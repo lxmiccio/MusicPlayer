@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="scroll-bar.jpg">resources/images/scroll-bar.jpg</file>
+        <file alias="tove-lo.jpg">resources/images/tove-lo.jpg</file>
+        <file alias="album-placeholder.png">resources/images/album-placeholder.png</file>
+    </qresource>
+    <qresource prefix="/svg">
+        <file alias="backward.svg">resources/svg/backward.svg</file>
+        <file alias="forward.svg">resources/svg/forward.svg</file>
+        <file alias="pause.svg">resources/svg/pause.svg</file>
+        <file alias="play.svg">resources/svg/play.svg</file>
+        <file alias="repeat.svg">resources/svg/repeat.svg</file>
+        <file alias="repeat-all.svg">resources/svg/repeat-all.svg</file>
+        <file alias="repeat-one.svg">resources/svg/repeat-one.svg</file>
+        <file alias="shuffle.svg">resources/svg/shuffle.svg</file>
+        <file alias="volume.svg">resources/svg/volume.svg</file>
+        <file alias="volume-muted.svg">resources/svg/volume-muted.svg</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="sniglet-extrabold.ttf">resources/fonts/Sniglet-ExtraBold.ttf</file>
+        <file alias="sniglet-regular.ttf">resources/fonts/Sniglet-Regular.ttf</file>
+    </qresource>
+</RCC>

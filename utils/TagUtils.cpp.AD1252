@@ -1,0 +1,102 @@
+#include "TagUtils.h"
+
+#include <QImage>
+#include <QMap>
+#include <QPixmap>
+#include <QDebug>
+
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
+#include <taglib/attachedPictureFrame.h>
+#include "taglib/id3v2frame.h"
+#include "taglib/id3v2header.h"
+#include "taglib/id3v2tag.h"
+#include "taglib/mp4file.h"
+#include "taglib/mpegfile.h"
+#include "taglib/unsynchronizedlyricsframe.h"
+
+QVariant TagUtils::readTags(const QFileInfo &fileInfo)
+{
+    QVariantMap tags;
+
+    /* Retrieve cover */
+    TagLib::MPEG::File file(TagLib::FileName(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath())));
+    TagLib::ID3v2::Tag* mp3Tag = file.ID3v2Tag();
+
+    TagLib::ID3v2::FrameList listOfMp3Frames;
+    TagLib::ID3v2::AttachedPictureFrame* pictureFrame;
+
+    if(mp3Tag)
+    {
+        listOfMp3Frames = mp3Tag->frameListMap()["APIC"];
+        if(!listOfMp3Frames.isEmpty())
+        {
+            for(TagLib::ID3v2::FrameList::ConstIterator i_frame = listOfMp3Frames.begin(); i_frame != listOfMp3Frames.end() ; i_frame++)
+            {
+                pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame*> (*i_frame);
+
+                QByteArray cover = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
+                tags["cover"] = QPixmap::fromImage(QImage::fromData(cover));
+            }
+        }
+    }
+
+    /* Retrieve lyrics */
+    TagLib::ID3v2::FrameList frames = file.ID3v2Tag()->frameListMap()["USLT"];
+
+    if(!frames.isEmpty())
+    {
+        TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame*> (frames.front());
+        if(frame)
+        {
+            QString lyrics = frame->text().toCString(true);
+            lyrics.replace("\r", "\r\n");
+
+            tags["lyrics"] = lyrics;
+            qDebug() << lyrics;
+        }
+    }
+
+    return tags;
+}
+
+char* TagUtils::QStringToBuffer(const QString& string)
+{
+    return string.toUtf8().data();
+}
+
+QString TagUtils::StringToQString(const TagLib::String& string)
+{
+    return QString(string.toCString(true));
+}
+
+QString TagUtils::extensionToMimetype(const QString& extension)
+{
+    static QMap<QString, QString> extToMime;
+
+    if(extToMime.isEmpty())
+    {
+        extToMime.insert("aac",  "audio/mp4");
+        extToMime.insert("aif",  "audio/aiff");
+        extToMime.insert("aiff", "audio/aiff");
+        extToMime.insert("flac", "audio/flac");
+        extToMime.insert("m4a",  "audio/mp4");
+        extToMime.insert("mp3",  "audio/mpeg");
+        extToMime.insert("mp4",  "audio/mp4");
+        extToMime.insert("mpc",  "audio/x-musepack");
+        extToMime.insert("oga",  "application/ogg");
+
+#if defined(TAGLIB_MAJOR_VERSION) && defined(TAGLIB_MINOR_VERSION)
+#if TAGLIB_MAJOR_VERSION >= 1 && TAGLIB_MINOR_VERSION >= 9
+        extToMime.insert( "opus",  "application/opus" );
+#endif
+#endif
+
+        extToMime.insert("ogg",  "application/ogg");
+        extToMime.insert("opus",  "application/opus");
+        extToMime.insert("wma",  "audio/x-ms-wma");
+        extToMime.insert("wv",   "audio/x-wavpack");
+    }
+
+    return extToMime.value(extension.toLower(), "unknown");
+}
