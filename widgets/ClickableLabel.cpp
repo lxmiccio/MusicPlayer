@@ -24,7 +24,7 @@ void ClickableLabel::mousePressEvent(QMouseEvent* event)
 {
     QLabel::mousePressEvent(event);
 
-    if (!m_moved)
+    if(!m_moved)
     {
         m_dragPoint = event->pos();
         m_pressed = true;

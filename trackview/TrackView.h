@@ -28,9 +28,11 @@ class TrackView : public QWidget
 
     signals:
         void doubleClicked(const Track&);
+        void coverClicked();
 
     private slots:
         void onDoubleClicked(const QModelIndex& index);
+        void onCoverClicked();
 
     private:
         void clear();

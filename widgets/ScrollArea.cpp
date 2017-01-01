@@ -1,6 +1,7 @@
 #include "ScrollArea.h"
 
 #include <QCommonStyle>
+#include <QDirIterator>
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QScrollBar>
@@ -20,9 +21,7 @@ ScrollArea::ScrollArea(QWidget* parent) : QScrollArea(parent)
                             "background: transparent;"
                           "}"));
 
-    /* Workaround */
     verticalScrollBar()->setStyle(new QCommonStyle);
-
     verticalScrollBar()->setStyleSheet(QString("QScrollBar:vertical {"
                                                    "background: transparent;"
                                                    "border: 0px;"
@@ -50,13 +49,29 @@ void ScrollArea::dragEnterEvent(QDragEnterEvent* event)
 void ScrollArea::dropEvent(QDropEvent* event)
 {
     QList<QUrl> urls = event->mimeData()->urls();
-    QListIterator<QUrl> iterator(urls);
+    QListIterator<QUrl> urlIterator(urls);
 
-    while(iterator.hasNext()) {
-        QFileInfo fileInfo(iterator.next().toLocalFile());
-
-        if(Track::isSupportedSuffix(fileInfo.suffix())) {
-            emit fileDropped(fileInfo);
+    while(urlIterator.hasNext())
+    {
+        QFileInfo fileInfo(urlIterator.next().toLocalFile());
+        if(fileInfo.isDir())
+        {
+            QDirIterator directoryIterator(fileInfo.absoluteFilePath(), QStringList() << "*.mp3", QDir::Files, QDirIterator::Subdirectories);
+            while(directoryIterator.hasNext())
+            {
+                QFileInfo file(directoryIterator.next());
+                if(Track::isSupportedSuffix(file.suffix()))
+                {
+                    emit fileDropped(file);
+                }
+            }
+        }
+        else
+        {
+            if(Track::isSupportedSuffix(fileInfo.suffix()))
+            {
+                emit fileDropped(fileInfo);
+            }
         }
     }
 }

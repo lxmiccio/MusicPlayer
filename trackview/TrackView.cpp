@@ -9,6 +9,7 @@
 TrackView::TrackView(QWidget* parent) : QWidget(parent)
 {
     m_trackAlbum = new TrackAlbum();
+    QObject::connect(m_trackAlbum, SIGNAL(coverClicked()), this, SLOT(onCoverClicked()));
 
     m_spacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -67,6 +68,11 @@ void TrackView::onDoubleClicked(const QModelIndex& index)
 {
     const Track* track = m_items.at(index.row())->track();
     emit doubleClicked(*track);
+}
+
+void TrackView::onCoverClicked()
+{
+    emit coverClicked();
 }
 
 void TrackView::clear()

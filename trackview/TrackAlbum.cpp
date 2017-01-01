@@ -1,17 +1,25 @@
 #include "TrackAlbum.h"
 
+#include <QApplication>
+#include <QFont>
+
 #include "Cover.h"
 
 TrackAlbum::TrackAlbum(QWidget* parent) : QWidget(parent)
 {
-    m_cover = new QLabel();
+    QFont font = QApplication::font();
+    font.setPointSize(13);
+
+    m_cover = new ClickableLabel();
     m_cover->setAlignment(Qt::AlignCenter);
     m_cover->setPixmap(QPixmap());
+    QObject::connect(m_cover, SIGNAL(clicked()), this, SLOT(onCoverClicked()));
 
     m_spacer1 = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_albumTitle = new QLabel();
     m_albumTitle->setAlignment(Qt::AlignCenter);
+    m_albumTitle->setFont(font);
     m_albumTitle->setWordWrap(true);
     m_albumTitle->setStyleSheet(QString("color: white;"));
 
@@ -19,6 +27,7 @@ TrackAlbum::TrackAlbum(QWidget* parent) : QWidget(parent)
 
     m_artistName = new QLabel();
     m_artistName->setAlignment(Qt::AlignCenter);
+    m_artistName->setFont(font);
     m_artistName->setWordWrap(true);
     m_artistName->setStyleSheet(QString("color: white;"));
 
@@ -62,4 +71,9 @@ void TrackAlbum::setAlbum(const Album *album)
     m_albumTitle->setText(album->title());
     m_artistName->setText(album->artist()->name());
     m_cover->setPixmap(pixmap);
+}
+
+void TrackAlbum::onCoverClicked()
+{
+    emit coverClicked();
 }

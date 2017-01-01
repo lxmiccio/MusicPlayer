@@ -7,25 +7,35 @@
 #include <QWidget>
 
 #include "Album.h"
+#include "ClickableLabel.h"
 
 class TrackAlbum : public QWidget
 {
+    Q_OBJECT
+
     public:
         explicit TrackAlbum(QWidget* parent = 0);
         ~TrackAlbum();
 
         void setAlbum(const Album* album);
 
-        static const quint16 WIDGET_HEIGHT = 275;
-        static const quint16 WIDGET_WIDTH = 200;
+        static const quint16 WIDGET_HEIGHT = 375;
+        static const quint16 WIDGET_WIDTH = 300;
 
-        static const quint16 IMAGE_HEIGHT = 200;
-        static const quint16 IMAGE_WIDTH = 200;
+        static const quint16 IMAGE_HEIGHT = 300;
+        static const quint16 IMAGE_WIDTH = 300;
+
+    signals:
+        void coverClicked();
+
+    private slots:
+        void onCoverClicked();
 
     private:
         const Album* c_album;
 
-        QLabel* m_cover;
+        //QLabel* m_cover;
+        ClickableLabel* m_cover;
         QSpacerItem* m_spacer1;
         QLabel* m_albumTitle;
         QSpacerItem* m_spacer2;

@@ -46,9 +46,11 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
 
     m_trackView = new TrackView(this);
     QObject::connect(m_trackView, SIGNAL(doubleClicked(const Track&)), this, SLOT(itemDoubleClicked(const Track&)));
+    QObject::connect(m_trackView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
 
     m_audioControls = new AudioControls(this);
     m_audioControls->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioControls, SLOT(onCurrentMediaChanged(const Track&)));
     //QObject::connect(m_audioControls, SIGNAL(backwardClicked()), this, SLOT(onBackwardClicked()));
     //QObject::connect(m_audioControls, SIGNAL(playClicked()), this, SLOT(onPlayClicked()));
     //QObject::connect(m_audioControls, SIGNAL(pauseClicked()), this, SLOT(onPauseClicked()));
@@ -80,6 +82,17 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     m_musicLibrary = new MusicLibrary();
 
     m_musicPlayer = new MusicPlayer();
+}
+
+void MainWindow::itemDoubleClicked(const Track& track)
+{
+    emit trackClicked(track);
+}
+
+void MainWindow::coverClicked()
+{
+    m_scrollArea->show();
+    m_trackView->hide();
 }
 
 void MainWindow::onCoverClicked(const Album &album)

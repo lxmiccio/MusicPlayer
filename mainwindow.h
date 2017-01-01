@@ -35,76 +35,73 @@
 
 class MainWindow : public BackgroundWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 private:
-  const StackedWidget* c_stackedWidget;
+    const StackedWidget* c_stackedWidget;
 
-  AlbumView* m_albumView;
-  ScrollArea* m_scrollArea;
+    AlbumView* m_albumView;
+    ScrollArea* m_scrollArea;
 
-  TrackView* m_trackView;
+    TrackView* m_trackView;
 
-  AudioControls* m_audioControls;
+    AudioControls* m_audioControls;
 
-  QHBoxLayout* m_horLayout;
-  QVBoxLayout* m_layout;
+    QHBoxLayout* m_horLayout;
+    QVBoxLayout* m_layout;
 
-  MusicLibrary* m_musicLibrary;
+    MusicLibrary* m_musicLibrary;
 
-  MusicPlayer* m_musicPlayer;
+    MusicPlayer* m_musicPlayer;
 
-  LeftPanel* m_leftPanel;
+    LeftPanel* m_leftPanel;
 
 public:
-  MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
+    MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
 
 public slots:
-  void onCoverClicked(const Album& album);
+    void onCoverClicked(const Album& album);
 
-  void onBackwardClicked();
-  void onPlayClicked();
-  void onPauseClicked();
-  void onForwardClicked();
-  void onFileDropped(const QFileInfo& fileInfo);
-  void onMusicSliderMoved(int position, int minimum, int maximum);
-  void onShuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
-  void onRepeatClicked(AudioControls::RepeatMode_t repeatMode);
-  void onVolumeClicked(AudioControls::VolumeMode_t volumeMode);
+    void onBackwardClicked();
+    void onPlayClicked();
+    void onPauseClicked();
+    void onForwardClicked();
+    void onFileDropped(const QFileInfo& fileInfo);
+    void onMusicSliderMoved(int position, int minimum, int maximum);
+    void onShuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
+    void onRepeatClicked(AudioControls::RepeatMode_t repeatMode);
+    void onVolumeClicked(AudioControls::VolumeMode_t volumeMode);
 
-  void itemDoubleClicked(const Track& track){
-    m_scrollArea->show();
-    m_trackView->hide();/*
-    m_musicPlayer->mediaPlaylist()->setCurrentIndex(track.track() - 1);
-    m_musicPlayer->mediaPlayer()->play();*/
-  }
+    void coverClicked();
 
-  void onCurrentMediaChanged(QMediaContent);
+    void itemDoubleClicked(const Track& track);
+    void onCurrentMediaChanged(QMediaContent);
 
 
-  void mediaPlayerPositionChanged(qint64 position);
-  void musicSliderMoved(int value);
-  void musicSliderPressed();
-  void musicSliderReleased();
-  void volumeSliderMoved(int value);
-  void volumeValueChanged(int value);
-  void trackListItemDoubleClicked(const QModelIndex& index);
-  void playClicked();
-  void stopClicked();
-  void previousClicked();
-  void nextClicked();
-  void addSongClicked();
-  void addDirectoryClicked();
-  void removeClicked();
-  void removeAllClicked();
-  void savePlaylistClicked();
-  void loadPlaylistClicked();
-  void playlistLoaded(QString playlistName);
+    void mediaPlayerPositionChanged(qint64 position);
+    void musicSliderMoved(int value);
+    void musicSliderPressed();
+    void musicSliderReleased();
+    void volumeSliderMoved(int value);
+    void volumeValueChanged(int value);
+    void trackListItemDoubleClicked(const QModelIndex& index);
+    void playClicked();
+    void stopClicked();
+    void previousClicked();
+    void nextClicked();
+    void addSongClicked();
+    void addDirectoryClicked();
+    void removeClicked();
+    void removeAllClicked();
+    void savePlaylistClicked();
+    void loadPlaylistClicked();
+    void playlistLoaded(QString playlistName);
 
 signals:
-  void trackAdded(const Track& track);
-  currentMediaChanged(Track &track);
-  positionChanged(qint64 position, qint64 duration);
+    void trackClicked(const Track& track);
+    void trackAdded(const Track& track);
+    currentMediaChanged(Track &track);
+    positionChanged(qint64 position, qint64 duration);
 };
 
 #endif // MAINWINDOW_H
