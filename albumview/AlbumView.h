@@ -34,6 +34,7 @@ class AlbumView : public QWidget
         void displayCover(Cover* cover);
 
         quint8 albumsPerRow(quint16 width);
+        quint8 spacerWidth(quint16 width);
 
         QVector<Cover*> m_covers;
         QVector<QHBoxLayout*> m_layouts;
@@ -43,9 +44,13 @@ class AlbumView : public QWidget
         QSpacerItem* m_leftSpacer;
         QSpacerItem* m_lowerSpacer;
         QSpacerItem* m_rightSpacer;
+        QSpacerItem* m_middleHorizontalSpacer;
+        QSpacerItem* m_middleVerticalSpacer;
 
         quint8 m_currentColumn;
         quint8 m_currentRow;
+
+        quint8 m_albumCurrentColumn;
         quint8 m_albumsPerRow;
 };
 

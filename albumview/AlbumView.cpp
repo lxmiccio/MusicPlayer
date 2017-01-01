@@ -1,25 +1,29 @@
 #include "AlbumView.h"
 
 #include <QApplication>
+#include <QDebug>
 #include <QResizeEvent>
 
 AlbumView::AlbumView(QWidget* parent) : QWidget(parent)
 {
-    m_upperSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_leftSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_upperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_middleHorizontalSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_middleVerticalSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_covers = QVector<Cover*>();
     m_layouts = QVector<QHBoxLayout*>();
     m_layout = new QVBoxLayout();
-    m_layout->setMargin(0);
+    m_layout->setContentsMargins(40, 16, 40, 12);
     m_layout->addItem(m_upperSpacer);
     m_layout->addItem(m_lowerSpacer);
     setLayout(m_layout);
 
+    m_albumCurrentColumn = 0;
     m_currentColumn = 0;
-    m_currentRow = 0;
+    m_currentRow = 1;
     m_albumsPerRow = albumsPerRow(rect().size().width());
 }
 
@@ -49,14 +53,16 @@ void AlbumView::clearLayout(QLayout* layout)
         {
             delete i_item->widget();
         }
-#endif
 
         delete i_item;
+#endif
     }
 }
 
 void AlbumView::onScrollAreaResized(QResizeEvent* event)
 {
+    m_middleHorizontalSpacer->changeSize(spacerWidth(event->size().width()), 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+
     if(m_albumsPerRow != albumsPerRow(event->size().width()))
     {
         m_albumsPerRow = albumsPerRow(event->size().width());
@@ -66,38 +72,58 @@ void AlbumView::onScrollAreaResized(QResizeEvent* event)
             clearLayout(i_layout);
         }
         m_layouts.clear();
+        m_layout->removeItem(m_middleVerticalSpacer);
 
+        m_albumCurrentColumn = 0;
         m_currentColumn = 0;
-        m_currentRow = 0;
+        m_currentRow = 1;
 
         foreach(Cover* i_cover, m_covers)
         {
-            i_cover->hide();
-
-            if(m_currentColumn == 0)
+            if(m_albumCurrentColumn == 0)
             {
                 QHBoxLayout* layout = new QHBoxLayout();
                 layout->addItem(m_leftSpacer);
-                layout->addItem(m_rightSpacer);
-                layout->insertWidget(m_currentColumn + 1, i_cover);
-                m_layouts.push_back(layout);
+                m_currentColumn++;
 
-                m_layout->insertLayout(m_currentRow + 1, layout);
+                if(m_currentRow == 1)
+                {
+                    m_layout->insertLayout(m_currentRow, layout);
+                    m_currentRow++;
+                }
+                else
+                {
+                    m_layout->insertItem(m_currentRow, m_middleVerticalSpacer);
+                    m_currentRow++;
+                    m_layout->insertLayout(m_currentRow, layout);
+                    m_currentRow++;
+                }
+
+                layout->addItem(m_rightSpacer);
+
+                m_layouts.push_back(layout);
+            }
+
+            m_layouts.at(m_layouts.size() - 1)->insertWidget(m_currentColumn, i_cover);
+            m_albumCurrentColumn++;
+            m_currentColumn++;
+
+            if(m_albumCurrentColumn == m_albumsPerRow)
+            {
+                m_albumCurrentColumn = 0;
+                m_currentColumn = 0;
             }
             else
             {
-                m_layouts.at(m_currentRow)->insertWidget(m_currentColumn + 1, i_cover);
+                m_layouts.at(m_layouts.size() - 1)->insertItem(m_currentColumn, m_middleHorizontalSpacer);
+                m_currentColumn++;
             }
 
-            if(++m_currentColumn == m_albumsPerRow)
-            {
-                m_currentColumn = 0;
-                m_currentRow++;
-            }
 
-            i_cover->show();
+
         }
     }
+    m_layout->invalidate();
 }
 
 void AlbumView::onTrackAdded(const Track& track)
@@ -109,25 +135,43 @@ void AlbumView::onTrackAdded(const Track& track)
         m_albums.push_back(album);
 
         Cover* cover = new Cover(album);
+        QObject::connect(cover, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
         m_covers.push_back(cover);
 
-        QObject::connect(cover, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
-
-        if(m_currentColumn == 0)
+        if(m_albumCurrentColumn == 0)
         {
             QHBoxLayout* layout = new QHBoxLayout();
             layout->addItem(m_leftSpacer);
+            m_currentColumn++;
+
+            if(m_currentRow == 1)
+            {
+                m_layout->insertLayout(m_currentRow, layout);
+                m_currentRow++;
+            }
+            else
+            {
+                m_layout->insertItem(m_currentRow, m_middleVerticalSpacer);
+                m_currentRow++;
+                m_layout->insertLayout(m_currentRow, layout);
+                m_currentRow++;
+            }
+
             layout->addItem(m_rightSpacer);
+
             m_layouts.push_back(layout);
-            m_layout->insertLayout(m_currentRow + 1, layout);
         }
 
-        m_layouts.at(m_currentRow)->insertWidget(m_currentColumn + 1, cover);
+        m_layouts.at(m_layouts.size() - 1)->insertWidget(m_currentColumn, cover);
+        m_albumCurrentColumn++;
+        m_currentColumn++;
+        m_layouts.at(m_layouts.size() - 1)->insertItem(m_currentColumn, m_middleHorizontalSpacer);
+        m_currentColumn++;
 
-        if(++m_currentColumn == m_albumsPerRow)
+        if(m_albumCurrentColumn == m_albumsPerRow)
         {
+            m_albumCurrentColumn = 0;
             m_currentColumn = 0;
-            m_currentRow++;
         }
     }
 }
@@ -139,5 +183,10 @@ void AlbumView::onCoverClicked(const Album& album)
 
 quint8 AlbumView::albumsPerRow(quint16 width)
 {
-    return (width - 12) / (Cover::COVER_WIDTH + 6);
+    return (width - 80) / (Cover::COVER_WIDTH + 32);
+}
+
+quint8 AlbumView::spacerWidth(quint16 width)
+{
+    return (width - 80 - Cover::COVER_WIDTH * albumsPerRow(width)) / albumsPerRow(width);
 }
