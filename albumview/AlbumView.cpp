@@ -5,9 +5,17 @@
 
 AlbumView::AlbumView(QWidget* parent) : QWidget(parent)
 {
+    m_upperSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+    m_rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+
     m_covers = QVector<Cover*>();
     m_layouts = QVector<QHBoxLayout*>();
     m_layout = new QVBoxLayout();
+    m_layout->setMargin(0);
+    m_layout->addItem(m_upperSpacer);
+    m_layout->addItem(m_lowerSpacer);
     setLayout(m_layout);
 
     m_currentColumn = 0;
@@ -69,14 +77,16 @@ void AlbumView::onScrollAreaResized(QResizeEvent* event)
             if(m_currentColumn == 0)
             {
                 QHBoxLayout* layout = new QHBoxLayout();
+                layout->addItem(m_leftSpacer);
+                layout->addItem(m_rightSpacer);
+                layout->insertWidget(m_currentColumn + 1, i_cover);
                 m_layouts.push_back(layout);
-                layout->addWidget(i_cover);
 
-                m_layout->addLayout(layout);
+                m_layout->insertLayout(m_currentRow + 1, layout);
             }
             else
             {
-                m_layouts.at(m_currentRow)->addWidget(i_cover);
+                m_layouts.at(m_currentRow)->insertWidget(m_currentColumn + 1, i_cover);
             }
 
             if(++m_currentColumn == m_albumsPerRow)
@@ -106,11 +116,13 @@ void AlbumView::onTrackAdded(const Track& track)
         if(m_currentColumn == 0)
         {
             QHBoxLayout* layout = new QHBoxLayout();
+            layout->addItem(m_leftSpacer);
+            layout->addItem(m_rightSpacer);
             m_layouts.push_back(layout);
-            m_layout->addLayout(layout);
+            m_layout->insertLayout(m_currentRow + 1, layout);
         }
 
-        m_layouts.at(m_currentRow)->addWidget(cover);
+        m_layouts.at(m_currentRow)->insertWidget(m_currentColumn + 1, cover);
 
         if(++m_currentColumn == m_albumsPerRow)
         {

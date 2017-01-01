@@ -108,7 +108,7 @@ void MainWindow::onFileDropped(const QFileInfo& fileInfo)
         //this->m_musicLibrary->debug();
         //this->items.push_back(ti);
 
-        emit this->trackAdded(*track);
+        emit trackAdded(*track);
     }
 }
 

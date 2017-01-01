@@ -65,8 +65,8 @@ void TrackView::onAlbumSelected(const Album& album)
 
 void TrackView::onDoubleClicked(const QModelIndex& index)
 {
-    // const Track* track = m_items.at(index.row())->track();
-    emit doubleClicked(Track());
+    const Track* track = m_items.at(index.row())->track();
+    emit doubleClicked(*track);
 }
 
 void TrackView::clear()

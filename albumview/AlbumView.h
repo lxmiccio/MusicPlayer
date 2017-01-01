@@ -2,6 +2,7 @@
 #define ALBUMVIEW_H
 
 #include <QHBoxLayout>
+#include <QSpacerItem>
 #include <QVBoxLayout>
 
 #include "Album.h"
@@ -37,6 +38,11 @@ class AlbumView : public QWidget
         QVector<Cover*> m_covers;
         QVector<QHBoxLayout*> m_layouts;
         QVBoxLayout* m_layout;
+
+        QSpacerItem* m_upperSpacer;
+        QSpacerItem* m_leftSpacer;
+        QSpacerItem* m_lowerSpacer;
+        QSpacerItem* m_rightSpacer;
 
         quint8 m_currentColumn;
         quint8 m_currentRow;
