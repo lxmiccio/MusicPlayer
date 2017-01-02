@@ -11,7 +11,7 @@ LoadPlaylistWindow::LoadPlaylistWindow(StackedWidget* stackedWidget, QWidget* pa
   this->stackedWidget = stackedWidget;
 
   this->playlists = new QListWidget();
-  this->playlists->addItems(Playlist::getAllPlaylists(QDir::currentPath() + "/tracks/"));
+  //this->playlists->addItems(Playlist::getAllPlaylists(QDir::currentPath() + "/tracks/"));
 
   this->goBack = new QPushButton("Go Back");
   QObject::connect(this->goBack, SIGNAL(clicked()), this->stackedWidget, SLOT(previousView()));

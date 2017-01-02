@@ -4,6 +4,7 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 
+#include "playlist.h"
 #include "Track.h"
 
 class MusicPlayer
@@ -11,16 +12,14 @@ class MusicPlayer
     public:
         MusicPlayer();
 
-        void addTrack(const Track& track);
-        void addTracks(const QVector<const Track*>& tracks);
-        void removeTrack(const Track& track);
-        void removeAllTracks();
+        Playlist* playlist() const;
+        void setPlaylist(Playlist& playlist);
 
         QMediaPlayer* mediaPlayer() const;
         QMediaPlaylist* mediaPlaylist() const;
 
     private:
-        QVector<const Track*> m_tracks;
+        Playlist* m_playlist;
 
         QMediaPlayer* m_mediaPlayer;
         QMediaPlaylist* m_mediaPlaylist;

@@ -1,88 +1,38 @@
 #include "playlist.h"
 
-#include <QDir>
-#include <QDirIterator>
-#include <QFile>
-#include <QDebug>
-
-Playlist::Playlist()
+Playlist::Playlist(const QString& name)
 {
-  this->tracks = QVector<Track>();
+    m_name = name;
+
+    c_tracks = QVector<const Track*>();
 }
 
-void Playlist::setName(QString name)
+const QString& Playlist::name() const
 {
-  this->name = name;
+    return m_name;
 }
 
-QString Playlist::getName()
+void Playlist::setName(const QString& name)
 {
-  return this->getName();
+    m_name = name;
 }
 
-QVector<Track>* Playlist::getTracks()
+const QVector<const Track*>& Playlist::tracks() const
 {
-  return &this->tracks;
+    return c_tracks;
 }
 
-void Playlist::addTrack(Track track)
+void Playlist::addTrack(const Track& track)
 {
-  this->tracks.push_back(track);
+    c_tracks.push_back(&track);
 }
 
-void Playlist::removeTrack(Track &track)
+void Playlist::removeTrack(const Track& track)
 {
-  this->tracks.removeAt(this->tracks.indexOf(track));
+    c_tracks.removeOne(&track);
 }
 
 void Playlist::removeAllTracks()
 {
-  this->tracks.empty();
-}
-
-void Playlist::savePlaylist(QString path)
-{
-  for(QVector<Track>::iterator track {this->tracks.begin()}; track != this->tracks.end(); ++track) {
-    //QFile::copy(track->getPath(), path + '/' + track->getFilename());
-  }
-}
-
-Playlist Playlist::loadPlaylist(QString path)
-{
-  QDir directory {path};
-
-  QStringList filenames = directory.entryList(QStringList() << "*.mp3", QDir::Files);
-
-  Playlist playlist = Playlist();
-
-  playlist.setName(QString(path.split('/').last()));
-
-  for(QStringList::iterator filename {filenames.begin()}; filename != filenames.end(); ++filename) {
-    QFileInfo fileInfo {*filename};
-    QStringList data {directory.filePath(*filename).split('/')};
-
-    QString title = QString(data.at(data.length() - TITLE_INDEX)).mid(5);
-    title = title.left(title.length() - 4);
-
-    //Track track = Track(QString(data.at(data.length() - ARTIST_INDEX)), QString(data.at(data.length() - ALBUM_INDEX)), title, QString(data.at(data.length() - TITLE_INDEX)), directory.filePath(*filename), QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
-
-    //playlist.addTrack(track);
-  }
-
-  return playlist;
-}
-
-QStringList Playlist::getAllPlaylists(QString path)
-{
-  QStringList playlists;
-
-  QDirIterator directories {path, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories};
-
-  while(directories.hasNext()) {
-    directories.next();
-
-    playlists.push_back(directories.fileName());
-  }
-
-  return playlists;
+    c_tracks.clear();
 }

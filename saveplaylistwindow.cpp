@@ -61,7 +61,7 @@ void SavePlaylistWindow::savePlaylistClicked()
         subDirectory.removeRecursively();
       }
 
-      this->playlist->savePlaylist(playlistPath);
+      //this->playlist->savePlaylist(playlistPath);
 
       break;
     }
@@ -72,7 +72,7 @@ void SavePlaylistWindow::savePlaylistClicked()
   }
   else {
     if(QDir().mkdir(playlistPath)) {
-      this->playlist->savePlaylist(playlistPath);
+      //this->playlist->savePlaylist(playlistPath);
     }
     else {
       qDebug() << "Cannot create directory " << playlistName << " in " << path;

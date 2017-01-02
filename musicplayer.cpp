@@ -9,34 +9,17 @@ MusicPlayer::MusicPlayer()
     m_mediaPlayer->setPlaylist(m_mediaPlaylist);
 }
 
-void MusicPlayer::addTrack(const Track& track)
+Playlist* MusicPlayer::playlist() const
 {
-    m_tracks.push_back(&track);
-    m_mediaPlaylist->addMedia(track.mediaContent());
+    return m_playlist;
 }
 
-void MusicPlayer::addTracks(const QVector<const Track*>& tracks)
+void MusicPlayer::setPlaylist(Playlist& playlist)
 {
-    foreach(const Track* i_track, tracks)
-    {
-        m_tracks.push_back(i_track);
-        m_mediaPlaylist->addMedia(i_track->mediaContent());
-    }
-}
+    m_playlist = &playlist;
 
-void MusicPlayer::removeTrack(const Track& track)
-{
-    for(int i {0}; i < m_mediaPlaylist->mediaCount(); ++i) {
-        //if(m_mediaPlaylist->media(i) == track.getMediaContent()) {
-        //m_mediaPlaylist->removeMedia(i);
-        //break;
-        //}
-    }
-}
-
-void MusicPlayer::removeAllTracks()
-{
-    m_mediaPlaylist->clear();
+    m_mediaPlayer->setMedia(QUrl::fromLocalFile(playlist.tracks().at(0)->path()));
+    m_mediaPlayer->play();
 }
 
 QMediaPlayer* MusicPlayer::mediaPlayer() const

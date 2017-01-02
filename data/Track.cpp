@@ -17,12 +17,10 @@ Track::Track(const QVariantMap& tags, const Album* album)
     m_year = tags["year"].toUInt();
     m_duration = tags["duration"].toUInt();
     m_bitrate = tags["bitrate"].toUInt();
-    m_url = tags["url"].toString();
+    m_path = tags["path"].toString();
     m_size = tags["size"].toULongLong();
 
     c_album = album;
-
-    m_mediaContent = QMediaContent(QUrl(QFileInfo(m_url).absoluteFilePath()));
 }
 
 const QString& Track::title() const
@@ -100,14 +98,14 @@ void Track::setBitrate(quint32 bitrate)
     m_bitrate = bitrate;
 }
 
-const QString& Track::url() const
+const QString& Track::path() const
 {
-    return m_url;
+    return m_path;
 }
 
-void Track::setUrl(const QString &url)
+void Track::setPath(const QString &path)
 {
-    m_url = url;
+    m_path = path;
 }
 
 quint64 Track::size() const
@@ -118,16 +116,6 @@ quint64 Track::size() const
 void Track::setSize(quint64 size)
 {
     m_size = size;
-}
-
-const QMediaContent& Track::mediaContent() const
-{
-    return m_mediaContent;
-}
-
-void Track::setMediaContent(const QMediaContent& mediaContent)
-{
-    m_mediaContent = mediaContent;
 }
 
 const Album* Track::album() const
@@ -149,7 +137,8 @@ bool Track::isSupportedSuffix(const QString& suffix)
 {
     static QVector<QString> suffixes;
 
-    if(suffixes.isEmpty()) {
+    if(suffixes.isEmpty())
+    {
         suffixes.append("mp3");
     }
 

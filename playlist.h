@@ -1,37 +1,26 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include <QString>
 #include <QVector>
 
 #include "Track.h"
 
 class Playlist
 {
-public:
-  static const int16_t ARTIST_INDEX = 3;
-  static const int16_t ALBUM_INDEX = 2;
-  static const int16_t TITLE_INDEX = 1;
+    public:
+        explicit Playlist(const QString& name);
 
-private:
-  QString name;
-  QVector<Track> tracks;
+        const QString& name() const;
+        void setName(const QString& name);
 
-public:
-  Playlist();
+        const QVector<const Track*>& tracks() const;
+        void addTrack(const Track& track);
+        void removeTrack(const Track &track);
+        void removeAllTracks();
 
-  void setName(QString name);
-  QString getName();
-  void addTrack(Track track);
-  void removeTrack(Track &track);
-  void removeAllTracks();
-  QVector<Track>* getTracks();
-
-  void savePlaylist(QString path);
-
-  Playlist loadPlaylist(QString path);
-
-  static QStringList getAllPlaylists(QString path);
+    private:
+        QVector<const Track*> c_tracks;
+        QString m_name;
 };
 
 #endif // PLAYLIST_H

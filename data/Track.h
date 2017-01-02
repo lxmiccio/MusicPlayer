@@ -39,14 +39,11 @@ class Track
         quint32 bitrate() const;
         void setBitrate(quint32 bitrate);
 
-        const QString& url() const;
-        void setUrl(const QString& url);
+        const QString& path() const;
+        void setPath(const QString& path);
 
         quint64 size() const;
         void setSize(quint64 size);
-
-        const QMediaContent& mediaContent() const;
-        void setMediaContent(const QMediaContent& mediaContent);
 
         const Album* album() const;
         void setAlbum(Album& album);
@@ -66,10 +63,8 @@ class Track
         quint32 m_duration;
         quint32 m_bitrate;
 
-        QString m_url;
+        QString m_path;
         quint64 m_size;
-
-        QMediaContent m_mediaContent;
 };
 
 bool operator==(const Track& track1, const Track& track2);

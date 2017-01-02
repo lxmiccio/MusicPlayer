@@ -87,6 +87,10 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
 void MainWindow::itemDoubleClicked(const Track& track)
 {
     emit trackClicked(track);
+
+    Playlist* p = new Playlist("temp");
+    p->addTrack(track);
+    this->m_musicPlayer->setPlaylist(*p);
 }
 
 void MainWindow::coverClicked()
@@ -95,14 +99,14 @@ void MainWindow::coverClicked()
     m_trackView->hide();
 }
 
-void MainWindow::onCoverClicked(const Album &album)
+void MainWindow::onCoverClicked(const Album& album)
 {
     m_trackView->show();
     m_trackView->onAlbumSelected(album);
     m_scrollArea->hide();
 
     foreach(Track* i_track, album.tracks())
-        qDebug()<< i_track->title();
+        qDebug() << i_track->title();
 }
 
 void MainWindow::onFileDropped(const QFileInfo& fileInfo)
@@ -137,7 +141,8 @@ void MainWindow::onPlayClicked()
 
 void MainWindow::onPauseClicked()
 {/*
-    this->musicPlayer->getMediaPlayer()->pause();*/
+    this->musicPlayer->getMediaPlayer()->pause();
+*/
 }
 
 void MainWindow::onForwardClicked()
@@ -265,7 +270,7 @@ void MainWindow::volumeValueChanged(int value)
 void MainWindow::trackListItemDoubleClicked(const QModelIndex& index)
 {
     qDebug() << index.row();
-    // qDebug() << this->items.at(index.row())->getTrack()->getTitle();
+    //qDebug() << this->items.at(index.row())->getTrack()->getTitle();
     /*for(int i {0}; i < this->trackList->count(); i++) {
     if(item->text() == this->trackList->item(i)->text()) {
       this->musicPlayer->getMediaPlaylist()->setCurrentIndex(i);
