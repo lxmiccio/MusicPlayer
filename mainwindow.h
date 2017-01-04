@@ -10,8 +10,7 @@
 
 
 
-#include "gui/audiocontrols.h"
-#include "musicplayer.h"
+#include "AudioEngine.h"
 #include "playlist.h"
 #include "Track.h"
 #include "MusicLibrary.h"
@@ -45,7 +44,7 @@ private:
 
     TrackView* m_trackView;
 
-    AudioControls* m_audioControls;
+    AudioEngine* m_audioEngine;
 
     QHBoxLayout* m_horLayout;
     QVBoxLayout* m_layout;
@@ -62,46 +61,14 @@ public:
 public slots:
     void onCoverClicked(const Album& album);
 
-    void onBackwardClicked();
-    void onPlayClicked();
-    void onPauseClicked();
-    void onForwardClicked();
     void onFileDropped(const QFileInfo& fileInfo);
-    void onMusicSliderMoved(int position, int minimum, int maximum);
-    void onShuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
-    void onRepeatClicked(AudioControls::RepeatMode_t repeatMode);
-    void onVolumeClicked(AudioControls::VolumeMode_t volumeMode);
-
     void coverClicked();
 
     void itemDoubleClicked(const Track& track);
-    void onCurrentMediaChanged(QMediaContent);
-
-
-    void mediaPlayerPositionChanged(qint64 position);
-    void musicSliderMoved(int value);
-    void musicSliderPressed();
-    void musicSliderReleased();
-    void volumeSliderMoved(int value);
-    void volumeValueChanged(int value);
-    void trackListItemDoubleClicked(const QModelIndex& index);
-    void playClicked();
-    void stopClicked();
-    void previousClicked();
-    void nextClicked();
-    void addSongClicked();
-    void addDirectoryClicked();
-    void removeClicked();
-    void removeAllClicked();
-    void savePlaylistClicked();
-    void loadPlaylistClicked();
-    void playlistLoaded(QString playlistName);
 
 signals:
     void trackClicked(const Track& track);
     void trackAdded(const Track& track);
-    currentMediaChanged(Track &track);
-    positionChanged(qint64 position, qint64 duration);
 };
 
 #endif // MAINWINDOW_H

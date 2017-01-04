@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QSlider>
 #include <QSpacerItem>
+#include <QTimeLine>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -67,6 +68,7 @@ class AudioControls : public QWidget
         QSpacerItem* m_lowerSpacer3;
         QLabel* m_elapsedTime;
         QSpacerItem* m_lowerSpacer4;
+        QTimeLine* m_musicTimeline;
         SeekSlider* m_musicSlider;
         QSpacerItem* m_lowerSpacer5;
         QLabel* m_remainingTime;
@@ -76,14 +78,15 @@ class AudioControls : public QWidget
         ImageButton* m_repeat;
         QSpacerItem* m_lowerSpacer8;
         ImageButton* m_volume;
-        QSlider* m_volumeSlider;
+        SeekSlider* m_volumeSlider;
 
         RepeatMode_t m_repeatMode;
         ShuffleMode_t m_shuffleMode;
         VolumeMode_t m_volumeMode;
 
     public slots:
-        void onCurrentMediaChanged(const Track& track);
+        void onTrackStarted(const Track& Track);
+        void onPlaylistEnded();
         void onPositionChanged(qint64 position, qint64 duration);
 
     private slots:
@@ -95,7 +98,7 @@ class AudioControls : public QWidget
         void onShuffleClicked();
         void onRepeatClicked();
         void onVolumeClicked();
-        void onVolumeSliderMoved(int position);
+        void onVolumeValueChanged(int position);
 
     signals:
         void backwardClicked();
@@ -106,7 +109,7 @@ class AudioControls : public QWidget
         void shuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
         void repeatClicked(AudioControls::RepeatMode_t repeatMode);
         void volumeClicked(AudioControls::VolumeMode_t volumeMode);
-        void volumeSliderMoved(int position);
+        void volumeValueChanged(int value);
 };
 
 #endif // AUDIOCONTROLS_H

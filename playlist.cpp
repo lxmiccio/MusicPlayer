@@ -1,20 +1,8 @@
 #include "playlist.h"
 
-Playlist::Playlist(const QString& name)
+Playlist::Playlist()
 {
-    m_name = name;
-
     c_tracks = QVector<const Track*>();
-}
-
-const QString& Playlist::name() const
-{
-    return m_name;
-}
-
-void Playlist::setName(const QString& name)
-{
-    m_name = name;
 }
 
 const QVector<const Track*>& Playlist::tracks() const

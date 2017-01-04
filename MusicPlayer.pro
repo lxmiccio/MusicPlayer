@@ -14,11 +14,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
     albumview/AlbumView.cpp \
     albumview/Cover.cpp \
+    audio/AudioControls.cpp \
+    audio/AudioEngine.cpp \
+    audio/MusicPlayer.cpp \
     data/Album.cpp \
     data/Artist.cpp \
     data/MusicLibrary.cpp \
     data/Track.cpp \
-    gui/AudioControls.cpp \
     trackview/TrackAlbum.cpp \
     trackview/TrackDelegate.cpp \
     trackview/TrackItem.cpp \
@@ -37,17 +39,18 @@ SOURCES += main.cpp\
     widgets/StackedWidget.cpp \
     loadplaylistwindow.cpp \
     mainwindow.cpp \
-    musicplayer.cpp \
     playlist.cpp \
     saveplaylistwindow.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
+    audio/AudioControls.h \
+    audio/AudioEngine.h \
+    audio/MusicPlayer.h \
     data/Album.h \
     data/Artist.h \
     data/MusicLibrary.h \
     data/Track.h \
-    gui/AudioControls.h \
     trackview/TrackDelegate.h \
     trackview/TrackItem.h \
     trackview/TrackView.h \
@@ -66,11 +69,11 @@ HEADERS  += albumview/AlbumView.h \
     widgets/StackedWidget.h \
     loadplaylistwindow.h \
     mainwindow.h \
-    musicplayer.h \
     playlist.h \
     saveplaylistwindow.h
 
 INCLUDEPATH += $$PWD/albumview
+INCLUDEPATH += $$PWD/audio
 INCLUDEPATH += $$PWD/data
 INCLUDEPATH += $$PWD/engine
 INCLUDEPATH += $$PWD/gui

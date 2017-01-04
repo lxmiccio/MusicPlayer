@@ -8,10 +8,7 @@
 class Playlist
 {
     public:
-        explicit Playlist(const QString& name);
-
-        const QString& name() const;
-        void setName(const QString& name);
+        Playlist();
 
         const QVector<const Track*>& tracks() const;
         void addTrack(const Track& track);
@@ -20,7 +17,6 @@ class Playlist
 
     private:
         QVector<const Track*> c_tracks;
-        QString m_name;
 };
 
 #endif // PLAYLIST_H
