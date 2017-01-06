@@ -1,11 +1,10 @@
-#include "SeekSlider.h"
+#include "TrackSlider.h"
 
-#include <QMouseEvent>
-
-SeekSlider::SeekSlider(Qt::Orientation orientation, QWidget* parent) : Slider(orientation, parent)
+TrackSlider::TrackSlider(Qt::Orientation orientation, QWidget* parent) : Slider(orientation, parent)
 {
-    m_elapsedTime = 0;
+    Slider::setLockScubbing(true);
 
+    m_elapsedTime = 0;
     m_time = new QTime();
 
     m_timer = new QTimer();
@@ -14,15 +13,15 @@ SeekSlider::SeekSlider(Qt::Orientation orientation, QWidget* parent) : Slider(or
     QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(onValueChanged(int)));
 }
 
-void SeekSlider::onTrackStarted(int duration)
+void TrackSlider::onTrackStarted(int duration)
 {
     setRange(0, duration * 1000);
 
     m_time->start();
-    m_timer->start(25);
+    m_timer->start(0);
 }
 
-void SeekSlider::onTrackFinished()
+void TrackSlider::onTrackFinished()
 {
     setValue(0);
 
@@ -30,19 +29,19 @@ void SeekSlider::onTrackFinished()
     m_timer->stop();
 }
 
-void SeekSlider::onTrackPaused()
+void TrackSlider::onTrackPaused()
 {
     m_elapsedTime += m_time->restart();
     m_timer->stop();
 }
 
-void SeekSlider::onTrackResumed()
+void TrackSlider::onTrackResumed()
 {
     m_time->restart();
     m_timer->start();
 }
 
-void SeekSlider::onTimerTimeout()
+void TrackSlider::onTimerTimeout()
 {
     m_elapsedTime += m_time->restart();
 
@@ -51,11 +50,19 @@ void SeekSlider::onTimerTimeout()
     blockSignals(false);
 }
 
-void SeekSlider::onValueChanged(int value)
+void TrackSlider::onValueChanged(int value)
 {
-    m_timer->stop();
-
     m_elapsedTime = value;
     m_time->restart();
-    m_timer->start();
+}
+
+void TrackSlider::onPositionChanged(qint64 position)
+{
+    m_elapsedTime = position;
+
+    blockSignals(true);
+    QSlider::setValue(m_elapsedTime);
+    blockSignals(false);
+
+    m_time->restart();
 }

@@ -20,7 +20,7 @@ void Playlist::removeTrack(const Track& track)
     c_tracks.removeOne(&track);
 }
 
-void Playlist::removeAllTracks()
+void Playlist::clear()
 {
     c_tracks.clear();
 }

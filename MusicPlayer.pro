@@ -11,12 +11,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = 010-MusicPlayer
 TEMPLATE = app
 
-SOURCES += main.cpp\
-    albumview/AlbumView.cpp \
+SOURCES += albumview/AlbumView.cpp \
     albumview/Cover.cpp \
     audio/AudioControls.cpp \
     audio/AudioEngine.cpp \
     audio/MusicPlayer.cpp \
+    audio/TrackSlider.cpp \
     data/Album.cpp \
     data/Artist.cpp \
     data/MusicLibrary.cpp \
@@ -35,19 +35,19 @@ SOURCES += main.cpp\
     widgets/ImageButton.cpp \
     widgets/LeftPanel.cpp \
     widgets/ScrollArea.cpp \
-    widgets/SeekSlider.cpp \
+    widgets/Slider.cpp \
     widgets/StackedWidget.cpp \
-    loadplaylistwindow.cpp \
+    main.cpp \
     mainwindow.cpp \
     playlist.cpp \
-    saveplaylistwindow.cpp \
-    widgets/Slider.cpp
+    utils/Utils.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
     audio/AudioControls.h \
     audio/AudioEngine.h \
     audio/MusicPlayer.h \
+    audio/TrackSlider.h \
     data/Album.h \
     data/Artist.h \
     data/MusicLibrary.h \
@@ -66,13 +66,11 @@ HEADERS  += albumview/AlbumView.h \
     widgets/ImageButton.h \
     widgets/LeftPanel.h \
     widgets/ScrollArea.h \
-    widgets/SeekSlider.h \
+    widgets/Slider.h \
     widgets/StackedWidget.h \
-    loadplaylistwindow.h \
     mainwindow.h \
     playlist.h \
-    saveplaylistwindow.h \
-    widgets/Slider.h
+    utils/Utils.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

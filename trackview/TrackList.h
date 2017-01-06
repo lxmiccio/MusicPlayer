@@ -3,8 +3,6 @@
 
 #include <QTableView>
 
-#include "SeekSlider.h"
-
 class TrackList : public QTableView
 {
     Q_OBJECT

@@ -18,6 +18,7 @@ AudioEngine::AudioEngine(QObject* parent) : QObject(parent)
     QObject::connect(m_audioControls, SIGNAL(volumeValueChanged(int)), m_musicPlayer, SLOT(onVolumeValueChanged(int)));
 
     QObject::connect(m_musicPlayer, SIGNAL(trackStarted(const Track&)), m_audioControls, SLOT(onTrackStarted(const Track&)));
+    QObject::connect(m_musicPlayer, SIGNAL(positionChanged(qint64)), m_audioControls, SLOT(onPositionChanged(qint64)));
     QObject::connect(m_musicPlayer, SIGNAL(trackFinished()), m_audioControls, SLOT(onTrackFinished()));
 }
 

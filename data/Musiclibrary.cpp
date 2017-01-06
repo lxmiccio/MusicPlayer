@@ -195,25 +195,3 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
 
     return track;
 }
-
-void MusicLibrary::debug()
-{
-    qDebug() << "*****";
-
-    foreach(Artist* i_artist, m_artists)
-    {
-        qDebug() << "****" << i_artist->name();
-
-        foreach(Album* i_album, i_artist->albums())
-        {
-            qDebug() << "***" << i_album->title();
-
-            foreach(Track *i_track, i_album->tracks())
-            {
-                qDebug() << "**" << i_track->title();
-            }
-        }
-    }
-
-    qDebug() << '*';
-}

@@ -11,6 +11,8 @@ MusicPlayer::MusicPlayer(QObject* parent) : QObject(parent)
     m_mediaPlayer->setPlaylist(m_mediaPlaylist);
     m_mediaPlayer->setVolume(100);
     QObject::connect(m_mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
+
+    QObject::connect(this, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted()));
 }
 
 QMediaPlayer* MusicPlayer::mediaPlayer() const
@@ -25,19 +27,26 @@ QMediaPlaylist* MusicPlayer::mediaPlaylist() const
 
 void MusicPlayer::onTrackSelected(const Track& track)
 {
-    m_playlist->removeAllTracks();
+    m_playlist->clear();
     m_mediaPlaylist->clear();
 
-    Track* trackSelected = const_cast<Track*>(&track);
+    const Album* album = track.album();
 
-    for(int i = track.album()->tracks().indexOf(trackSelected); i < track.album()->tracks().size(); i++)
+    if(album)
     {
-        m_playlist->addTrack(*track.album()->tracks().at(i));
-        m_mediaPlaylist->addMedia(QUrl::fromLocalFile(track.album()->tracks().at(i)->path()));
+        for(int i = album->tracks().indexOf(const_cast<Track*>(&track)); i < album->tracks().size(); i++)
+        {
+            m_playlist->addTrack(*album->tracks().at(i));
+            m_mediaPlaylist->addMedia(QUrl::fromLocalFile(album->tracks().at(i)->path()));
+        }
+    }
+    else
+    {
+        m_playlist->addTrack(track);
+        m_mediaPlaylist->addMedia(QUrl::fromLocalFile(track.path()));
     }
 
     emit trackStarted(track);
-    m_mediaPlayer->play();
 }
 
 void MusicPlayer::onBackwardClicked()
@@ -171,5 +180,19 @@ void MusicPlayer::onCurrentIndexChanged(int index)
 
 void MusicPlayer::onPositionChanged(qint64 position)
 {
-    emit positionChanged(position, m_mediaPlayer->duration());
+    emit positionChanged(position);
+
+    if(m_mediaPlaylist->playbackMode() == QMediaPlaylist::CurrentItemInLoop)
+    {
+        if(position >= m_mediaPlayer->duration())
+        {
+            emit trackFinished();
+            emit trackStarted(*m_playlist->tracks().at(m_mediaPlaylist->currentIndex()));
+        }
+    }
+}
+
+void MusicPlayer::onTrackStarted()
+{
+    m_mediaPlayer->play();
 }

@@ -3,7 +3,6 @@
 #include <QCommonStyle>
 #include <QResizeEvent>
 #include <QScrollBar>
-#include <QDebug>
 
 TrackList::TrackList(QWidget* parent) : QTableView(parent)
 {

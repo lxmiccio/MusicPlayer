@@ -1,19 +1,20 @@
-#ifndef SEEKSLIDER_H
-#define SEEKSLIDER_H
+#ifndef TRACKSLIDER_H
+#define TRACKSLIDER_H
 
 #include <QTime>
 #include <QTimer>
 
 #include "Slider.h"
 
-class SeekSlider : public Slider
+class TrackSlider : public Slider
 {
     Q_OBJECT
 
     public:
-        SeekSlider(Qt::Orientation orientation, QWidget* parent = 0);
+        TrackSlider(Qt::Orientation orientation, QWidget* parent = 0);
 
     public slots:
+        void onPositionChanged(qint64 position);
         void onTrackStarted(int duration);
         void onTrackFinished();
         void onTrackPaused();
@@ -29,4 +30,4 @@ class SeekSlider : public Slider
         QTimer* m_timer;
 };
 
-#endif // SEEKSLIDER_H
+#endif // TRACKSLIDER_H

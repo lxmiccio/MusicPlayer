@@ -34,16 +34,16 @@ class MusicPlayer : public QObject
 
     signals:
         void trackStarted(const Track& track);
+        void positionChanged(qint64 position);
         void trackFinished();
-        void positionChanged(qint64 position, qint64 duration);
 
     private slots:
         void onCurrentIndexChanged(int index);
         void onPositionChanged(qint64 position);
+        void onTrackStarted();
 
     private:
         Playlist* m_playlist;
-
         QMediaPlayer* m_mediaPlayer;
         QMediaPlaylist* m_mediaPlaylist;
 };

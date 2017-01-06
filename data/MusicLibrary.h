@@ -27,9 +27,7 @@ class MusicLibrary
         bool removeTrack(Track& track);
         bool removeTrack(const QString& trackTitle, const QString& albumTitle);
 
-        Track *addTrack(const QVariantMap& tags);
-
-        void debug();
+        Track* addTrack(const QVariantMap& tags);
 
     private:
         QVector<Artist*> m_artists;

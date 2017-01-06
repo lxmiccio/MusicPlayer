@@ -13,7 +13,7 @@ class Playlist
         const QVector<const Track*>& tracks() const;
         void addTrack(const Track& track);
         void removeTrack(const Track &track);
-        void removeAllTracks();
+        void clear();
 
     private:
         QVector<const Track*> c_tracks;

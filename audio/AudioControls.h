@@ -11,7 +11,7 @@
 
 #include "BackgroundWidget.h"
 #include "ImageButton.h"
-#include "SeekSlider.h"
+#include "TrackSlider.h"
 #include "Slider.h"
 #include "Track.h"
 
@@ -49,6 +49,8 @@ class AudioControls : public QWidget
         VolumeMode_t;
 
     private:
+        const Track* c_currentTrack;
+
         QVBoxLayout* m_verticalLayout;
 
         QHBoxLayout* m_upperHorizontalLayout;
@@ -68,7 +70,7 @@ class AudioControls : public QWidget
         QSpacerItem* m_lowerSpacer3;
         QLabel* m_elapsedTime;
         QSpacerItem* m_lowerSpacer4;
-        SeekSlider* m_musicSlider;
+        TrackSlider* m_trackSlider;
         QSpacerItem* m_lowerSpacer5;
         QLabel* m_remainingTime;
         QSpacerItem* m_lowerSpacer6;
@@ -85,6 +87,7 @@ class AudioControls : public QWidget
 
     public slots:
         void onTrackStarted(const Track& Track);
+        void onPositionChanged(qint64 position);
         void onTrackFinished();
 
     private slots:
@@ -105,6 +108,7 @@ class AudioControls : public QWidget
         void playClicked();
         void pauseClicked();
         void forwardClicked();
+        void positionChanged(qint64 position);
         void trackValueChanged(int position);
         void shuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
         void repeatClicked(AudioControls::RepeatMode_t repeatMode);

@@ -17,9 +17,6 @@
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 
-#include "loadplaylistwindow.h"
-#include "saveplaylistwindow.h"
-
 #include "ImageUtils.h"
 
 #include "TrackItem.h"
@@ -32,7 +29,7 @@
 MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : BackgroundWidget(parent)
 {
     QImage backgroud(":/images/tove-lo.jpg");
-    BackgroundWidget::setBackgroundImage(QPixmap::fromImage(ImageUtils::blur(backgroud, backgroud.rect(), 100, false, true)));
+    BackgroundWidget::setBackgroundImage(QPixmap::fromImage(ImageUtils::blur(backgroud, backgroud.rect(), 15, false, true)));
 
     c_stackedWidget = stackedWidget;
 
@@ -117,30 +114,3 @@ void MainWindow::onFileDropped(const QFileInfo& fileInfo)
         emit trackAdded(*track);
     }
 }
-
-#if 0
-void MainWindow::musicSliderMoved(int value)
-{
-    this->musicPlayer->getMediaPlayer()->setPosition((this->musicPlayer->getMediaPlayer()->duration() * value) / (this->musicSlider->maximum() - this->musicSlider->minimum()));
-}
-
-void MainWindow::musicSliderPressed()
-{
-    QObject::disconnect(this->musicPlayer->getMediaPlayer(), SIGNAL(positionChanged(qint64)), this, SLOT(mediaPlayerPositionChanged(qint64)));
-}
-
-void MainWindow::musicSliderReleased()
-{
-    QObject::connect(this->musicPlayer->getMediaPlayer(), SIGNAL(positionChanged(qint64)), this, SLOT(mediaPlayerPositionChanged(qint64)));
-}
-
-void MainWindow::volumeSliderMoved(int value)
-{
-    this->musicPlayer->getMediaPlayer()->setVolume(value);
-}
-
-void MainWindow::volumeValueChanged(int value)
-{
-    this->musicPlayer->getMediaPlayer()->setVolume(value);
-}
-#endif
