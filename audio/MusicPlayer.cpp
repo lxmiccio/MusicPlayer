@@ -26,6 +26,7 @@ QMediaPlaylist* MusicPlayer::mediaPlaylist() const
 void MusicPlayer::onTrackSelected(const Track& track)
 {
     m_playlist->removeAllTracks();
+    m_mediaPlaylist->clear();
 
     Track* trackSelected = const_cast<Track*>(&track);
 
@@ -36,6 +37,7 @@ void MusicPlayer::onTrackSelected(const Track& track)
     }
 
     emit trackStarted(track);
+    m_mediaPlayer->play();
 }
 
 void MusicPlayer::onBackwardClicked()
@@ -72,16 +74,9 @@ void MusicPlayer::onForwardClicked()
     }
 }
 
-void MusicPlayer::onTrackSliderMoved(int position, int minimum, int maximum)
+void MusicPlayer::onTrackValueChanged(int value)
 {
-    if(maximum - minimum != 0)
-    {
-        m_mediaPlayer->setPosition((m_mediaPlayer->duration() * position) / (maximum - minimum));
-    }
-    else
-    {
-        m_mediaPlayer->setPosition(0);
-    }
+    m_mediaPlayer->setPosition(value);
 }
 
 void MusicPlayer::onShuffleClicked(AudioControls::ShuffleMode_t shuffleMode)
@@ -166,13 +161,11 @@ void MusicPlayer::onVolumeValueChanged(int value)
 
 void MusicPlayer::onCurrentIndexChanged(int index)
 {
-    if(index < m_mediaPlaylist->mediaCount())
+    emit trackFinished();
+
+    if(index >= 0 && index < m_playlist->tracks().size())
     {
         emit trackStarted(*m_playlist->tracks().at(index));
-    }
-    else
-    {
-        emit playlistEnded();
     }
 }
 

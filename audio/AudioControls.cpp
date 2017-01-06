@@ -6,6 +6,10 @@
 
 AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
 {
+    m_repeatMode = AudioControls::REPEAT_NONE;
+    m_shuffleMode = AudioControls::SHUFFLE_OFF;
+    m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
+
     QFont font = QApplication::font();
     font.setPointSize(13);
 
@@ -67,19 +71,15 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
 
     m_lowerSpacer4 = new QSpacerItem(6, 0, QSizePolicy::Fixed);
 
-    m_musicTimeline = new QTimeLine();
-
     m_musicSlider = new SeekSlider(Qt::Horizontal);
-    m_musicSlider->setTimeLine(m_musicTimeline);
     m_musicSlider->setFixedHeight(6);
     m_musicSlider->setMinimumWidth(256);
     m_musicSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-    QObject::connect(m_musicSlider, SIGNAL(sliderMoved(int)), this, SLOT(onMusicSliderMoved(int)));
-    QObject::connect(m_musicSlider, SIGNAL(sliderPressed()), this, SLOT(onMusicSliderMoved(int)));
-    QObject::connect(m_musicSlider, SIGNAL(sliderReleased()), this, SLOT(onMusicSliderMoved(int)));
-    QObject::connect(m_musicSlider, SIGNAL(), this, SLOT(onMusicSliderMoved(int)));
-
-    QObject::connect(m_musicTimeline, SIGNAL(frameChanged(int)), m_musicSlider, SLOT(setValue(int)));
+    QObject::connect(m_musicSlider, SIGNAL(valueChanged(int)), this, SLOT(onTrackValueChanged(int)));
+    QObject::connect(this, SIGNAL(trackStarted(int)), m_musicSlider, SLOT(onTrackStarted(int)));
+    QObject::connect(this, SIGNAL(trackFinished()), m_musicSlider, SLOT(onTrackFinished()));
+    QObject::connect(this, SIGNAL(pauseClicked()), m_musicSlider, SLOT(onTrackPaused()));
+    QObject::connect(this, SIGNAL(playClicked()), m_musicSlider, SLOT(onTrackResumed()));
 
     m_lowerSpacer5 = new QSpacerItem(6, 0, QSizePolicy::Fixed);
 
@@ -111,7 +111,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
     m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume.svg"), QSize(17, 17), 1.0, Qt::gray), QIcon::Off, QIcon::Active);
     QObject::connect(m_volume, SIGNAL(clicked()), this, SLOT(onVolumeClicked()));
 
-    m_volumeSlider = new SeekSlider(Qt::Horizontal);
+    m_volumeSlider = new Slider(Qt::Horizontal);
     m_volumeSlider->setAcceptWheelEvents(true);
     m_volumeSlider->setLockScubbing(false);
     m_volumeSlider->setFixedHeight(6);
@@ -147,10 +147,6 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
     m_verticalLayout->addLayout(m_lowerHorizontalLayout);
 
     setLayout(m_verticalLayout);
-
-    m_repeatMode = AudioControls::REPEAT_NONE;
-    m_shuffleMode = AudioControls::SHUFFLE_OFF;
-    m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
 }
 
 AudioControls::~AudioControls()
@@ -203,29 +199,35 @@ void AudioControls::showPause(bool show)
 void AudioControls::onTrackStarted(const Track& track)
 {
     m_artist->show();
-    m_dash->show();
-    m_track->show();
-
     m_artist->setText(track.artist()->name());
+
+    m_dash->show();
+
+    m_track->show();
     m_track->setText(track.title());
 
-    m_musicTimeline->setCurrentTime(0);
-    m_musicTimeline->setCurveShape(QTimeLine::LinearCurve);
-    m_musicTimeline->setDuration(track.duration());
-    m_musicTimeline->setFrameRange(0, track.duration());
-    m_musicTimeline->setUpdateInterval(10000);
-    m_musicTimeline->start();
+    m_pause->show();
+    m_play->hide();
+
+    m_elapsedTime->setText("00:00");
+    m_remainingTime->setText(track.durationInMinutes());
+
+    emit trackStarted(track.duration());
 }
 
-void AudioControls::onPlaylistEnded()
+void AudioControls::onTrackFinished()
 {
     m_artist->hide();
     m_dash->hide();
     m_track->hide();
-}
 
-void AudioControls::onPositionChanged(qint64 position, qint64 duration)
-{
+    m_play->show();
+    m_pause->hide();
+
+    m_elapsedTime->hide();
+    m_remainingTime->hide();
+
+    emit trackFinished();
 }
 
 void AudioControls::onBackwardClicked()
@@ -254,35 +256,35 @@ void AudioControls::onForwardClicked()
     emit forwardClicked();
 }
 
-void AudioControls::onMusicSliderMoved(int position)
+void AudioControls::onTrackValueChanged(int value)
 {
-    emit musicSliderMoved(position, m_musicSlider->minimum(), m_musicSlider->maximum());
+    emit trackValueChanged(value);
 }
 
 void AudioControls::onShuffleClicked()
 {
     switch (m_shuffleMode)
     {
-    case AudioControls::SHUFFLE_OFF:
-    {
-        m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 1.0, Qt::white));
-        m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 0.5, Qt::gray), QIcon::Off, QIcon::Active);
-        m_shuffleMode = AudioControls::SHUFFLE_ON;
-        break;
-    }
+        case AudioControls::SHUFFLE_OFF:
+        {
+            m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 1.0, Qt::white));
+            m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 0.5, Qt::gray), QIcon::Off, QIcon::Active);
+            m_shuffleMode = AudioControls::SHUFFLE_ON;
+            break;
+        }
 
-    case AudioControls::SHUFFLE_ON:
-    {
-        m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 1.0, Qt::gray));
-        m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
-        m_shuffleMode = AudioControls::SHUFFLE_OFF;
-        break;
-    }
+        case AudioControls::SHUFFLE_ON:
+        {
+            m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 1.0, Qt::gray));
+            m_shuffle->setPixmap(ImageUtils::pixmap(QString(":/svg/shuffle.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
+            m_shuffleMode = AudioControls::SHUFFLE_OFF;
+            break;
+        }
 
-    default:
-    {
-        break;
-    }
+        default:
+        {
+            break;
+        }
     }
 
     emit shuffleClicked(m_shuffleMode);
@@ -292,34 +294,34 @@ void AudioControls::onRepeatClicked()
 {
     switch (m_repeatMode)
     {
-    case AudioControls::REPEAT_NONE:
-    {
-        m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-one.svg"), QSize(17, 17), 1.0, Qt::white));
-        m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-one.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
-        m_repeatMode = AudioControls::REPEAT_ONE;
-        break;
-    }
+        case AudioControls::REPEAT_NONE:
+        {
+            m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-one.svg"), QSize(17, 17), 1.0, Qt::white));
+            m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-one.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
+            m_repeatMode = AudioControls::REPEAT_ONE;
+            break;
+        }
 
-    case AudioControls::REPEAT_ONE:
-    {
-        m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-all.svg"), QSize(17, 17), 1.0, Qt::white));
-        m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-all.svg"), QSize(17, 17), 1.0, Qt::gray), QIcon::Off, QIcon::Active);
-        m_repeatMode = AudioControls::REPEAT_ALL;
-        break;
-    }
+        case AudioControls::REPEAT_ONE:
+        {
+            m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-all.svg"), QSize(17, 17), 1.0, Qt::white));
+            m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat-all.svg"), QSize(17, 17), 1.0, Qt::gray), QIcon::Off, QIcon::Active);
+            m_repeatMode = AudioControls::REPEAT_ALL;
+            break;
+        }
 
-    case AudioControls::REPEAT_ALL:
-    {
-        m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat.svg"), QSize(17, 17), 1.0, Qt::gray));
-        m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
-        m_repeatMode = AudioControls::REPEAT_NONE;
-        break;
-    }
+        case AudioControls::REPEAT_ALL:
+        {
+            m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat.svg"), QSize(17, 17), 1.0, Qt::gray));
+            m_repeat->setPixmap(ImageUtils::pixmap(QString(":/svg/repeat.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
+            m_repeatMode = AudioControls::REPEAT_NONE;
+            break;
+        }
 
-    default:
-    {
-        break;
-    }
+        default:
+        {
+            break;
+        }
     }
 
     emit repeatClicked(m_repeatMode);
@@ -329,32 +331,41 @@ void AudioControls::onVolumeClicked()
 {
     switch (m_volumeMode)
     {
-    case AudioControls::VOLUME_MUTED:
-    {
-        m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume.svg"), QSize(17, 17), 1.0, Qt::white));
-        m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume.svg"), QSize(17, 17), 1.0, Qt::gray), QIcon::Off, QIcon::Active);
-        m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
-        break;
-    }
+        case AudioControls::VOLUME_MUTED:
+        {
+            m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume.svg"), QSize(17, 17), 1.0, Qt::white));
+            m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume.svg"), QSize(17, 17), 1.0, Qt::gray), QIcon::Off, QIcon::Active);
+            m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
+            break;
+        }
 
-    case AudioControls::VOLUME_NOT_MUTED:
-    {
-        m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume-muted.svg"), QSize(17, 17), 1.0, Qt::gray));
-        m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume-muted.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
-        m_volumeMode = AudioControls::VOLUME_MUTED;
-        break;
-    }
+        case AudioControls::VOLUME_NOT_MUTED:
+        {
+            m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume-muted.svg"), QSize(17, 17), 1.0, Qt::gray));
+            m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume-muted.svg"), QSize(17, 17), 1.0, Qt::white), QIcon::Off, QIcon::Active);
+            m_volumeMode = AudioControls::VOLUME_MUTED;
+            break;
+        }
 
-    default:
-    {
-        break;
-    }
+        default:
+        {
+            break;
+        }
     }
 
     emit volumeClicked(m_volumeMode);
 }
 
-void AudioControls::onVolumeValueChanged(int position)
+void AudioControls::onVolumeValueChanged(int value)
 {
-    emit volumeValueChanged(position);
+    if(m_volumeMode == AudioControls::VOLUME_MUTED)
+    {
+        m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume.svg"), QSize(17, 17), 1.0, Qt::white));
+        m_volume->setPixmap(ImageUtils::pixmap(QString(":/svg/volume.svg"), QSize(17, 17), 1.0, Qt::gray), QIcon::Off, QIcon::Active);
+        m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
+
+        emit volumeClicked(m_volumeMode);
+    }
+
+    emit volumeValueChanged(value);
 }

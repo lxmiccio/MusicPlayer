@@ -1,33 +1,32 @@
 #ifndef SEEKSLIDER_H
 #define SEEKSLIDER_H
 
-#include <QSlider>
-#include <QTimeLine>
+#include <QTime>
+#include <QTimer>
 
-class SeekSlider : public QSlider
+#include "Slider.h"
+
+class SeekSlider : public Slider
 {
+    Q_OBJECT
+
     public:
         SeekSlider(Qt::Orientation orientation, QWidget* parent = 0);
 
-        void setAcceptWheelEvents(bool accept);
-        void setLockScubbing(bool lock);
-        void setTimeLine(QTimeLine* timeline);
-
-        static const quint8 HORIZONTAL_SLIDER_WIDTH = 10;
-
     public slots:
-        void setValue(int value);
+        void onTrackStarted(int duration);
+        void onTrackFinished();
+        void onTrackPaused();
+        void onTrackResumed();
 
-    protected:
-        virtual void mousePressEvent(QMouseEvent* event);
-        virtual void mouseMoveEvent(QMouseEvent* event);
-        virtual void wheelEvent(QWheelEvent* event);
+    private slots:
+        void onTimerTimeout();
+        void onValueChanged(int value);
 
     private:
-        bool m_acceptWheelEvents;
-        bool m_lockScrubbing;
-        bool m_scrubbing;
-        QTimeLine* m_timeLine;
+        quint64 m_elapsedTime;
+        QTime* m_time;
+        QTimer* m_timer;
 };
 
 #endif // SEEKSLIDER_H

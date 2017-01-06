@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     loadplaylistwindow.cpp \
     mainwindow.cpp \
     playlist.cpp \
-    saveplaylistwindow.cpp
+    saveplaylistwindow.cpp \
+    widgets/Slider.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -70,7 +71,8 @@ HEADERS  += albumview/AlbumView.h \
     loadplaylistwindow.h \
     mainwindow.h \
     playlist.h \
-    saveplaylistwindow.h
+    saveplaylistwindow.h \
+    widgets/Slider.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

@@ -6,13 +6,13 @@
 #include <QObject>
 #include <QSlider>
 #include <QSpacerItem>
-#include <QTimeLine>
 #include <QVBoxLayout>
 #include <QWidget>
 
 #include "BackgroundWidget.h"
 #include "ImageButton.h"
 #include "SeekSlider.h"
+#include "Slider.h"
 #include "Track.h"
 
 class AudioControls : public QWidget
@@ -68,7 +68,6 @@ class AudioControls : public QWidget
         QSpacerItem* m_lowerSpacer3;
         QLabel* m_elapsedTime;
         QSpacerItem* m_lowerSpacer4;
-        QTimeLine* m_musicTimeline;
         SeekSlider* m_musicSlider;
         QSpacerItem* m_lowerSpacer5;
         QLabel* m_remainingTime;
@@ -78,7 +77,7 @@ class AudioControls : public QWidget
         ImageButton* m_repeat;
         QSpacerItem* m_lowerSpacer8;
         ImageButton* m_volume;
-        SeekSlider* m_volumeSlider;
+        Slider* m_volumeSlider;
 
         RepeatMode_t m_repeatMode;
         ShuffleMode_t m_shuffleMode;
@@ -86,26 +85,27 @@ class AudioControls : public QWidget
 
     public slots:
         void onTrackStarted(const Track& Track);
-        void onPlaylistEnded();
-        void onPositionChanged(qint64 position, qint64 duration);
+        void onTrackFinished();
 
     private slots:
         void onBackwardClicked();
         void onPlayClicked();
         void onPauseClicked();
         void onForwardClicked();
-        void onMusicSliderMoved(int position);
+        void onTrackValueChanged(int value);
         void onShuffleClicked();
         void onRepeatClicked();
         void onVolumeClicked();
-        void onVolumeValueChanged(int position);
+        void onVolumeValueChanged(int value);
 
     signals:
+        void trackStarted(int duration);
+        void trackFinished();
         void backwardClicked();
         void playClicked();
         void pauseClicked();
         void forwardClicked();
-        void musicSliderMoved(int position, int minimum, int maximum);
+        void trackValueChanged(int position);
         void shuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
         void repeatClicked(AudioControls::RepeatMode_t repeatMode);
         void volumeClicked(AudioControls::VolumeMode_t volumeMode);

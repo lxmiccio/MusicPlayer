@@ -2,96 +2,60 @@
 
 #include <QMouseEvent>
 
-SeekSlider::SeekSlider(Qt::Orientation orientation, QWidget* parent) : QSlider(parent)
+SeekSlider::SeekSlider(Qt::Orientation orientation, QWidget* parent) : Slider(orientation, parent)
 {
-    m_acceptWheelEvents = false;
-    m_lockScrubbing = false;
-    m_scrubbing = false;
-    m_timeLine = NULL;
+    m_elapsedTime = 0;
 
-    setOrientation(orientation);
+    m_time = new QTime();
 
-    setStyleSheet(QString("QSlider::groove:horizontal {"
-                              "background: rgba(200, 200, 200, 50);"
-                              "border-radius: 3px 3px 3px 3px;"
-                              "margin-bottom: 0px;"
-                              "margin-left: 0px;"
-                              "margin-right: 0px;"
-                              "margin-top: 0px;"
-                          "}"
-                          "QSlider::sub-page:horizontal {"
-                              "background: white;"
-                              "margin-bottom: 1px;"
-                              "margin-left: 1px;"
-                              "margin-right: 1px;"
-                              "margin-top: 1px;"
-                          "}"));
+    m_timer = new QTimer();
+    QObject::connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+
+    QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(onValueChanged(int)));
 }
 
-void SeekSlider::setAcceptWheelEvents(bool accept)
+void SeekSlider::onTrackStarted(int duration)
 {
-    m_acceptWheelEvents = accept;
+    setRange(0, duration * 1000);
+
+    m_time->start();
+    m_timer->start(25);
 }
 
-void SeekSlider::setLockScubbing(bool lock)
+void SeekSlider::onTrackFinished()
 {
-    m_lockScrubbing = lock;
+    setValue(0);
+
+    m_elapsedTime = 0;
+    m_timer->stop();
 }
 
-void SeekSlider::setTimeLine(QTimeLine *timeline)
+void SeekSlider::onTrackPaused()
 {
-    m_timeLine = timeline;
-}
-#include <QDebug>
-void SeekSlider::setValue(int value)
-{
-    if(m_timeLine && sender() == m_timeLine)
-    {
-        qDebug() << "time";
-        blockSignals(true);
-        QSlider::setValue(value);
-        blockSignals(false);
-    }
-    else
-    {
-        qDebug() << "notime";
-        QSlider::setValue(value);
-    }
+    m_elapsedTime += m_time->restart();
+    m_timer->stop();
 }
 
-void SeekSlider::mouseMoveEvent(QMouseEvent* event)
+void SeekSlider::onTrackResumed()
 {
-    if(m_scrubbing)
-    {
-        if(m_lockScrubbing && event->pos().x() > width())
-        {
-            m_scrubbing = false;
-        }
-        QSlider::mouseMoveEvent(event);
-    }
+    m_time->restart();
+    m_timer->start();
 }
 
-void SeekSlider::mousePressEvent(QMouseEvent* event)
+void SeekSlider::onTimerTimeout()
 {
-    if(event->button() == Qt::LeftButton)
-    {
-        m_scrubbing = true;
-        QSlider::mousePressEvent(new QMouseEvent(QEvent::MouseButtonRelease, event->pos(), event->globalPos(), Qt::MidButton, Qt::MidButton, event->modifiers()));
-    }
-    else
-    {
-        QSlider::mousePressEvent(event);
-    }
+    m_elapsedTime += m_time->restart();
+
+    blockSignals(true);
+    QSlider::setValue(m_elapsedTime);
+    blockSignals(false);
 }
 
-void SeekSlider::wheelEvent(QWheelEvent* event)
+void SeekSlider::onValueChanged(int value)
 {
-    if(m_acceptWheelEvents)
-    {
-        QAbstractSlider::wheelEvent(event);
-    }
-    else
-    {
-        event->ignore();
-    }
+    m_timer->stop();
+
+    m_elapsedTime = value;
+    m_time->restart();
+    m_timer->start();
 }

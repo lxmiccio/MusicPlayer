@@ -26,7 +26,7 @@ class MusicPlayer : public QObject
         void onPlayClicked();
         void onPauseClicked();
         void onForwardClicked();
-        void onTrackSliderMoved(int position, int minimum, int maximum);
+        void onTrackValueChanged(int value);
         void onShuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
         void onRepeatClicked(AudioControls::RepeatMode_t repeatMode);
         void onVolumeClicked(AudioControls::VolumeMode_t volumeMode);
@@ -34,7 +34,7 @@ class MusicPlayer : public QObject
 
     signals:
         void trackStarted(const Track& track);
-        void playlistEnded();
+        void trackFinished();
         void positionChanged(qint64 position, qint64 duration);
 
     private slots:

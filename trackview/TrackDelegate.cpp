@@ -26,12 +26,12 @@ void TrackDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
 
         if(index.column() == TrackList::TRACK)
         {
-            rect = QRect(QPoint(option.rect.topLeft().x() + SeekSlider::HORIZONTAL_SLIDER_WIDTH, option.rect.topLeft().y()), option.rect.bottomRight());
+            rect = QRect(QPoint(option.rect.topLeft().x() + 10, option.rect.topLeft().y()), option.rect.bottomRight());
             painter->fillRect(rect, QColor(0, 0, 0, 10));
         }
         else if(index.column() == TrackList::DURATION)
         {
-            rect = QRect(option.rect.topLeft(), QPoint(option.rect.bottomRight().x() - SeekSlider::HORIZONTAL_SLIDER_WIDTH, option.rect.bottomRight().y()));
+            rect = QRect(option.rect.topLeft(), QPoint(option.rect.bottomRight().x() - 10, option.rect.bottomRight().y()));
             painter->fillRect(rect, QColor(0, 0, 0, 10));
         }
         else
