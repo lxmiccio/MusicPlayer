@@ -42,11 +42,15 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
     m_trackView = new TrackView(this);
-    QObject::connect(m_trackView, SIGNAL(doubleClicked(const Track&)), this, SLOT(itemDoubleClicked(const Track&)));
+    QObject::connect(m_trackView, SIGNAL(doubleClicked(const Track&)), this, SLOT(onItemDoubleClicked(const Track&)));
     QObject::connect(m_trackView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
 
-    m_audioEngine = new AudioEngine(this);
-    QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioEngine, SLOT(onTrackSelected(const Track&)));
+    QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_trackView, SLOT(onTrackStarted(const Track&)));
+
+
+    m_audioManager = new AudioManager(this);
+    QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioManager, SLOT(onTrackSelected(const Track&)));
+    QObject::connect(m_audioManager, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
 
     m_leftPanel = new LeftPanel();
 
@@ -62,21 +66,15 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     m_layout->setSpacing(0);
     m_trackView->hide();
     m_layout->addLayout(m_horLayout);
-    m_layout->addWidget(m_audioEngine->audioControls());
+    m_layout->addWidget(m_audioManager);
     setLayout(m_layout);
 
     m_musicLibrary = new MusicLibrary();
-
-    m_musicPlayer = new MusicPlayer();
 }
 
-void MainWindow::itemDoubleClicked(const Track& track)
+void MainWindow::onItemDoubleClicked(const Track& track)
 {
     emit trackClicked(track);
-
-    //    Playlist* p = new Playlist("temp");
-    //    p->addTrack(track);
-    //    this->m_musicPlayer->setPlaylist(*p);
 }
 
 void MainWindow::coverClicked()
@@ -90,9 +88,16 @@ void MainWindow::onCoverClicked(const Album& album)
     m_trackView->show();
     m_trackView->onAlbumSelected(album);
     m_scrollArea->hide();
+}
 
-    foreach(Track* i_track, album.tracks())
-        qDebug() << i_track->title();
+void MainWindow::onTrackSelected(const Track& track)
+{
+    //emit trackSelected(track);
+}
+
+void MainWindow::onTrackStarted(const Track& track)
+{
+    emit trackStarted(track);
 }
 
 void MainWindow::onFileDropped(const QFileInfo& fileInfo)
@@ -105,12 +110,6 @@ void MainWindow::onFileDropped(const QFileInfo& fileInfo)
 
     if(track)
     {
-        TrackItem* trackItem = new TrackItem(track);
-        //this->model->appendRow(ti->getItems());
-
-        //this->m_musicLibrary->debug();
-        //this->items.push_back(ti);
-
         emit trackAdded(*track);
     }
 }

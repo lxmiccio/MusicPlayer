@@ -11,6 +11,14 @@ TrackView::TrackView(QWidget* parent) : QWidget(parent)
     m_trackAlbum = new TrackAlbum();
     QObject::connect(m_trackAlbum, SIGNAL(coverClicked()), this, SLOT(onCoverClicked()));
 
+    m_trackLyrics = new TrackLyrics();
+    m_trackLyrics->setFixedWidth(500);
+    QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_trackLyrics, SLOT(onTrackStarted(const Track&)));
+
+    QVBoxLayout* m_leftLayout = new QVBoxLayout();
+    m_leftLayout->addWidget(m_trackAlbum);
+    m_leftLayout->addWidget(m_trackLyrics);
+
     m_spacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_model = new TrackModel();
@@ -26,7 +34,7 @@ TrackView::TrackView(QWidget* parent) : QWidget(parent)
 
     m_layout = new QHBoxLayout();
     m_layout->setContentsMargins(40, 16, 40, 12);
-    m_layout->addWidget(m_trackAlbum);
+    m_layout->addLayout(m_leftLayout);
     m_layout->addItem(m_spacer);
     m_layout->addWidget(m_trackList);
 
@@ -62,6 +70,11 @@ void TrackView::onAlbumSelected(const Album& album)
     }
 
     m_trackAlbum->setAlbum(&album);
+}
+
+void TrackView::onTrackStarted(const Track& track)
+{
+    emit trackStarted(track);
 }
 
 void TrackView::onDoubleClicked(const QModelIndex& index)

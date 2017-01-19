@@ -14,8 +14,6 @@ TEMPLATE = app
 SOURCES += albumview/AlbumView.cpp \
     albumview/Cover.cpp \
     audio/AudioControls.cpp \
-    audio/AudioEngine.cpp \
-    audio/MusicPlayer.cpp \
     audio/TrackSlider.cpp \
     data/Album.cpp \
     data/Artist.cpp \
@@ -40,13 +38,14 @@ SOURCES += albumview/AlbumView.cpp \
     main.cpp \
     mainwindow.cpp \
     playlist.cpp \
-    utils/Utils.cpp
+    utils/Utils.cpp \
+    trackview/TrackLyrics.cpp \
+    audio/AudioManager.cpp \
+    audio/AudioEngine.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
     audio/AudioControls.h \
-    audio/AudioEngine.h \
-    audio/MusicPlayer.h \
     audio/TrackSlider.h \
     data/Album.h \
     data/Artist.h \
@@ -70,7 +69,10 @@ HEADERS  += albumview/AlbumView.h \
     widgets/StackedWidget.h \
     mainwindow.h \
     playlist.h \
-    utils/Utils.h
+    utils/Utils.h \
+    trackview/TrackLyrics.h \
+    audio/AudioManager.h \
+    audio/AudioEngine.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

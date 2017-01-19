@@ -8,6 +8,7 @@ Slider::Slider(Qt::Orientation orientation, QWidget* parent) : QSlider(parent)
     m_lockScrubbing = false;
     m_scrubbing = false;
 
+    setContextMenuPolicy(Qt::NoContextMenu);
     setOrientation(orientation);
 
     setStyleSheet("QSlider::groove:horizontal {"

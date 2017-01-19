@@ -6,10 +6,9 @@ TrackSlider::TrackSlider(Qt::Orientation orientation, QWidget* parent) : Slider(
 
     m_elapsedTime = 0;
     m_time = new QTime();
-
     m_timer = new QTimer();
-    QObject::connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
 
+    QObject::connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
     QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(onValueChanged(int)));
 }
 
@@ -17,6 +16,7 @@ void TrackSlider::onTrackStarted(int duration)
 {
     setRange(0, duration * 1000);
 
+    m_ignoreTimeout = true;
     m_time->start();
     m_timer->start(0);
 }
@@ -43,11 +43,14 @@ void TrackSlider::onTrackResumed()
 
 void TrackSlider::onTimerTimeout()
 {
-    m_elapsedTime += m_time->restart();
+    if(!m_ignoreTimeout)
+    {
+        m_elapsedTime += m_time->restart();
 
-    blockSignals(true);
-    QSlider::setValue(m_elapsedTime);
-    blockSignals(false);
+        blockSignals(true);
+        QSlider::setValue(m_elapsedTime);
+        blockSignals(false);
+    }
 }
 
 void TrackSlider::onValueChanged(int value)
@@ -59,6 +62,11 @@ void TrackSlider::onValueChanged(int value)
 void TrackSlider::onPositionChanged(qint64 position)
 {
     m_elapsedTime = position;
+
+    if(position > 0 && m_ignoreTimeout)
+    {
+        m_ignoreTimeout = false;
+    }
 
     blockSignals(true);
     QSlider::setValue(m_elapsedTime);

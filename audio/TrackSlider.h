@@ -26,6 +26,7 @@ class TrackSlider : public Slider
 
     private:
         quint64 m_elapsedTime;
+        bool m_ignoreTimeout;
         QTime* m_time;
         QTimer* m_timer;
 };

@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QStandardItemModel>
+#include <QVBoxLayout>
 
 #include "BackgroundWidget.h"
 #include "Track.h"
@@ -11,6 +12,7 @@
 #include "TrackDelegate.h"
 #include "TrackItem.h"
 #include "TrackList.h"
+#include "TrackLyrics.h"
 #include "TrackModel.h"
 
 class TrackView : public QWidget
@@ -25,10 +27,12 @@ class TrackView : public QWidget
 
     public slots:
         void onAlbumSelected(const Album& album);
+        void onTrackStarted(const Track& track);
 
     signals:
         void doubleClicked(const Track&);
         void coverClicked();
+        void trackStarted(const Track&);
 
     private slots:
         void onDoubleClicked(const QModelIndex& index);
@@ -38,6 +42,7 @@ class TrackView : public QWidget
         void clear();
 
         TrackAlbum* m_trackAlbum;
+        TrackLyrics* m_trackLyrics;
 
         QSpacerItem* m_spacer;
 
@@ -47,6 +52,7 @@ class TrackView : public QWidget
 
         QVector<TrackItem*> m_items;
 
+        QVBoxLayout* m_leftLayout;
         QHBoxLayout* m_layout;
 };
 

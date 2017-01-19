@@ -18,7 +18,7 @@ TrackAlbum::TrackAlbum(QWidget* parent) : QWidget(parent)
     m_spacer1 = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_albumTitle = new QLabel();
-    m_albumTitle->setAlignment(Qt::AlignCenter);
+    m_albumTitle->setAlignment(Qt::AlignTop | Qt::AlignCenter);
     m_albumTitle->setFont(font);
     m_albumTitle->setWordWrap(true);
     m_albumTitle->setStyleSheet(QString("color: white;"));
@@ -31,7 +31,7 @@ TrackAlbum::TrackAlbum(QWidget* parent) : QWidget(parent)
     m_artistName->setWordWrap(true);
     m_artistName->setStyleSheet(QString("color: white;"));
 
-    m_spacer3 = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+    m_spacer3 = new QSpacerItem(0, 40, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_layout = new QVBoxLayout();
     m_layout->setMargin(0);

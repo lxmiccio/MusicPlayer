@@ -10,7 +10,7 @@
 
 
 
-#include "AudioEngine.h"
+#include "AudioManager.h"
 #include "playlist.h"
 #include "Track.h"
 #include "MusicLibrary.h"
@@ -44,14 +44,12 @@ private:
 
     TrackView* m_trackView;
 
-    AudioEngine* m_audioEngine;
+    AudioManager* m_audioManager;
 
     QHBoxLayout* m_horLayout;
     QVBoxLayout* m_layout;
 
     MusicLibrary* m_musicLibrary;
-
-    MusicPlayer* m_musicPlayer;
 
     LeftPanel* m_leftPanel;
 
@@ -59,16 +57,19 @@ public:
     MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
 
 public slots:
-    void onCoverClicked(const Album& album);
-
     void onFileDropped(const QFileInfo& fileInfo);
+    void onCoverClicked(const Album& album);
+    void onItemDoubleClicked(const Track& track);
+    void onTrackSelected(const Track& track);
+    void onTrackStarted(const Track& track);
     void coverClicked();
 
-    void itemDoubleClicked(const Track& track);
+
 
 signals:
     void trackClicked(const Track& track);
     void trackAdded(const Track& track);
+    void trackStarted(const Track& track);
 };
 
 #endif // MAINWINDOW_H

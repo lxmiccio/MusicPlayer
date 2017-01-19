@@ -21,6 +21,7 @@ ScrollArea::ScrollArea(QWidget* parent) : QScrollArea(parent)
                             "background: transparent;"
                           "}"));
 
+    verticalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
     verticalScrollBar()->setStyle(new QCommonStyle);
     verticalScrollBar()->setStyleSheet(QString("QScrollBar:vertical {"
                                                    "background: transparent;"

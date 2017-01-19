@@ -23,9 +23,6 @@ class AudioControls : public QWidget
         explicit AudioControls(QWidget* parent = 0);
         ~AudioControls();
 
-        void showPlay(bool show);
-        void showPause(bool show);
-
         typedef enum ShuffleMode
         {
             SHUFFLE_OFF = 0,
@@ -48,8 +45,42 @@ class AudioControls : public QWidget
         }
         VolumeMode_t;
 
+    public slots:
+        void onPositionChanged(qint64 position);
+        void onTrackStarted(const Track& Track);
+        void onTrackFinished();
+
+    private slots:
+        void onBackwardClicked();
+        void onPlayClicked();
+        void onPauseClicked();
+        void onForwardClicked();
+        void onTrackValueChanged(int value);
+        void onShuffleClicked();
+        void onRepeatClicked();
+        void onVolumeClicked();
+        void onVolumeValueChanged(int value);
+
+    signals:
+        void trackStarted(int duration);
+        void trackFinished();
+        void backwardClicked();
+        void playClicked();
+        void pauseClicked();
+        void forwardClicked();
+        void positionChanged(qint64 position);
+        void trackValueChanged(int position);
+        void shuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
+        void repeatClicked(AudioControls::RepeatMode_t repeatMode);
+        void volumeClicked(AudioControls::VolumeMode_t volumeMode);
+        void volumeValueChanged(int value);
+
     private:
         const Track* c_currentTrack;
+
+        RepeatMode_t m_repeatMode;
+        ShuffleMode_t m_shuffleMode;
+        VolumeMode_t m_volumeMode;
 
         QVBoxLayout* m_verticalLayout;
 
@@ -80,40 +111,6 @@ class AudioControls : public QWidget
         QSpacerItem* m_lowerSpacer8;
         ImageButton* m_volume;
         Slider* m_volumeSlider;
-
-        RepeatMode_t m_repeatMode;
-        ShuffleMode_t m_shuffleMode;
-        VolumeMode_t m_volumeMode;
-
-    public slots:
-        void onTrackStarted(const Track& Track);
-        void onPositionChanged(qint64 position);
-        void onTrackFinished();
-
-    private slots:
-        void onBackwardClicked();
-        void onPlayClicked();
-        void onPauseClicked();
-        void onForwardClicked();
-        void onTrackValueChanged(int value);
-        void onShuffleClicked();
-        void onRepeatClicked();
-        void onVolumeClicked();
-        void onVolumeValueChanged(int value);
-
-    signals:
-        void trackStarted(int duration);
-        void trackFinished();
-        void backwardClicked();
-        void playClicked();
-        void pauseClicked();
-        void forwardClicked();
-        void positionChanged(qint64 position);
-        void trackValueChanged(int position);
-        void shuffleClicked(AudioControls::ShuffleMode_t shuffleMode);
-        void repeatClicked(AudioControls::RepeatMode_t repeatMode);
-        void volumeClicked(AudioControls::VolumeMode_t volumeMode);
-        void volumeValueChanged(int value);
 };
 
 #endif // AUDIOCONTROLS_H
