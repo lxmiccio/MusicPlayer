@@ -5,7 +5,7 @@
 
 class TrackList : public QTableView
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit TrackList(QWidget* parent = 0);

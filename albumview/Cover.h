@@ -11,7 +11,7 @@
 
 class Cover : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit Cover(const Album* album, QWidget* parent = 0);

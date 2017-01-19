@@ -87,7 +87,9 @@ INCLUDEPATH += $$PWD/widgets
 
 RESOURCES += resources.qrc
 
-INCLUDEPATH += $$PWD/taglib/include
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Libraries/taglib/lib/ -lTagLib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../Libraries/taglib/lib/ -lTagLibd
+else:unix: LIBS += -L$$PWD/../../../../Libraries/taglib/lib/ -lTagLib
 
-LIBS += -L$$PWD/taglib/lib -ltaglib
-
+INCLUDEPATH += $$PWD/../../../../Libraries/taglib/include
+DEPENDPATH += $$PWD/../../../../Libraries/taglib/include

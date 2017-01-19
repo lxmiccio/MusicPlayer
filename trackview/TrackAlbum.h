@@ -11,7 +11,7 @@
 
 class TrackAlbum : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit TrackAlbum(QWidget* parent = 0);

@@ -11,7 +11,7 @@
 
 class AudioEngine : public QObject
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         AudioEngine(QObject* parent = 0);

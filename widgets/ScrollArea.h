@@ -6,7 +6,7 @@
 
 class ScrollArea : public QScrollArea
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit ScrollArea(QWidget* parent = 0);

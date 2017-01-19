@@ -12,19 +12,19 @@ Slider::Slider(Qt::Orientation orientation, QWidget* parent) : QSlider(parent)
     setOrientation(orientation);
 
     setStyleSheet("QSlider::groove:horizontal {"
-                      "background: rgba(200, 200, 200, 50);"
-                      "border-radius: 3px 3px 3px 3px;"
-                      "margin-bottom: 0px;"
-                      "margin-left: 0px;"
-                      "margin-right: 0px;"
-                      "margin-top: 0px;"
+                  "background: rgba(200, 200, 200, 50);"
+                  "border-radius: 3px 3px 3px 3px;"
+                  "margin-bottom: 0px;"
+                  "margin-left: 0px;"
+                  "margin-right: 0px;"
+                  "margin-top: 0px;"
                   "}"
                   "QSlider::sub-page:horizontal {"
-                      "background: white;"
-                      "margin-bottom: 1px;"
-                      "margin-left: 1px;"
-                      "margin-right: 1px;"
-                      "margin-top: 1px;"
+                  "background: white;"
+                  "margin-bottom: 1px;"
+                  "margin-left: 1px;"
+                  "margin-right: 1px;"
+                  "margin-top: 1px;"
                   "}");
 }
 

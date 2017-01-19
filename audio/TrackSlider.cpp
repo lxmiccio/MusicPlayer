@@ -61,12 +61,12 @@ void TrackSlider::onValueChanged(int value)
 
 void TrackSlider::onPositionChanged(qint64 position)
 {
-    m_elapsedTime = position;
-
     if(position > 0 && m_ignoreTimeout)
     {
         m_ignoreTimeout = false;
     }
+
+    m_elapsedTime = position;
 
     blockSignals(true);
     QSlider::setValue(m_elapsedTime);

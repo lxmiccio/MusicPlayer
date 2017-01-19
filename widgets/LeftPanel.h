@@ -8,7 +8,7 @@
 
 class LeftPanel : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit LeftPanel(QWidget* parent = 0);

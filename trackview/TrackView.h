@@ -17,7 +17,7 @@
 
 class TrackView : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit TrackView(QWidget* parent = 0);

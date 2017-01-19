@@ -6,32 +6,32 @@
 
 class ClickableLabel : public QLabel
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    explicit ClickableLabel(QWidget* parent = 0);
-    virtual ~ClickableLabel();
+    public:
+        explicit ClickableLabel(QWidget* parent = 0);
+        virtual ~ClickableLabel();
 
-    void setOpacity(float opacity);
+        void setOpacity(float opacity);
 
-signals:
-    void clicked();
-    void resized(const QPoint& delta);
+    signals:
+        void clicked();
+        void resized(const QPoint& delta);
 
-protected:
-    virtual void mouseMoveEvent(QMouseEvent* event);
-    virtual void mousePressEvent(QMouseEvent* event);
-    virtual void mouseReleaseEvent(QMouseEvent* event);
-    virtual void paintEvent(QPaintEvent* event);
+    protected:
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void mouseReleaseEvent(QMouseEvent* event);
+        virtual void paintEvent(QPaintEvent* event);
 
-private:
-    float m_opacity;
+    private:
+        float m_opacity;
 
-    bool m_moved;
-    QPoint m_dragPoint;
+        bool m_moved;
+        QPoint m_dragPoint;
 
-    bool m_pressed;
-    QTime m_time;
+        bool m_pressed;
+        QTime m_time;
 };
 
 #endif // CLICKABLELABEL_H

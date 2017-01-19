@@ -10,7 +10,7 @@
 
 class TrackLyrics : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         TrackLyrics(QWidget* parent = 0);

@@ -8,7 +8,7 @@
 
 class TrackSlider : public Slider
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         TrackSlider(Qt::Orientation orientation, QWidget* parent = 0);

@@ -7,12 +7,14 @@
 
 AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
 {
-    m_repeatMode = AudioControls::REPEAT_NONE;
-    m_shuffleMode = AudioControls::SHUFFLE_OFF;
-    m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
+    QSizePolicy sizePolicy;
 
     QFont font = QApplication::font();
     font.setPointSize(13);
+
+    m_repeatMode = AudioControls::REPEAT_NONE;
+    m_shuffleMode = AudioControls::SHUFFLE_OFF;
+    m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
 
     m_upperSpacer1 = new QSpacerItem(0, 0, QSizePolicy::Expanding);
 
@@ -25,9 +27,9 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
     m_dash->hide();
     m_dash->setFont(font);
     m_dash->setStyleSheet(QString("color: white;"));
-    QSizePolicy dashSizePolicy = m_dash->sizePolicy();
-    dashSizePolicy.setRetainSizeWhenHidden(true);
-    m_dash->setSizePolicy(dashSizePolicy);
+    sizePolicy = m_dash->sizePolicy();
+    sizePolicy.setRetainSizeWhenHidden(true);
+    m_dash->setSizePolicy(sizePolicy);
 
     m_track = new QLabel();
     m_track->hide();
@@ -73,9 +75,9 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
     m_elapsedTime->setFont(font);
     m_elapsedTime->setStyleSheet(QString("color: white; margin-top: -2px;"));
     m_elapsedTime->setMinimumWidth(30);
-    QSizePolicy elapsedTimeSizePolicy = m_elapsedTime->sizePolicy();
-    elapsedTimeSizePolicy.setRetainSizeWhenHidden(true);
-    m_elapsedTime->setSizePolicy(elapsedTimeSizePolicy);
+    sizePolicy = m_elapsedTime->sizePolicy();
+    sizePolicy.setRetainSizeWhenHidden(true);
+    m_elapsedTime->setSizePolicy(sizePolicy);
 
     m_lowerSpacer4 = new QSpacerItem(6, 0, QSizePolicy::Fixed);
 
@@ -84,9 +86,9 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
     m_trackSlider->setMinimumWidth(256);
     m_trackSlider->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
     m_trackSlider->setValue(0);
-    QSizePolicy trackSliderSizePolicy = m_trackSlider->sizePolicy();
-    trackSliderSizePolicy.setRetainSizeWhenHidden(true);
-    m_trackSlider->setSizePolicy(trackSliderSizePolicy);
+    sizePolicy = m_trackSlider->sizePolicy();
+    sizePolicy.setRetainSizeWhenHidden(true);
+    m_trackSlider->setSizePolicy(sizePolicy);
 
     m_lowerSpacer5 = new QSpacerItem(6, 0, QSizePolicy::Fixed);
 
@@ -95,9 +97,9 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
     m_remainingTime->setFont(font);
     m_remainingTime->setStyleSheet(QString("color: white; margin-top: -2px;"));
     m_remainingTime->setMinimumWidth(30);
-    QSizePolicy remainingTimeSizePolicy = m_remainingTime->sizePolicy();
-    remainingTimeSizePolicy.setRetainSizeWhenHidden(true);
-    m_remainingTime->setSizePolicy(remainingTimeSizePolicy);
+    sizePolicy = m_remainingTime->sizePolicy();
+    sizePolicy.setRetainSizeWhenHidden(true);
+    m_remainingTime->setSizePolicy(sizePolicy);
 
     m_lowerSpacer6 = new QSpacerItem(36, 0, QSizePolicy::Fixed);
 
@@ -182,9 +184,9 @@ void AudioControls::onPositionChanged(qint64 position)
     if(c_currentTrack)
     {
         quint16 elapsedTime = position / 1000;
-        quint16 remainingTime = c_currentTrack->duration() - elapsedTime;
-
         m_elapsedTime->setText(QString("%1").arg(Utils::secondsToMinutes(elapsedTime)));
+
+        quint16 remainingTime = c_currentTrack->duration() - elapsedTime;
         m_remainingTime->setText(QString("%1").arg(Utils::secondsToMinutes(remainingTime)));
     }
 

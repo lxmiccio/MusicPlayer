@@ -9,7 +9,7 @@
 
 class AudioManager : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         AudioManager(QWidget* parent = 0);

@@ -6,55 +6,55 @@
 
 class ElidedLabel : public QFrame
 {
-  Q_OBJECT
+        Q_OBJECT
 
-  public:
-    explicit ElidedLabel(QWidget* parent = 0, Qt::WindowFlags flags = 0);
-    explicit ElidedLabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    public:
+        explicit ElidedLabel(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+        explicit ElidedLabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
-    Qt::Alignment alignment() const;
-    void setAlignment(Qt::Alignment alignment);
+        Qt::Alignment alignment() const;
+        void setAlignment(Qt::Alignment alignment);
 
-    Qt::TextElideMode elideMode() const;
-    void setElideMode(Qt::TextElideMode elideMode);
+        Qt::TextElideMode elideMode() const;
+        void setElideMode(Qt::TextElideMode elideMode);
 
-    void setFont(const QFont& font);
+        void setFont(const QFont& font);
 
-    int margin() const;
-    void setMargin(int margin);
+        int margin() const;
+        void setMargin(int margin);
 
-    QString text() const;
-    void setText(const QString& text);
+        QString text() const;
+        void setText(const QString& text);
 
-    bool wordWrap();
-    void setWordWrap(bool wordWrap);
+        bool wordWrap();
+        void setWordWrap(bool wordWrap);
 
-    virtual QSize sizeHint() const;
-    virtual QSize minimumSizeHint() const;
+        virtual QSize sizeHint() const;
+        virtual QSize minimumSizeHint() const;
 
-  public slots:
-    //void setWordWrap(bool wordWrap);
+    public slots:
+        //void setWordWrap(bool wordWrap);
 
-  signals:
-    void clicked();
-    void textChanged(const QString& text);
+    signals:
+        void clicked();
+        void textChanged(const QString& text);
 
-  protected:
-    virtual void changeEvent(QEvent* event);
-    virtual void mousePressEvent(QMouseEvent* event);
-    virtual void mouseReleaseEvent(QMouseEvent* event);
-    virtual void paintEvent(QPaintEvent* event);
+    protected:
+        virtual void changeEvent(QEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void mouseReleaseEvent(QMouseEvent* event);
+        virtual void paintEvent(QPaintEvent* event);
 
-  private:
-    QString m_text;
+    private:
+        QString m_text;
 
-    Qt::Alignment m_alignment;
-    Qt::TextElideMode m_elideMode;
+        Qt::Alignment m_alignment;
+        Qt::TextElideMode m_elideMode;
 
-    QTime m_time;
+        QTime m_time;
 
-    int m_margin;
-    bool m_wordWrap;
+        int m_margin;
+        bool m_wordWrap;
 };
 
 #endif // ELIDEDLABEL_H
