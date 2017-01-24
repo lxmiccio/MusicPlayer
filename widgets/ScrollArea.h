@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include <QScrollArea>
 
+#include "Track.h"
+
 class ScrollArea : public QScrollArea
 {
         Q_OBJECT
@@ -11,9 +13,14 @@ class ScrollArea : public QScrollArea
     public:
         explicit ScrollArea(QWidget* parent = 0);
 
+    private slots:
+        void onTrackLoaded(const Track& track);
+
     signals:
-        void fileDropped(const QFileInfo& fileInfo);
+        void flacDropped(const QFileInfo& fileInfo);
+        void mp3Dropped(const QFileInfo& fileInfo);
         void resized(QResizeEvent* event);
+        void trackLoaded(const Track& track);
 
     protected:
         virtual void dragEnterEvent(QDragEnterEvent* event);

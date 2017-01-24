@@ -1,11 +1,13 @@
 #include "ScrollArea.h"
 
 #include <QCommonStyle>
+#include <QDebug>
 #include <QDirIterator>
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QScrollBar>
-
+#include <unistd.h>
+#include "LoaderThread.h"
 #include "Track.h"
 
 ScrollArea::ScrollArea(QWidget* parent) : QScrollArea(parent)
@@ -52,29 +54,44 @@ void ScrollArea::dropEvent(QDropEvent* event)
     QList<QUrl> urls = event->mimeData()->urls();
     QListIterator<QUrl> urlIterator(urls);
 
+    LoaderThread* loaderThread = new LoaderThread();
+    QThread* thread = new QThread();
+
+    QObject::connect(thread, SIGNAL(finished()), loaderThread, SLOT(deleteLater()));
+    QObject::connect(this, SIGNAL(flacDropped(QFileInfo)), loaderThread, SLOT(loadFile(QFileInfo)));
+    QObject::connect(loaderThread, SIGNAL(fileLoaded(Track)), this, SLOT(onTrackLoaded(Track)));
+
+    loaderThread->moveToThread(thread);
+    thread->start();
+
+    emit this->flacDropped(urls.at(0).toLocalFile());
+
+#if 0
     while(urlIterator.hasNext())
     {
+        LoaderThread* loaderThread = new LoaderThread();
+        QThread thread;
+
+        QObject::connect(&thread, SIGNAL(finished()), loaderThread, SLOT(deleteLater()));
+        QObject::connect(this, SIGNAL(flacDropped(QFileInfo)), loaderThread, SLOT(loadFile(QFileInfo)));
+        QObject::connect(loaderThread, SIGNAL(fileLoaded(Track)), this, SLOT(onTrackLoaded(Track)));
+
+        loaderThread->moveToThread(&thread);
+        thread.start();
+
         QFileInfo fileInfo(urlIterator.next().toLocalFile());
-        if(fileInfo.isDir())
+
+        if(fileInfo.suffix() == "flac")
         {
-            QDirIterator directoryIterator(fileInfo.absoluteFilePath(), QStringList() << "*.mp3", QDir::Files, QDirIterator::Subdirectories);
-            while(directoryIterator.hasNext())
-            {
-                QFileInfo file(directoryIterator.next());
-                if(Track::isSupportedSuffix(file.suffix()))
-                {
-                    emit fileDropped(file);
-                }
-            }
-        }
-        else
-        {
-            if(Track::isSupportedSuffix(fileInfo.suffix()))
-            {
-                emit fileDropped(fileInfo);
-            }
+            emit this->flacDropped(fileInfo);
         }
     }
+#endif
+}
+
+void ScrollArea::onTrackLoaded(const Track& track)
+{
+    emit trackLoaded(track);
 }
 
 void ScrollArea::resizeEvent(QResizeEvent* event)

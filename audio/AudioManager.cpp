@@ -2,7 +2,7 @@
 
 AudioManager::AudioManager(QWidget* parent) : QWidget(parent)
 {
-    m_audioEngine = new AudioEngine();
+    m_audioEngine = AudioEngine::instance();
     m_audioControls = new AudioControls();
 
     m_layout = new QVBoxLayout();

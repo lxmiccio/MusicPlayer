@@ -7,7 +7,6 @@
 #include <QString>
 #include <QStringList>
 
-
 #include <QStandardItem>
 #include <QScrollArea>
 #include <QHeaderView>
@@ -17,14 +16,10 @@
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 
-#include "ImageUtils.h"
-
-#include "TrackItem.h"
-
-#include "ScrollArea.h"
 #include "Cover.h"
-
 #include "ImageUtils.h"
+#include "ScrollArea.h"
+#include "TrackItem.h"
 
 MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : BackgroundWidget(parent)
 {
@@ -37,7 +32,8 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     m_albumView = new AlbumView();
     m_scrollArea->setWidget(m_albumView);
     QObject::connect(m_scrollArea, SIGNAL(resized(QResizeEvent*)), m_albumView, SLOT(onScrollAreaResized(QResizeEvent*)));
-    QObject::connect(m_scrollArea, SIGNAL(fileDropped(const QFileInfo&)), this, SLOT(onFileDropped(const QFileInfo&)));
+    QObject::connect(m_scrollArea, SIGNAL(trackLoaded(Track)), this, SLOT(onTrackLoaded(const Track&)));
+    QObject::connect(m_scrollArea, SIGNAL(mp3Dropped(const QFileInfo&)), this, SLOT(onMp3Dropped(const QFileInfo&)));
     QObject::connect(this, SIGNAL(trackAdded(const Track&)), m_albumView, SLOT(onTrackAdded(const Track&)));
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
@@ -69,7 +65,7 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     m_layout->addWidget(m_audioManager);
     setLayout(m_layout);
 
-    m_musicLibrary = new MusicLibrary();
+    m_musicLibrary = MusicLibrary::instance();
 }
 
 void MainWindow::onItemDoubleClicked(const Track& track)
@@ -100,11 +96,19 @@ void MainWindow::onTrackStarted(const Track& track)
     emit trackStarted(track);
 }
 
-void MainWindow::onFileDropped(const QFileInfo& fileInfo)
+void MainWindow::onTrackLoaded(const Track& fileInfo)
 {
-    QVariantMap tags = TagUtils::readTags(fileInfo).toMap();
-    tags["cover"] = TagUtils::readCover(fileInfo);
-    tags["lyrics"] = TagUtils::readLyrics(fileInfo);
+    qDebug() << "sdfsfsdf";
+    {
+        emit trackAdded(fileInfo);
+    }
+}
+
+void MainWindow::onMp3Dropped(const QFileInfo& fileInfo)
+{
+    QVariantMap tags = TagUtils::readMp3Tags(fileInfo).toMap();
+    tags["cover"] = TagUtils::readMp3Cover(fileInfo);
+    tags["lyrics"] = TagUtils::readMp3Lyrics(fileInfo);
 
     Track* track = this->m_musicLibrary->addTrack(tags);
 

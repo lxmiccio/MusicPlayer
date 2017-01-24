@@ -139,6 +139,7 @@ bool Track::isSupportedSuffix(const QString& suffix)
 
     if(suffixes.isEmpty())
     {
+        suffixes.append("flac");
         suffixes.append("mp3");
     }
 

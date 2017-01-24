@@ -1,17 +1,20 @@
 #ifndef MUSICLIBRARY_H
 #define MUSICLIBRARY_H
 
+#include <QPointer>
 #include <QString>
 #include <QVector>
 
-#include "artist.h"
-#include "album.h"
-#include "track.h"
+#include "Album.h"
+#include "Artist.h"
+#include "Track.h"
 
-class MusicLibrary
+class MusicLibrary : public QObject
 {
+        Q_OBJECT
+
     public:
-        explicit MusicLibrary();
+        static MusicLibrary* instance();
 
         const QVector<Artist*>& artists() const;
         Artist* artist(const QString& name) const;
@@ -29,7 +32,12 @@ class MusicLibrary
 
         Track* addTrack(const QVariantMap& tags);
 
+    protected:
+        MusicLibrary();
+
     private:
+        static QPointer<MusicLibrary> m_instance;
+
         QVector<Artist*> m_artists;
 };
 

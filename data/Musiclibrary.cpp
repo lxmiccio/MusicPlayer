@@ -1,9 +1,19 @@
 #include "MusicLibrary.h"
 
-#include <QDebug>
+QPointer<MusicLibrary> MusicLibrary::m_instance = 0;
 
 MusicLibrary::MusicLibrary()
 {
+}
+
+MusicLibrary* MusicLibrary::instance()
+{
+    if(m_instance.isNull())
+    {
+        m_instance = new MusicLibrary();
+    }
+
+    return m_instance;
 }
 
 const QVector<Artist*>& MusicLibrary::artists() const
@@ -140,7 +150,7 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
     Album* album = NULL;
     Track* track = NULL;
 
-    if(tags["artist"].toString().length() > 0 && tags["album"].toString().length() && tags["title"].toString().length() && tags["track"] > 0 && tags["duration"] > 0)
+    //if(tags["artist"].toString().length() > 0 && tags["album"].toString().length() > 0 && tags["title"].toString().length() > 0 && tags["track"] > 0 && tags["duration"] > 0)
     {
         foreach(Artist* i_artist, m_artists)
         {

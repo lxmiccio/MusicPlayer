@@ -4,9 +4,10 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QObject>
+#include <QPointer>
 
 #include "AudioControls.h"
-#include "playlist.h"
+#include "Playlist.h"
 #include "Track.h"
 
 class AudioEngine : public QObject
@@ -14,7 +15,12 @@ class AudioEngine : public QObject
         Q_OBJECT
 
     public:
-        AudioEngine(QObject* parent = 0);
+        static AudioEngine* instance();
+        void close();
+
+    protected:
+        AudioEngine();
+        ~AudioEngine();
 
     public slots:
         void onTrackSelected(const Track& track);
@@ -40,6 +46,8 @@ class AudioEngine : public QObject
         void trackFinished();
 
     private:
+        static QPointer<AudioEngine> m_instance;
+
         Playlist* m_playlist;
         QMediaPlayer* m_mediaPlayer;
         QMediaPlaylist* m_mediaPlaylist;

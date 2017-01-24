@@ -6,6 +6,7 @@
 
 #include <taglib/attachedPictureFrame.h>
 #include <taglib/fileref.h>
+#include <taglib/flacfile.h>
 #include <taglib/id3v2frame.h>
 #include <taglib/id3v2header.h>
 #include <taglib/id3v2tag.h>
@@ -14,7 +15,76 @@
 #include <taglib/tag.h>
 #include <taglib/unsynchronizedlyricsframe.h>
 
-QPixmap TagUtils::readCover(const QFileInfo &fileInfo)
+#include "MusicLibrary.h"
+
+Track* TagUtils::readFlac(const QFileInfo& fileInfo)
+{
+    QPixmap cover = TagUtils::readFlacCover(fileInfo);
+    QVariantMap tags = TagUtils::readFlacTags(fileInfo).toMap();
+    tags["cover"] = cover;
+
+    MusicLibrary* m_musicLibrary = MusicLibrary::instance();
+
+    Track* track = m_musicLibrary->addTrack(tags);
+    return track;
+}
+
+QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
+{
+    TagLib::FLAC::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
+
+    const TagLib::List<TagLib::FLAC::Picture*>& pictureList = file.pictureList();
+    TagLib::FLAC::Picture* picture = pictureList[0];
+
+    if(picture)
+    {
+        return QPixmap::fromImage(QImage::fromData(QByteArray(picture->data().data(), picture->width() * picture->height())));
+    }
+
+    return QPixmap();
+}
+
+QString TagUtils::readFlacLyrics(const QFileInfo &fileInfo)
+{
+    //TODO
+}
+
+QVariant TagUtils::readFlacTags(const QFileInfo &fileInfo)
+{
+    QVariantMap tags;
+    TagLib::FLAC::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
+
+    if(file.isValid() && file.tag())
+    {
+        tags["album"] = TagUtils::StringToQString(file.tag()->album());
+        tags["artist"] = TagUtils::StringToQString(file.tag()->artist());
+        tags["title"] = TagUtils::StringToQString(file.tag()->title());
+        tags["track"] = file.tag()->track();
+        tags["year"] = file.tag()->year();
+
+        tags["mimetype"] = TagUtils::extensionToMimetype(fileInfo.suffix());
+        tags["path"] = fileInfo.canonicalFilePath();
+        tags["size"] = (quint64) fileInfo.size();
+
+        if(file.audioProperties())
+        {
+            tags["bitrate"] = file.audioProperties()->bitrate();
+            tags["duration"] = file.audioProperties()->length();
+        }
+    }
+
+    return tags;
+}
+
+Track* TagUtils::readMp3(const QFileInfo &fileInfo)
+{
+    QPixmap cover = TagUtils::readFlacCover(fileInfo);
+    QVariant tags = TagUtils::readFlacTags(fileInfo);
+
+    Track* track = new Track();
+}
+
+QPixmap TagUtils::readMp3Cover(const QFileInfo &fileInfo)
 {
     QPixmap cover;
     TagLib::MPEG::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
@@ -36,7 +106,7 @@ QPixmap TagUtils::readCover(const QFileInfo &fileInfo)
     return cover;
 }
 
-QString TagUtils::readLyrics(const QFileInfo &fileInfo)
+QString TagUtils::readMp3Lyrics(const QFileInfo &fileInfo)
 {
     QString lyrics;
     TagLib::MPEG::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
@@ -58,7 +128,7 @@ QString TagUtils::readLyrics(const QFileInfo &fileInfo)
     return lyrics;
 }
 
-QVariant TagUtils::readTags(const QFileInfo &fileInfo)
+QVariant TagUtils::readMp3Tags(const QFileInfo &fileInfo)
 {
     QVariantMap tags;
     TagLib::FileRef fileRef(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));

@@ -1,6 +1,8 @@
 #include "AudioEngine.h"
 
-AudioEngine::AudioEngine(QObject* parent) : QObject(parent)
+QPointer<AudioEngine> AudioEngine::m_instance = 0;
+
+AudioEngine::AudioEngine()
 {
     m_playlist = new Playlist();
 
@@ -13,6 +15,25 @@ AudioEngine::AudioEngine(QObject* parent) : QObject(parent)
     QObject::connect(m_mediaPlaylist, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
     QObject::connect(m_mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
     QObject::connect(this, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted()));
+}
+
+AudioEngine::~AudioEngine()
+{
+}
+
+AudioEngine* AudioEngine::instance()
+{
+    if(m_instance.isNull())
+    {
+        m_instance = new AudioEngine();
+    }
+
+    return m_instance;
+}
+
+void AudioEngine::close()
+{
+    delete m_instance;
 }
 
 void AudioEngine::onTrackSelected(const Track& track)

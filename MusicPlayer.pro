@@ -41,7 +41,8 @@ SOURCES += albumview/AlbumView.cpp \
     utils/Utils.cpp \
     trackview/TrackLyrics.cpp \
     audio/AudioManager.cpp \
-    audio/AudioEngine.cpp
+    audio/AudioEngine.cpp \
+    utils/LoaderThread.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -72,7 +73,8 @@ HEADERS  += albumview/AlbumView.h \
     utils/Utils.h \
     trackview/TrackLyrics.h \
     audio/AudioManager.h \
-    audio/AudioEngine.h
+    audio/AudioEngine.h \
+    utils/LoaderThread.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio
@@ -87,9 +89,7 @@ INCLUDEPATH += $$PWD/widgets
 
 RESOURCES += resources.qrc
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Libraries/taglib/lib/ -lTagLib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../Libraries/taglib/lib/ -lTagLibd
-else:unix: LIBS += -L$$PWD/../../../../Libraries/taglib/lib/ -lTagLib
+unix|win32: LIBS += -L$$PWD/taglib/lib/ -ltaglib
 
-INCLUDEPATH += $$PWD/../../../../Libraries/taglib/include
-DEPENDPATH += $$PWD/../../../../Libraries/taglib/include
+INCLUDEPATH += $$PWD/taglib/include
+DEPENDPATH += $$PWD/taglib/include
