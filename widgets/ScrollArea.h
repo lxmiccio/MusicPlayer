@@ -16,13 +16,13 @@ class ScrollArea : public QScrollArea
         TrackLoader l;
 
     private slots:
-        void onTrackLoaded(const Track& track);
+        void onTrackLoaded(Track* track);
 
     signals:
         void flacDropped(const QFileInfo& fileInfo);
         void mp3Dropped(const QFileInfo& fileInfo);
         void resized(QResizeEvent* event);
-        void trackLoaded(const Track& track);
+        void trackLoaded(Track* track);
 
     protected:
         virtual void dragEnterEvent(QDragEnterEvent* event);

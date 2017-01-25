@@ -24,7 +24,7 @@ class LoaderThread : public QObject
         void onTracksLoaded();
 
     signals:
-        void trackLoaded(const Track* tracks);
+        void trackLoaded(Track* tracks);
         void tracksLoaded();
 
     private:

@@ -57,7 +57,7 @@ class MainWindow : public BackgroundWidget
         MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
 
     public slots:
-        void onTrackLoaded(const Track& fileInfo);
+        void onTrackLoaded(Track* track);
         void onMp3Dropped(const QFileInfo& fileInfo);
         void onCoverClicked(const Album& album);
         void onItemDoubleClicked(const Track& track);

@@ -68,32 +68,11 @@ void ScrollArea::dropEvent(QDropEvent* event)
     emit this->flacDropped(urls.at(0).toLocalFile());
 #endif
 
+    QObject::connect(&l, SIGNAL(trackLoaded(Track*)), this, SLOT(onTrackLoaded(Track*)));
 l.loadTracks(urls);
-
-#if 0
-    while(urlIterator.hasNext())
-    {
-        LoaderThread* loaderThread = new LoaderThread();
-        QThread thread;
-
-        QObject::connect(&thread, SIGNAL(finished()), loaderThread, SLOT(deleteLater()));
-        QObject::connect(this, SIGNAL(flacDropped(QFileInfo)), loaderThread, SLOT(loadFile(QFileInfo)));
-        QObject::connect(loaderThread, SIGNAL(fileLoaded(Track)), this, SLOT(onTrackLoaded(Track)));
-
-        loaderThread->moveToThread(&thread);
-        thread.start();
-
-        QFileInfo fileInfo(urlIterator.next().toLocalFile());
-
-        if(fileInfo.suffix() == "flac")
-        {
-            emit this->flacDropped(fileInfo);
-        }
-    }
-#endif
 }
 
-void ScrollArea::onTrackLoaded(const Track& track)
+void ScrollArea::onTrackLoaded(Track* track)
 {
     emit trackLoaded(track);
 }

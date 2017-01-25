@@ -18,6 +18,11 @@ class TrackLoader : public QObject
         static Track* load(QFileInfo& file);
 
     private slots:
+        void onTrackLoaded(Track* track);
+        void onTracksLoaded();
+
+    signals:
+        void trackLoaded(Track* track);
 
     private:
         QVector<LoaderThread*> m_trackLoaderThreads;

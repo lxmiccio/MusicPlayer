@@ -32,7 +32,7 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     m_albumView = new AlbumView();
     m_scrollArea->setWidget(m_albumView);
     QObject::connect(m_scrollArea, SIGNAL(resized(QResizeEvent*)), m_albumView, SLOT(onScrollAreaResized(QResizeEvent*)));
-    QObject::connect(m_scrollArea, SIGNAL(trackLoaded(Track)), this, SLOT(onTrackLoaded(const Track&)));
+    QObject::connect(m_scrollArea, SIGNAL(trackLoaded(Track*)), this, SLOT(onTrackLoaded(Track*)));
     QObject::connect(m_scrollArea, SIGNAL(mp3Dropped(const QFileInfo&)), this, SLOT(onMp3Dropped(const QFileInfo&)));
     QObject::connect(this, SIGNAL(trackAdded(const Track&)), m_albumView, SLOT(onTrackAdded(const Track&)));
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
@@ -96,11 +96,12 @@ void MainWindow::onTrackStarted(const Track& track)
     emit trackStarted(track);
 }
 
-void MainWindow::onTrackLoaded(const Track& fileInfo)
+void MainWindow::onTrackLoaded(Track* track)
 {
-    qDebug() << "sdfsfsdf";
+    if(track)
     {
-        emit trackAdded(fileInfo);
+        qDebug() << track->title();
+        emit trackAdded(*track);
     }
 }
 
