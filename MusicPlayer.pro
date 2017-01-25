@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia svg
+QT       += core concurrent gui multimedia svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -42,7 +42,8 @@ SOURCES += albumview/AlbumView.cpp \
     trackview/TrackLyrics.cpp \
     audio/AudioManager.cpp \
     audio/AudioEngine.cpp \
-    utils/LoaderThread.cpp
+    utils/LoaderThread.cpp \
+    utils/TrackLoader.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -74,7 +75,8 @@ HEADERS  += albumview/AlbumView.h \
     trackview/TrackLyrics.h \
     audio/AudioManager.h \
     audio/AudioEngine.h \
-    utils/LoaderThread.h
+    utils/LoaderThread.h \
+    utils/TrackLoader.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

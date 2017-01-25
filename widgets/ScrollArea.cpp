@@ -7,7 +7,7 @@
 #include <QMimeData>
 #include <QScrollBar>
 #include <unistd.h>
-#include "LoaderThread.h"
+#include "TrackLoader.h"
 #include "Track.h"
 
 ScrollArea::ScrollArea(QWidget* parent) : QScrollArea(parent)
@@ -54,6 +54,7 @@ void ScrollArea::dropEvent(QDropEvent* event)
     QList<QUrl> urls = event->mimeData()->urls();
     QListIterator<QUrl> urlIterator(urls);
 
+#if 0
     LoaderThread* loaderThread = new LoaderThread();
     QThread* thread = new QThread();
 
@@ -65,6 +66,9 @@ void ScrollArea::dropEvent(QDropEvent* event)
     thread->start();
 
     emit this->flacDropped(urls.at(0).toLocalFile());
+#endif
+
+l.loadTracks(urls);
 
 #if 0
     while(urlIterator.hasNext())

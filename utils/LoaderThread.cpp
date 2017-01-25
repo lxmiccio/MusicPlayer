@@ -1,17 +1,37 @@
 #include "LoaderThread.h"
 
-void LoaderThread::loadFile(const QFileInfo& file)
+static Track* loadTrack(QFileInfo &file)
 {
-    Track* track;
+    Track* track = new Track();
 
-    if(file.suffix() == "flac")
+    track->setTitle(file.absoluteFilePath());
+    /* TODO */
+
+    return track;
+}
+
+void LoaderThread::loadTracks(const QList<QUrl>& tracks)
+{
+    QListIterator<QUrl> iterator(tracks);
+
+    while(iterator.hasNext())
     {
-        track = TagUtils::readFlac(file);
-    }
-    else if(file.suffix() == "mp3")
-    {
-        track = TagUtils::readMp3(file);
+        m_tracks.append(iterator.next().toLocalFile());
     }
 
-    emit fileLoaded(*track);
+    m_future = QtConcurrent::mapped(m_tracks.begin(), m_tracks.end(), loadTrack);
+    m_futureWatcher.setFuture(m_future);
+
+    QObject::connect(&m_futureWatcher, SIGNAL(resultReadyAt(int)), this, SLOT(onTrackLoaded(int)));
+    QObject::connect(&m_futureWatcher, SIGNAL(finished()), this, SLOT(onTracksLoaded()));
+}
+
+void LoaderThread::onTrackLoaded(int index)
+{
+    emit trackLoaded(m_future.resultAt(index));
+}
+
+void LoaderThread::onTracksLoaded()
+{
+    emit tracksLoaded();
 }

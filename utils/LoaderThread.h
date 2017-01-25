@@ -1,7 +1,10 @@
 #ifndef LOADERTHREAD_H
 #define LOADERTHREAD_H
 
+#include <QtConcurrent>
 #include <QFileInfo>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QObject>
 #include <QThread>
 
@@ -11,13 +14,23 @@
 class LoaderThread : public QObject
 {
         Q_OBJECT
-        QThread workerThread;
+        QThread thread;
 
     public slots:
-        void loadFile(const QFileInfo& file);
+        void loadTracks(const QList<QUrl>& tracks);
+
+    private slots:
+        void onTrackLoaded(int index);
+        void onTracksLoaded();
 
     signals:
-        void fileLoaded(const Track& file);
+        void trackLoaded(const Track* tracks);
+        void tracksLoaded();
+
+    private:
+        QList<QFileInfo> m_tracks;
+        QFuture<Track*> m_future;
+        QFutureWatcher<Track*> m_futureWatcher;
 };
 
 #endif // LOADERTHREAD_H

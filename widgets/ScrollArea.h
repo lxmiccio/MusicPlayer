@@ -5,6 +5,7 @@
 #include <QScrollArea>
 
 #include "Track.h"
+#include "TrackLoader.h"
 
 class ScrollArea : public QScrollArea
 {
@@ -12,6 +13,7 @@ class ScrollArea : public QScrollArea
 
     public:
         explicit ScrollArea(QWidget* parent = 0);
+        TrackLoader l;
 
     private slots:
         void onTrackLoaded(const Track& track);
