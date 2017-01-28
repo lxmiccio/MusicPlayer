@@ -19,22 +19,24 @@ class AlbumView : public QWidget
 
     public slots:
         void onScrollAreaResized(QResizeEvent* event);
-        void onTrackAdded(const Track& track);
 
     signals:
         void coverClicked(const Album& album);
 
+    private:
+        void repaintCovers();
+
     private slots:
+        void onAlbumAdded(const Album* album);
         void onCoverClicked(const Album& album);
 
     private:
         QVector<const Album*> m_albums;
 
         void clearLayout(QLayout* layout);
-        void displayCover(Cover* cover);
 
         quint8 albumsPerRow(quint16 width);
-        quint8 spacerWidth(quint16 width);
+        quint8 horizontalSpacerWidth(quint16 width);
 
         QVector<Cover*> m_covers;
         QVector<QHBoxLayout*> m_layouts;
@@ -47,10 +49,10 @@ class AlbumView : public QWidget
         QSpacerItem* m_middleHorizontalSpacer;
         QSpacerItem* m_middleVerticalSpacer;
 
-        quint8 m_currentColumn;
-        quint8 m_currentRow;
+        quint8 m_currentColumn; /* Columns including spacer */
+        quint8 m_currentRow; /* Rows including spacer */
 
-        quint8 m_albumCurrentColumn;
+        quint8 m_albumCurrentColumn; /* Columns excluding spacer */
         quint8 m_albumsPerRow;
 };
 

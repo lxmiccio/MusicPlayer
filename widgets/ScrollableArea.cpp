@@ -33,7 +33,20 @@ void ScrollableArea::dropEvent(QDropEvent* event)
 
     while(urlsIterator.hasNext())
     {
-        filesInfo.push_back(urlsIterator.next().toLocalFile());
+        QFileInfo fileInfo(urlsIterator.next().toLocalFile());
+
+        if(fileInfo.isDir())
+        {
+            QDirIterator directoryIterator(fileInfo.absoluteFilePath(), QStringList() << "*.flac" << "*.mp3", QDir::Files, QDirIterator::Subdirectories);
+            while(directoryIterator.hasNext())
+            {
+                filesInfo.push_back(directoryIterator.next());
+            }
+        }
+        else
+        {
+            filesInfo.push_back(fileInfo);
+        }
     }
 
     emit filesDropped(filesInfo);

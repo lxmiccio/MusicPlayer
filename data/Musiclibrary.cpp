@@ -176,31 +176,37 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
             {
                 track = new Track(tags, album);
                 album->addTrack(*track);
+
+                emit trackAdded(track);
             }
             else
             {
                 album = new Album(tags["album"].toString(), artist);
+                artist->addAlbum(*album);
 
                 track = new Track(tags, album);
                 album->addTrack(*track);
                 album->setCover(track->cover());
 
-                artist->addAlbum(*album);
+                emit albumAdded(album);
+                emit trackAdded(track);
             }
         }
         else
         {
             artist = new Artist(tags["artist"].toString());
+            m_artists.push_back(artist);
 
             album = new Album(tags["album"].toString(), artist);
+            artist->addAlbum(*album);
 
             track = new Track(tags, album);
             album->addTrack(*track);
             album->setCover(track->cover());
 
-            artist->addAlbum(*album);
-
-            m_artists.push_back(artist);
+            emit artistAdded(artist);
+            emit albumAdded(album);
+            emit trackAdded(track);
         }
     }
 

@@ -31,6 +31,11 @@ class MusicLibrary : public QObject
 
         Track* addTrack(const QVariantMap& tags);
 
+    signals:
+        void artistAdded(const Artist* artist);
+        void albumAdded(const Album* album);
+        void trackAdded(const Track* track);
+
     protected:
         MusicLibrary();
 
