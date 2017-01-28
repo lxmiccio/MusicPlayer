@@ -22,10 +22,10 @@ Track* TagUtils::readFlac(const QFileInfo& fileInfo)
     MusicLibrary* musicLibrary = MusicLibrary::instance();
 
     QPixmap cover = TagUtils::readFlacCover(fileInfo);
-    QString lyrics = TagUtils::readFlacLyrics(fileInfo);
+    //QString lyrics = TagUtils::readFlacLyrics(fileInfo);
     QVariantMap tags = TagUtils::readFlacTags(fileInfo).toMap();
     tags["cover"] = cover;
-    tags["lyrics"] = lyrics;
+    //tags["lyrics"] = lyrics;
 
     return musicLibrary->addTrack(tags);
 }
@@ -33,13 +33,16 @@ Track* TagUtils::readFlac(const QFileInfo& fileInfo)
 QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
 {
     TagLib::FLAC::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
-
     const TagLib::List<TagLib::FLAC::Picture*>& pictureList = file.pictureList();
-    TagLib::FLAC::Picture* picture = pictureList[0];
 
-    if(picture)
+    if(pictureList.size() > 0)
     {
-        return QPixmap::fromImage(QImage::fromData(QByteArray(picture->data().data(), picture->width() * picture->height())));
+        TagLib::FLAC::Picture* picture = pictureList[0];
+
+        if(picture)
+        {
+            return QPixmap::fromImage(QImage::fromData(QByteArray(picture->data().data(), picture->width() * picture->height())));
+        }
     }
 
     return QPixmap();

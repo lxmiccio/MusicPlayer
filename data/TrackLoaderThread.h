@@ -11,13 +11,13 @@
 #include "TagUtils.h"
 #include "Track.h"
 
-class LoaderThread : public QObject
+class TrackLoaderThread : public QObject
 {
         Q_OBJECT
         QThread thread;
 
     public slots:
-        void loadTracks(const QList<QUrl>& tracks);
+        void loadTracks(const QVector<QFileInfo>& tracks);
 
     private slots:
         void onTrackLoaded(int index);
@@ -28,7 +28,7 @@ class LoaderThread : public QObject
         void tracksLoaded();
 
     private:
-        QList<QFileInfo> m_tracks;
+        QVector<QFileInfo> m_tracks;
         QFuture<Track*> m_future;
         QFutureWatcher<Track*> m_futureWatcher;
 };

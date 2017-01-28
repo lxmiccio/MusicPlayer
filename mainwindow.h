@@ -14,6 +14,7 @@
 #include "playlist.h"
 #include "Track.h"
 #include "MusicLibrary.h"
+#include "TrackLoader.h"
 
 #include "TagUtils.h"
 
@@ -22,15 +23,13 @@
 #include "TrackView.h"
 
 #include "AlbumView.h"
-#include "ScrollArea.h"
+#include "ScrollableArea.h"
 
 #include "ImageButton.h"
 #include "StackedWidget.h"
 #include "BackgroundWidget.h"
 
 #include <QStandardItemModel>
-
-#include <LeftPanel.h>
 
 class MainWindow : public BackgroundWidget
 {
@@ -40,7 +39,7 @@ class MainWindow : public BackgroundWidget
         const StackedWidget* c_stackedWidget;
 
         AlbumView* m_albumView;
-        ScrollArea* m_scrollArea;
+        ScrollableArea* m_scrollableArea;
 
         TrackView* m_trackView;
 
@@ -50,15 +49,13 @@ class MainWindow : public BackgroundWidget
         QVBoxLayout* m_layout;
 
         MusicLibrary* m_musicLibrary;
-
-        LeftPanel* m_leftPanel;
+        TrackLoader* m_trackLoader;
 
     public:
         MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
 
     public slots:
         void onTrackLoaded(Track* track);
-        void onMp3Dropped(const QFileInfo& fileInfo);
         void onCoverClicked(const Album& album);
         void onItemDoubleClicked(const Track& track);
         void onTrackSelected(const Track& track);

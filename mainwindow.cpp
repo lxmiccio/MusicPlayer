@@ -18,7 +18,7 @@
 
 #include "Cover.h"
 #include "ImageUtils.h"
-#include "ScrollArea.h"
+#include "ScrollableArea.h"
 #include "TrackItem.h"
 
 MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : BackgroundWidget(parent)
@@ -28,12 +28,10 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
 
     c_stackedWidget = stackedWidget;
 
-    m_scrollArea = new ScrollArea();
+    m_scrollableArea = new ScrollableArea();
     m_albumView = new AlbumView();
-    m_scrollArea->setWidget(m_albumView);
-    QObject::connect(m_scrollArea, SIGNAL(resized(QResizeEvent*)), m_albumView, SLOT(onScrollAreaResized(QResizeEvent*)));
-    QObject::connect(m_scrollArea, SIGNAL(trackLoaded(Track*)), this, SLOT(onTrackLoaded(Track*)));
-    QObject::connect(m_scrollArea, SIGNAL(mp3Dropped(const QFileInfo&)), this, SLOT(onMp3Dropped(const QFileInfo&)));
+    m_scrollableArea->setWidget(m_albumView);
+    QObject::connect(m_scrollableArea, SIGNAL(resized(QResizeEvent*)), m_albumView, SLOT(onScrollAreaResized(QResizeEvent*)));
     QObject::connect(this, SIGNAL(trackAdded(const Track&)), m_albumView, SLOT(onTrackAdded(const Track&)));
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
@@ -48,13 +46,12 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioManager, SLOT(onTrackSelected(const Track&)));
     QObject::connect(m_audioManager, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
 
-    m_leftPanel = new LeftPanel();
 
     m_horLayout = new QHBoxLayout();
     m_horLayout->setMargin(0);
     m_horLayout->setSpacing(0);
     //m_horLayout->addWidget(m_leftPanel);
-    m_horLayout->addWidget(m_scrollArea);
+    m_horLayout->addWidget(m_scrollableArea);
     m_horLayout->addWidget(m_trackView);
 
     m_layout = new QVBoxLayout();
@@ -66,6 +63,9 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     setLayout(m_layout);
 
     m_musicLibrary = MusicLibrary::instance();
+    m_trackLoader = new TrackLoader();
+    QObject::connect(m_scrollableArea, SIGNAL(filesDropped(QVector<QFileInfo>)), m_trackLoader, SLOT(loadTracks(QVector<QFileInfo>)));
+    QObject::connect(m_trackLoader, SIGNAL(trackLoaded(Track*)), this, SLOT(onTrackLoaded(Track*)));
 }
 
 void MainWindow::onItemDoubleClicked(const Track& track)
@@ -75,7 +75,7 @@ void MainWindow::onItemDoubleClicked(const Track& track)
 
 void MainWindow::coverClicked()
 {
-    m_scrollArea->show();
+    m_scrollableArea->show();
     m_trackView->hide();
 }
 
@@ -83,7 +83,7 @@ void MainWindow::onCoverClicked(const Album& album)
 {
     m_trackView->show();
     m_trackView->onAlbumSelected(album);
-    m_scrollArea->hide();
+    m_scrollableArea->hide();
 }
 
 void MainWindow::onTrackSelected(const Track& track)
@@ -101,20 +101,6 @@ void MainWindow::onTrackLoaded(Track* track)
     if(track)
     {
         qDebug() << track->title();
-        emit trackAdded(*track);
-    }
-}
-
-void MainWindow::onMp3Dropped(const QFileInfo& fileInfo)
-{
-    QVariantMap tags = TagUtils::readMp3Tags(fileInfo).toMap();
-    tags["cover"] = TagUtils::readMp3Cover(fileInfo);
-    tags["lyrics"] = TagUtils::readMp3Lyrics(fileInfo);
-
-    Track* track = this->m_musicLibrary->addTrack(tags);
-
-    if(track)
-    {
         emit trackAdded(*track);
     }
 }

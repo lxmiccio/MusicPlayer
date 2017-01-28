@@ -14,11 +14,14 @@ TEMPLATE = app
 SOURCES += albumview/AlbumView.cpp \
     albumview/Cover.cpp \
     audio/AudioControls.cpp \
+    audio/AudioEngine.cpp \
+    audio/AudioManager.cpp \
     audio/TrackSlider.cpp \
     data/Album.cpp \
     data/Artist.cpp \
     data/MusicLibrary.cpp \
     data/Track.cpp \
+    data/TrackLoader.cpp \
     trackview/TrackAlbum.cpp \
     trackview/TrackDelegate.cpp \
     trackview/TrackItem.cpp \
@@ -31,8 +34,7 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/ClickableLabel.cpp \
     widgets/ElidedLabel.cpp \
     widgets/ImageButton.cpp \
-    widgets/LeftPanel.cpp \
-    widgets/ScrollArea.cpp \
+    widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
     widgets/StackedWidget.cpp \
     main.cpp \
@@ -40,19 +42,20 @@ SOURCES += albumview/AlbumView.cpp \
     playlist.cpp \
     utils/Utils.cpp \
     trackview/TrackLyrics.cpp \
-    audio/AudioManager.cpp \
-    audio/AudioEngine.cpp \
-    utils/LoaderThread.cpp \
-    utils/TrackLoader.cpp
+    data/TrackLoaderThread.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
     audio/AudioControls.h \
+    audio/AudioEngine.h \
+    audio/AudioManager.h \
     audio/TrackSlider.h \
     data/Album.h \
     data/Artist.h \
     data/MusicLibrary.h \
     data/Track.h \
+    data/TrackLoader.h \
+    data/TrackLoaderThread.h \
     trackview/TrackDelegate.h \
     trackview/TrackItem.h \
     trackview/TrackView.h \
@@ -65,18 +68,13 @@ HEADERS  += albumview/AlbumView.h \
     widgets/ClickableLabel.h \
     widgets/ElidedLabel.h \
     widgets/ImageButton.h \
-    widgets/LeftPanel.h \
-    widgets/ScrollArea.h \
+    widgets/ScrollableArea.h \
     widgets/Slider.h \
     widgets/StackedWidget.h \
     mainwindow.h \
     playlist.h \
     utils/Utils.h \
-    trackview/TrackLyrics.h \
-    audio/AudioManager.h \
-    audio/AudioEngine.h \
-    utils/LoaderThread.h \
-    utils/TrackLoader.h
+    trackview/TrackLyrics.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

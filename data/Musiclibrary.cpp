@@ -150,7 +150,7 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
     Album* album = NULL;
     Track* track = NULL;
 
-    //if(tags["artist"].toString().length() > 0 && tags["album"].toString().length() > 0 && tags["title"].toString().length() > 0 && tags["track"] > 0 && tags["duration"] > 0)
+    if(tags["artist"].toString().length() > 0 && tags["album"].toString().length() > 0 && tags["title"].toString().length() > 0 && tags["track"] > 0)
     {
         foreach(Artist* i_artist, m_artists)
         {
@@ -183,6 +183,7 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
 
                 track = new Track(tags, album);
                 album->addTrack(*track);
+                album->setCover(track->cover());
 
                 artist->addAlbum(*album);
             }

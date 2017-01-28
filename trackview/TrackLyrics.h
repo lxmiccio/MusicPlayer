@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "ScrollArea.h"
+#include "ScrollableArea.h"
 #include "Track.h"
 
 class TrackLyrics : public QWidget
@@ -22,7 +22,7 @@ class TrackLyrics : public QWidget
         const Track* c_track;
 
         QVBoxLayout* m_layout;
-        ScrollArea* m_scrollArea;
+        ScrollableArea* m_scrollableArea;
         QLabel* m_lyrics;
 };
 

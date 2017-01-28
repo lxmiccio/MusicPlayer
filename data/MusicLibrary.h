@@ -2,7 +2,6 @@
 #define MUSICLIBRARY_H
 
 #include <QPointer>
-#include <QString>
 #include <QVector>
 
 #include "Album.h"
@@ -37,7 +36,6 @@ class MusicLibrary : public QObject
 
     private:
         static QPointer<MusicLibrary> m_instance;
-
         QVector<Artist*> m_artists;
 };
 

@@ -1,16 +1,14 @@
-#include "ScrollArea.h"
+#include "ScrollableArea.h"
 
 #include <QCommonStyle>
-#include <QDebug>
-#include <QDirIterator>
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QScrollBar>
-#include <unistd.h>
+
 #include "TrackLoader.h"
 #include "Track.h"
 
-ScrollArea::ScrollArea(QWidget* parent) : QScrollArea(parent)
+ScrollableArea::ScrollableArea(QWidget* parent) : QScrollArea(parent)
 {
     setAcceptDrops(true);
     setWidgetResizable(true);
@@ -44,42 +42,27 @@ ScrollArea::ScrollArea(QWidget* parent) : QScrollArea(parent)
                                                "}"));
 }
 
-void ScrollArea::dragEnterEvent(QDragEnterEvent* event)
+void ScrollableArea::dragEnterEvent(QDragEnterEvent* event)
 {
     event->accept();
 }
 
-void ScrollArea::dropEvent(QDropEvent* event)
+void ScrollableArea::dropEvent(QDropEvent* event)
 {
     QList<QUrl> urls = event->mimeData()->urls();
-    QListIterator<QUrl> urlIterator(urls);
+    QListIterator<QUrl> urlsIterator(urls);
+    QVector<QFileInfo> filesInfo;
 
-#if 0
-    LoaderThread* loaderThread = new LoaderThread();
-    QThread* thread = new QThread();
+    while(urlsIterator.hasNext())
+    {
+        filesInfo.push_back(urlsIterator.next().toLocalFile());
+    }
 
-    QObject::connect(thread, SIGNAL(finished()), loaderThread, SLOT(deleteLater()));
-    QObject::connect(this, SIGNAL(flacDropped(QFileInfo)), loaderThread, SLOT(loadFile(QFileInfo)));
-    QObject::connect(loaderThread, SIGNAL(fileLoaded(Track)), this, SLOT(onTrackLoaded(Track)));
-
-    loaderThread->moveToThread(thread);
-    thread->start();
-
-    emit this->flacDropped(urls.at(0).toLocalFile());
-#endif
-
-    QObject::connect(&l, SIGNAL(trackLoaded(Track*)), this, SLOT(onTrackLoaded(Track*)));
-l.loadTracks(urls);
+    emit filesDropped(filesInfo);
 }
 
-void ScrollArea::onTrackLoaded(Track* track)
-{
-    emit trackLoaded(track);
-}
-
-void ScrollArea::resizeEvent(QResizeEvent* event)
+void ScrollableArea::resizeEvent(QResizeEvent* event)
 {
     emit resized(event);
-
     QScrollArea::resizeEvent(event);
 }
