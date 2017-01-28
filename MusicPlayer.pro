@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-09-14T12:08:17
+# Project created by QtCreator 2016-09-14T12:08:18
 #
 #-------------------------------------------------
 
@@ -20,16 +20,20 @@ SOURCES += albumview/AlbumView.cpp \
     data/Album.cpp \
     data/Artist.cpp \
     data/MusicLibrary.cpp \
+    data/Playlist.cpp \
     data/Track.cpp \
     data/TrackLoader.cpp \
+    data/TrackLoaderThread.cpp \
     trackview/TrackAlbum.cpp \
     trackview/TrackDelegate.cpp \
     trackview/TrackItem.cpp \
     trackview/TrackList.cpp \
+    trackview/TrackLyrics.cpp \
     trackview/TrackModel.cpp \
     trackview/TrackView.cpp \
     utils/ImageUtils.cpp \
     utils/TagUtils.cpp \
+    utils/Utils.cpp \
     widgets/BackgroundWidget.cpp \
     widgets/ClickableLabel.cpp \
     widgets/ElidedLabel.cpp \
@@ -37,12 +41,8 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
     widgets/StackedWidget.cpp \
-    main.cpp \
     mainwindow.cpp \
-    playlist.cpp \
-    utils/Utils.cpp \
-    trackview/TrackLyrics.cpp \
-    data/TrackLoaderThread.cpp
+    main.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -53,28 +53,29 @@ HEADERS  += albumview/AlbumView.h \
     data/Album.h \
     data/Artist.h \
     data/MusicLibrary.h \
+    data/Playlist.h \
     data/Track.h \
     data/TrackLoader.h \
     data/TrackLoaderThread.h \
     trackview/TrackDelegate.h \
     trackview/TrackItem.h \
     trackview/TrackView.h \
+    trackview/TrackLyrics.h \
     trackview/TrackList.h \
     trackview/TrackModel.h \
     trackview/TrackAlbum.h \
+    utils/GuiUtils.h \
     utils/ImageUtils.h \
     utils/TagUtils.h \
+    utils/Utils.h \
     widgets/BackgroundWidget.h \
     widgets/ClickableLabel.h \
     widgets/ElidedLabel.h \
     widgets/ImageButton.h \
-    widgets/ScrollableArea.h \
     widgets/Slider.h \
+    widgets/ScrollableArea.h \
     widgets/StackedWidget.h \
-    mainwindow.h \
-    playlist.h \
-    utils/Utils.h \
-    trackview/TrackLyrics.h
+    mainwindow.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

@@ -22,10 +22,11 @@ Track* TagUtils::readFlac(const QFileInfo& fileInfo)
     MusicLibrary* musicLibrary = MusicLibrary::instance();
 
     QPixmap cover = TagUtils::readFlacCover(fileInfo);
-    //QString lyrics = TagUtils::readFlacLyrics(fileInfo);
+    // QString lyrics = TagUtils::readFlacLyrics(fileInfo);
+
     QVariantMap tags = TagUtils::readFlacTags(fileInfo).toMap();
     tags["cover"] = cover;
-    //tags["lyrics"] = lyrics;
+    // tags["lyrics"] = lyrics;
 
     return musicLibrary->addTrack(tags);
 }

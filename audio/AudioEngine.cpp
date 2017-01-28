@@ -45,10 +45,11 @@ void AudioEngine::onTrackSelected(const Track& track)
 
     if(album)
     {
-        for(int i = album->tracks().indexOf(const_cast<Track*>(&track)); i < album->tracks().size(); i++)
+        foreach(Track* i_track, album->tracks())
         {
-            m_playlist->addTrack(*album->tracks().at(i));
-            m_mediaPlaylist->addMedia(QUrl::fromLocalFile(album->tracks().at(i)->path()));
+            m_playlist->addTrack(*i_track);
+            m_mediaPlaylist->addMedia(QUrl::fromLocalFile(i_track->path()));
+            m_mediaPlaylist->setCurrentIndex(album->tracks().indexOf(const_cast<Track*>(&track)));
         }
     }
     else

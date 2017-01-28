@@ -20,13 +20,17 @@ void StackedWidget::previousView()
 {
     QString currentClassName = m_stackedWidget->currentWidget()->metaObject()->className();
 
-    for(int i = m_stackedWidget->count() - 1; i >= 0; --i) {
+    for(int i = m_stackedWidget->count() - 1; i >= 0; --i)
+    {
         QWidget* widget = m_stackedWidget->widget(i);
 
-        if(widget->metaObject()->className() == currentClassName) {
+        if(widget->metaObject()->className() == currentClassName)
+        {
             m_stackedWidget->removeWidget(widget);
             delete widget;
-        } else {
+        }
+        else
+        {
             m_stackedWidget->setCurrentWidget(m_stackedWidget->widget(i));
             break;
         }
