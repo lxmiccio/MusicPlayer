@@ -49,7 +49,6 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     m_horLayout = new QHBoxLayout();
     m_horLayout->setMargin(0);
     m_horLayout->setSpacing(0);
-    //m_horLayout->addWidget(m_leftPanel);
     m_horLayout->addWidget(m_scrollableArea);
     m_horLayout->addWidget(m_trackView);
 

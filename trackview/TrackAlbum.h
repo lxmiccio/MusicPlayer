@@ -21,7 +21,6 @@ class TrackAlbum : public QWidget
 
         static const quint16 WIDGET_HEIGHT = 275;
         static const quint16 WIDGET_WIDTH = 500;
-
         static const quint16 IMAGE_HEIGHT = 200;
         static const quint16 IMAGE_WIDTH = 200;
 

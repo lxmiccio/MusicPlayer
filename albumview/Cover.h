@@ -19,7 +19,6 @@ class Cover : public QWidget
 
         static const quint16 COVER_HEIGHT = 215;
         static const quint16 COVER_WIDTH = 175;
-
         static const quint16 IMAGE_HEIGHT = 175;
         static const quint16 IMAGE_WIDTH = 175;
 
