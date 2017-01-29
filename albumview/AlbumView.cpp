@@ -6,10 +6,11 @@
 
 AlbumView::AlbumView(QWidget* parent) : QWidget(parent)
 {
-    m_upperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_upperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+
     m_middleHorizontalSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_middleVerticalSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -113,7 +114,7 @@ void AlbumView::onAlbumAdded(const Album* album)
 {
     if(album)
     {
-        m_albums.push_back(album);
+        QMutexLocker locker(&m_mutex);
 
         Cover* cover = new Cover(album);
         QObject::connect(cover, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
@@ -128,18 +129,6 @@ void AlbumView::onAlbumAdded(const Album* album)
             else
             {
                 return cover1->album().title() < cover2->album().title();
-            }
-        });
-
-        qSort(m_albums.begin(), m_albums.end(), [] (const Album* album1, const Album* album2) -> bool
-        {
-            if(album1->artist()->name() != album2->artist()->name())
-            {
-                return album1->artist()->name() < album2->artist()->name();
-            }
-            else
-            {
-                return album1->title() < album2->title();
             }
         });
 

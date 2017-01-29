@@ -146,6 +146,8 @@ bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTi
 
 Track* MusicLibrary::addTrack(const QVariantMap& tags)
 {
+    QMutexLocker locker(&m_mutex);
+
     Artist* artist = NULL;
     Album* album = NULL;
     Track* track = NULL;

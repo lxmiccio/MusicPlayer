@@ -1,8 +1,6 @@
 #ifndef COVER_H
 #define COVER_H
 
-#include <QFuture>
-#include <QFutureWatcher>
 #include <QVBoxLayout>
 
 #include "Album.h"

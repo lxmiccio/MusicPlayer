@@ -1,6 +1,8 @@
 #ifndef MUSICLIBRARY_H
 #define MUSICLIBRARY_H
 
+#include <QMutex>
+#include <QMutexLocker>
 #include <QPointer>
 #include <QVector>
 
@@ -42,6 +44,8 @@ class MusicLibrary : public QObject
     private:
         static QPointer<MusicLibrary> m_instance;
         QVector<Artist*> m_artists;
+
+        QMutex m_mutex;
 };
 
 #endif // MUSICLIBRARY_H
