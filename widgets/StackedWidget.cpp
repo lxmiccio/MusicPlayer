@@ -1,6 +1,8 @@
 #include "StackedWidget.h"
 
 #include "MainWindow.h"
+#include <QApplication>
+#include <QDesktopWidget>
 
 StackedWidget::StackedWidget(QWidget *parent) : QMainWindow(parent)
 {

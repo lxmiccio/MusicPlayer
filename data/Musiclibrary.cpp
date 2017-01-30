@@ -44,7 +44,7 @@ bool MusicLibrary::removeArtist(const QString& name)
     return m_artists.removeOne(artist(name));
 }
 
-const QVector<Album*>& MusicLibrary::albums() const
+const QVector<Album*> MusicLibrary::albums() const
 {
     QVector<Album*> albums;
 
@@ -55,6 +55,18 @@ const QVector<Album*>& MusicLibrary::albums() const
             albums.push_back(i_album);
         }
     }
+
+    qSort(albums.begin(), albums.end(), [] (const Album* album1, const Album* album2) -> bool
+    {
+        if(album1->artist()->name() != album2->artist()->name())
+        {
+            return album1->artist()->name() < album2->artist()->name();
+        }
+        else
+        {
+            return album1->title() < album2->title();
+        }
+    });
 
     return albums;
 }
@@ -100,7 +112,7 @@ bool MusicLibrary::removeAlbum(const QString& albumName, const QString& artistNa
     }
 }
 
-const QVector<Track*>& MusicLibrary::tracks() const
+const QVector<Track*> MusicLibrary::tracks() const
 {
     QVector<Track*> tracks;
 
@@ -114,6 +126,22 @@ const QVector<Track*>& MusicLibrary::tracks() const
             }
         }
     }
+
+    qSort(tracks.begin(), tracks.end(), [] (const Track* track1, const Track* track2) -> bool
+    {
+        if(track1->album()->artist()->name() != track2->album()->artist()->name())
+        {
+            return track1->album()->artist()->name() < track2->album()->artist()->name();
+        }
+        else if(track1->album()->title() != track2->album()->title())
+        {
+            return track1->album()->title() < track2->album()->title();
+        }
+        else
+        {
+            return track1->title() < track2->title();
+        }
+    });
 
     return tracks;
 }

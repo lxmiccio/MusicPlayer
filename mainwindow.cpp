@@ -40,11 +40,9 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
 
     QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_trackView, SLOT(onTrackStarted(const Track&)));
 
-
     m_audioManager = new AudioManager(this);
     QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioManager, SLOT(onTrackSelected(const Track&)));
     QObject::connect(m_audioManager, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
-
 
     m_horLayout = new QHBoxLayout();
     m_horLayout->setMargin(0);

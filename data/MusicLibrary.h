@@ -22,12 +22,12 @@ class MusicLibrary : public QObject
         bool removeArtist(Artist& artist);
         bool removeArtist(const QString& name);
 
-        const QVector<Album*>& albums() const;
+        const QVector<Album*> albums() const;
         Album* album(const QString& title) const;
         bool removeAlbum(Album& album);
         bool removeAlbum(const QString& albumName, const QString &artistName);
 
-        const QVector<Track*>& tracks() const;
+        const QVector<Track*> tracks() const;
         bool removeTrack(Track& track);
         bool removeTrack(const QString& trackTitle, const QString& albumTitle);
 

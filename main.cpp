@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     QApplication::setFont(font);
 
     StackedWidget stackedWidget;
-    stackedWidget.show();
+    stackedWidget.showMaximized();
 
     return application.exec();
 }
