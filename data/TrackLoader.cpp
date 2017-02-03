@@ -32,7 +32,7 @@ void TrackLoader::onTracksLoaded()
     TrackLoaderThread* sender = static_cast<TrackLoaderThread*>(QObject::sender());
     qint8 index = m_trackLoaderThreads.indexOf(sender);
 
-    m_trackLoaderThreads.at(index)->deleteLater();
+    delete m_trackLoaderThreads.at(index);
     m_trackLoaderThreads.removeAt(index);
     m_threads.removeAt(index);
 }

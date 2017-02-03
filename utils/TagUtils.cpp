@@ -28,7 +28,7 @@ Track* TagUtils::readFlac(const QFileInfo& fileInfo)
     tags["cover"] = cover;
     // tags["lyrics"] = lyrics;
 
-    return musicLibrary->addTrack(tags);
+    //return musicLibrary->addTrack(tags);
 }
 
 QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
@@ -56,24 +56,20 @@ QString TagUtils::readFlacLyrics(const QFileInfo &fileInfo)
 
 QVariant TagUtils::readFlacTags(const QFileInfo &fileInfo)
 {
-    QVariantMap tags;
     TagLib::FLAC::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
+    QVariantMap tags;
 
     if(file.isValid() && file.tag())
     {
+        tags["track"] = file.tag()->track();
+        tags["title"] = TagUtils::StringToQString(file.tag()->title());
+        tags["path"] = fileInfo.canonicalFilePath();
+
         tags["album"] = TagUtils::StringToQString(file.tag()->album());
         tags["artist"] = TagUtils::StringToQString(file.tag()->artist());
-        tags["title"] = TagUtils::StringToQString(file.tag()->title());
-        tags["track"] = file.tag()->track();
-        tags["year"] = file.tag()->year();
-
-        tags["mimetype"] = TagUtils::extensionToMimetype(fileInfo.suffix());
-        tags["path"] = fileInfo.canonicalFilePath();
-        tags["size"] = (quint64) fileInfo.size();
 
         if(file.audioProperties())
         {
-            tags["bitrate"] = file.audioProperties()->bitrate();
             tags["duration"] = file.audioProperties()->length();
         }
     }
@@ -146,19 +142,15 @@ QVariant TagUtils::readMp3Tags(const QFileInfo &fileInfo)
 
     if(!fileRef.isNull() && fileRef.tag())
     {
+        tags["track"] = fileRef.tag()->track();
+        tags["title"] = TagUtils::StringToQString(fileRef.tag()->title());
+        tags["path"] = fileInfo.canonicalFilePath();
+
         tags["album"] = TagUtils::StringToQString(fileRef.tag()->album());
         tags["artist"] = TagUtils::StringToQString(fileRef.tag()->artist());
-        tags["title"] = TagUtils::StringToQString(fileRef.tag()->title());
-        tags["track"] = fileRef.tag()->track();
-        tags["year"] = fileRef.tag()->year();
-
-        tags["mimetype"] = TagUtils::extensionToMimetype(fileInfo.suffix());
-        tags["path"] = fileInfo.canonicalFilePath();
-        tags["size"] = (quint64) fileInfo.size();
 
         if(fileRef.audioProperties())
         {
-            tags["bitrate"] = fileRef.audioProperties()->bitrate();
             tags["duration"] = fileRef.audioProperties()->length();
         }
     }

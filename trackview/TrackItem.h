@@ -1,7 +1,8 @@
 #ifndef TRACKITEM_H
 #define TRACKITEM_H
 
-#include "track.h"
+#include "Track.h"
+#include "Utils.h"
 
 class TrackItem
 {

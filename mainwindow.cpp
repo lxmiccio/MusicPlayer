@@ -94,9 +94,4 @@ void MainWindow::onTrackStarted(const Track& track)
 
 void MainWindow::onTrackLoaded(Track* track)
 {
-    if(track)
-    {
-        qDebug() << track->title();
-        emit trackAdded(*track);
-    }
 }

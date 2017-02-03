@@ -17,54 +17,38 @@ class Track
         explicit Track();
         Track(const QVariantMap& tags, const Album* album);
 
+        quint16 track() const;
+        void setTrack(quint8 track);
+
         const QString& title() const;
         void setTitle(const QString& title);
-
-        const QPixmap& cover() const;
-        void setCover(const QPixmap& cover);
 
         const QString& lyrics() const;
         void setLyrics(const QString& lyrics);
 
-        quint8 track() const;
-        void setTrack(quint8 track);
-
-        quint8 year() const;
+        quint16 year() const;
         void setYear(quint8 year);
 
         quint32 duration() const;
-        QString durationInMinutes() const;
         void setDuration(quint32 duration);
-
-        quint32 bitrate() const;
-        void setBitrate(quint32 bitrate);
 
         const QString& path() const;
         void setPath(const QString& path);
 
-        quint64 size() const;
-        void setSize(quint64 size);
-
         const Album* album() const;
         void setAlbum(Album& album);
 
-        const Artist *artist() const;
-
-        static bool isSupportedSuffix(const QString& suffix);
+        const Artist* artist() const;
 
     private:
         const Album* c_album;
 
+        quint16 m_track;
         QString m_title;
-        QPixmap m_cover;
         QString m_lyrics;
-        quint8 m_track;
-        quint8 m_year;
+        quint16 m_year;
         quint32 m_duration;
-        quint32 m_bitrate;
-
         QString m_path;
-        quint64 m_size;
 };
 
 bool operator==(const Track& track1, const Track& track2);

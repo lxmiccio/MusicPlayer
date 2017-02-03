@@ -11,7 +11,7 @@ TrackItem::TrackItem(const Track* track, TrackItem* parent)
 {
     c_track = track;
     m_parent = parent;
-    m_data << QVariant(track->track()) << QVariant(track->title()) << QVariant(track->durationInMinutes());
+    m_data << QVariant(track->track()) << QVariant(track->title()) << QVariant(Utils::secondsToMinutes(track->duration()));
 }
 
 TrackItem::~TrackItem()

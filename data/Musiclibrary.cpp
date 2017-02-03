@@ -216,7 +216,7 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
 
                 track = new Track(tags, album);
                 album->addTrack(*track);
-                album->setCover(track->cover());
+                //album->setCover(track->cover());
 
                 emit albumAdded(album);
                 emit trackAdded(track);
@@ -232,7 +232,7 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
 
             track = new Track(tags, album);
             album->addTrack(*track);
-            album->setCover(track->cover());
+            //album->setCover(track->cover());
 
             emit artistAdded(artist);
             emit albumAdded(album);

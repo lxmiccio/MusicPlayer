@@ -52,7 +52,7 @@ const Track* Album::track(const QString& title) const
 void Album::addTrack(Track& track)
 {
     m_tracks.push_back(&track);
-    m_cover = track.cover();
+    //m_cover = track.cover();
 
     std::sort(m_tracks.begin(), m_tracks.end(), [] (const Track* track1, const Track* track2) -> bool {
         return track1->track() < track2->track();
