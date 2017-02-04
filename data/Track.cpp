@@ -20,6 +20,18 @@ Track::Track(const QVariantMap& tags, const Album* album)
     c_album = album;
 }
 
+Track::Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 duration, const QString& path, const Album* album)
+{
+    m_title = title;
+    m_lyrics = lyrics;
+    m_track = track;
+    m_year = year;
+    m_duration = duration;
+    m_path = path;
+
+    c_album = album;
+}
+
 const QString& Track::title() const
 {
     return m_title;

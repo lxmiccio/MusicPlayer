@@ -1,5 +1,7 @@
 #include "MusicLibrary.h"
 
+#include "TagUtils.h"
+
 QPointer<MusicLibrary> MusicLibrary::m_instance = 0;
 
 MusicLibrary::MusicLibrary()
@@ -80,6 +82,25 @@ Album* MusicLibrary::album(const QString& title) const
             if(i_album->title() == title)
             {
                 return i_album;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+Album* MusicLibrary::album(const QString& title, const QString& artistName) const
+{
+    foreach(Artist* i_artist, m_artists)
+    {
+        if(i_artist->name() == artistName)
+        {
+            foreach(Album* i_album, i_artist->albums())
+            {
+                if(i_album->title() == title)
+                {
+                    return i_album;
+                }
             }
         }
     }
@@ -176,69 +197,70 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
 {
     QMutexLocker locker(&m_mutex);
 
-    Artist* artist = NULL;
-    Album* album = NULL;
-    Track* track = NULL;
+    Artist* l_artist = NULL;
+    Album* l_album = NULL;
+    Track* l_track = NULL;
 
-    if(tags["artist"].toString().length() > 0 && tags["album"].toString().length() > 0 && tags["title"].toString().length() > 0 && tags["track"] > 0)
+    if(tags["artist"].toString().length() > 0)
     {
-        foreach(Artist* i_artist, m_artists)
+        l_artist = artist(tags["artist"].toString());
+
+        if(!l_artist)
         {
-            if(i_artist->name() == tags["artist"].toString())
-            {
-                artist = i_artist;
-                break;
-            }
+            l_artist = new Artist(tags["artist"].toString());
+            m_artists.push_back(l_artist);
+            emit artistAdded(l_artist);
         }
+    }
+    else
+    {
+        l_artist = artist("Unknown");
 
-        if(artist != NULL)
+        if(!l_artist)
         {
-            foreach(Album* i_album, artist->albums())
-            {
-                if(i_album->title() == tags["album"].toString())
-                {
-                    album = i_album;
-                    break;
-                }
-            }
-
-            if(album != NULL)
-            {
-                track = new Track(tags, album);
-                album->addTrack(*track);
-
-                emit trackAdded(track);
-            }
-            else
-            {
-                album = new Album(tags["album"].toString(), artist);
-                artist->addAlbum(*album);
-
-                track = new Track(tags, album);
-                album->addTrack(*track);
-                //album->setCover(track->cover());
-
-                emit albumAdded(album);
-                emit trackAdded(track);
-            }
-        }
-        else
-        {
-            artist = new Artist(tags["artist"].toString());
-            m_artists.push_back(artist);
-
-            album = new Album(tags["album"].toString(), artist);
-            artist->addAlbum(*album);
-
-            track = new Track(tags, album);
-            album->addTrack(*track);
-            //album->setCover(track->cover());
-
-            emit artistAdded(artist);
-            emit albumAdded(album);
-            emit trackAdded(track);
+            l_artist = new Artist("Unknown");
+            m_artists.push_back(l_artist);
+            emit artistAdded(l_artist);
         }
     }
 
-    return track;
+    if(tags["album"].toString().length() > 0)
+    {
+        l_album = album(tags["album"].toString());
+
+        if(!l_album)
+        {
+            l_album = new Album(tags["album"].toString(), l_artist);
+            l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
+            l_artist->addAlbum(*l_album);
+            emit albumAdded(l_album);
+        }
+    }
+    else
+    {
+        l_album = album("Unknown", l_artist->name());
+
+        if(!l_album)
+        {
+            l_album = new Album("Unknown", l_artist);
+            l_artist->addAlbum(*l_album);
+            emit albumAdded(l_album);
+        }
+    }
+
+    if(tags["title"].toString().length() > 0)
+    {
+        // tags["title"] = tags["patch"].toString().split("/").back().at(0);
+    }
+
+    l_track = const_cast<Track*>(l_album->track(tags["title"].toString()));
+
+    if(!l_track)
+    {
+        l_track = new Track(tags, l_album);
+        l_album->addTrack(*l_track);
+        emit trackAdded(l_track);
+    }
+
+    return l_track;
 }

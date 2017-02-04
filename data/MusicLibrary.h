@@ -24,6 +24,7 @@ class MusicLibrary : public QObject
 
         const QVector<Album*> albums() const;
         Album* album(const QString& title) const;
+        Album* album(const QString& title, const QString& artistName) const;
         bool removeAlbum(Album& album);
         bool removeAlbum(const QString& albumName, const QString &artistName);
 

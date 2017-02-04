@@ -16,6 +16,7 @@ class Track
     public:
         explicit Track();
         Track(const QVariantMap& tags, const Album* album);
+        Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 m_duration, const QString& m_path, const Album* album);
 
         quint16 track() const;
         void setTrack(quint8 track);
