@@ -40,9 +40,36 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
 
     QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_trackView, SLOT(onTrackStarted(const Track&)));
 
-    m_audioManager = new AudioManager(this);
-    QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioManager, SLOT(onTrackSelected(const Track&)));
-    QObject::connect(m_audioManager, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
+    m_audioControls = new AudioControls();
+
+    m_audioEngine = AudioEngine::instance();
+
+    QObject::connect(m_audioControls, SIGNAL(backwardClicked()), m_audioEngine, SLOT(onBackwardClicked()));
+    QObject::connect(m_audioControls, SIGNAL(playClicked()), m_audioEngine, SLOT(onPlayClicked()));
+    QObject::connect(m_audioControls, SIGNAL(pauseClicked()), m_audioEngine, SLOT(onPauseClicked()));
+    QObject::connect(m_audioControls, SIGNAL(forwardClicked()), m_audioEngine, SLOT(onForwardClicked()));
+    QObject::connect(m_audioControls, SIGNAL(trackValueChanged(int)), m_audioEngine, SLOT(onTrackValueChanged(int)));
+    QObject::connect(m_audioControls, SIGNAL(shuffleClicked(AudioControls::ShuffleMode_t)), m_audioEngine, SLOT(onShuffleClicked(AudioControls::ShuffleMode_t)));
+    QObject::connect(m_audioControls, SIGNAL(repeatClicked(AudioControls::RepeatMode_t)), m_audioEngine, SLOT(onRepeatClicked(AudioControls::RepeatMode_t)));
+    QObject::connect(m_audioControls, SIGNAL(volumeClicked(AudioControls::VolumeMode_t)), m_audioEngine, SLOT(onVolumeClicked(AudioControls::VolumeMode_t)));
+    QObject::connect(m_audioControls, SIGNAL(volumeValueChanged(int)), m_audioEngine, SLOT(onVolumeValueChanged(int)));
+
+    QObject::connect(m_audioEngine, SIGNAL(trackStarted(const Track&)), m_audioControls, SLOT(onTrackStarted(const Track&)));
+    QObject::connect(m_audioEngine, SIGNAL(positionChanged(qint64)), m_audioControls, SLOT(onPositionChanged(qint64)));
+    QObject::connect(m_audioEngine, SIGNAL(trackFinished()), m_audioControls, SLOT(onTrackFinished()));
+
+
+    QObject::connect(m_audioEngine, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
+    QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioEngine, SLOT(onTrackSelected(const Track&)));
+
+
+
+#if 0
+
+
+
+#endif
+
 
     m_horLayout = new QHBoxLayout();
     m_horLayout->setMargin(0);
@@ -55,13 +82,12 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     m_layout->setSpacing(0);
     m_trackView->hide();
     m_layout->addLayout(m_horLayout);
-    m_layout->addWidget(m_audioManager);
+    m_layout->addWidget(m_audioControls);
     setLayout(m_layout);
 
     m_musicLibrary = MusicLibrary::instance();
     m_trackLoader = new TrackLoader();
     QObject::connect(m_scrollableArea, SIGNAL(filesDropped(QVector<QFileInfo>)), m_trackLoader, SLOT(loadTracks(QVector<QFileInfo>)));
-    QObject::connect(m_trackLoader, SIGNAL(trackLoaded(Track*)), this, SLOT(onTrackLoaded(Track*)));
 }
 
 void MainWindow::onItemDoubleClicked(const Track& track)
@@ -82,16 +108,7 @@ void MainWindow::onCoverClicked(const Album& album)
     m_scrollableArea->hide();
 }
 
-void MainWindow::onTrackSelected(const Track& track)
-{
-    //emit trackSelected(track);
-}
-
 void MainWindow::onTrackStarted(const Track& track)
 {
     emit trackStarted(track);
-}
-
-void MainWindow::onTrackLoaded(Track* track)
-{
 }

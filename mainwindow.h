@@ -1,35 +1,19 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QListWidget>
-#include <QWidget>
-#include <QPushButton>
-#include <QSlider>
-#include <QVector>
-#include <QVBoxLayout>
-
-
-
+#include "AlbumView.h"
 #include "AudioManager.h"
-#include "playlist.h"
-#include "Track.h"
+#include "BackgroundWidget.h"
+#include "ImageButton.h"
 #include "MusicLibrary.h"
-#include "TrackLoader.h"
-
+#include "ScrollableArea.h"
+#include "StackedWidget.h"
 #include "TagUtils.h"
-
+#include "Track.h"
 #include "TrackDelegate.h"
 #include "TrackItem.h"
+#include "TrackLoader.h"
 #include "TrackView.h"
-
-#include "AlbumView.h"
-#include "ScrollableArea.h"
-
-#include "ImageButton.h"
-#include "StackedWidget.h"
-#include "BackgroundWidget.h"
-
-#include <QStandardItemModel>
 
 class MainWindow : public BackgroundWidget
 {
@@ -43,7 +27,8 @@ class MainWindow : public BackgroundWidget
 
         TrackView* m_trackView;
 
-        AudioManager* m_audioManager;
+        AudioControls* m_audioControls;
+        AudioEngine* m_audioEngine;
 
         QHBoxLayout* m_horLayout;
         QVBoxLayout* m_layout;
@@ -55,10 +40,8 @@ class MainWindow : public BackgroundWidget
         MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
 
     public slots:
-        void onTrackLoaded(Track* track);
         void onCoverClicked(const Album& album);
         void onItemDoubleClicked(const Track& track);
-        void onTrackSelected(const Track& track);
         void onTrackStarted(const Track& track);
         void coverClicked();
 

@@ -15,7 +15,6 @@ SOURCES += albumview/AlbumView.cpp \
     albumview/Cover.cpp \
     audio/AudioControls.cpp \
     audio/AudioEngine.cpp \
-    audio/AudioManager.cpp \
     audio/TrackSlider.cpp \
     data/Album.cpp \
     data/Artist.cpp \
@@ -48,7 +47,6 @@ HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
     audio/AudioControls.h \
     audio/AudioEngine.h \
-    audio/AudioManager.h \
     audio/TrackSlider.h \
     data/Album.h \
     data/Artist.h \
