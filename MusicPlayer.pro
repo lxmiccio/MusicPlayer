@@ -40,8 +40,8 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
     widgets/StackedWidget.cpp \
-    mainwindow.cpp \
-    main.cpp
+    main.cpp \
+    MainWindow.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -73,7 +73,7 @@ HEADERS  += albumview/AlbumView.h \
     widgets/Slider.h \
     widgets/ScrollableArea.h \
     widgets/StackedWidget.h \
-    mainwindow.h
+    MainWindow.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio
