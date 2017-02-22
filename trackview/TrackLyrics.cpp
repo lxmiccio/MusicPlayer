@@ -3,6 +3,7 @@
 #include <QScrollBar>
 
 #include "AudioEngine.h"
+#include "GuiUtils.h"
 #include "TrackAlbum.h"
 
 TrackLyrics::TrackLyrics(QWidget* parent) : QWidget(parent)
@@ -12,7 +13,7 @@ TrackLyrics::TrackLyrics(QWidget* parent) : QWidget(parent)
     m_lyrics->setWordWrap(true);
 
     m_scrollableArea = new ScrollableArea();
-    m_scrollableArea->verticalScrollBar()->hide();
+    m_scrollableArea->verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
     m_scrollableArea->setWidget(m_lyrics);
 
     m_layout = new QVBoxLayout();
