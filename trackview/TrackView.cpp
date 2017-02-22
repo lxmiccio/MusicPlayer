@@ -12,14 +12,13 @@ TrackView::TrackView(QWidget* parent) : QWidget(parent)
     QObject::connect(m_trackAlbum, SIGNAL(coverClicked()), this, SLOT(onCoverClicked()));
 
     m_trackLyrics = new TrackLyrics();
-    m_trackLyrics->setFixedWidth(500);
     QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_trackLyrics, SLOT(onTrackStarted(const Track&)));
 
     QVBoxLayout* m_leftLayout = new QVBoxLayout();
     m_leftLayout->addWidget(m_trackAlbum);
     m_leftLayout->addWidget(m_trackLyrics);
 
-    m_spacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_spacer = new QSpacerItem(48, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_model = new TrackModel();
 

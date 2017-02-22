@@ -19,10 +19,10 @@ class TrackAlbum : public QWidget
 
         void setAlbum(const Album* album);
 
-        static const quint16 WIDGET_HEIGHT = 275;
-        static const quint16 WIDGET_WIDTH = 500;
-        static const quint16 IMAGE_HEIGHT = 200;
-        static const quint16 IMAGE_WIDTH = 200;
+        static const quint16 WIDGET_HEIGHT = 200;
+        static const quint16 WIDGET_WIDTH = 300;
+        static const quint16 IMAGE_HEIGHT = 175;
+        static const quint16 IMAGE_WIDTH = 175;
 
     signals:
         void coverClicked();
@@ -35,9 +35,9 @@ class TrackAlbum : public QWidget
 
         ClickableLabel* m_cover;
         QSpacerItem* m_spacer1;
-        QLabel* m_albumTitle;
-        QSpacerItem* m_spacer2;
         QLabel* m_artistName;
+        QSpacerItem* m_spacer2;
+        QLabel* m_albumTitle;
         QSpacerItem* m_spacer3;
         QVBoxLayout* m_layout;
 };

@@ -32,7 +32,7 @@ class MusicLibrary : public QObject
         bool removeTrack(Track& track);
         bool removeTrack(const QString& trackTitle, const QString& albumTitle);
 
-        Track* addTrack(const QVariantMap& tags);
+        Track* addTrack(QVariantMap& tags);
 
     signals:
         void artistAdded(const Artist* artist);

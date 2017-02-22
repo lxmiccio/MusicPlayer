@@ -23,12 +23,12 @@ Track* TagUtils::readFlac(const QFileInfo& fileInfo)
 
     QPixmap cover = TagUtils::readFlacCover(fileInfo);
     // QString lyrics = TagUtils::readFlacLyrics(fileInfo);
-
     QVariantMap tags = TagUtils::readFlacTags(fileInfo).toMap();
+
     tags["cover"] = cover;
     // tags["lyrics"] = lyrics;
 
-    //return musicLibrary->addTrack(tags);
+    return musicLibrary->addTrack(tags);
 }
 
 QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
@@ -42,7 +42,7 @@ QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
 
         if(picture)
         {
-            return QPixmap::fromImage(QImage::fromData(QByteArray(picture->data().data(), picture->width() * picture->height())));
+            return QPixmap::fromImage(QImage::fromData(QByteArray(picture->data().data(), picture->data().size())));
         }
     }
 
@@ -51,7 +51,7 @@ QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
 
 QString TagUtils::readFlacLyrics(const QFileInfo &fileInfo)
 {
-    //TODO
+    //TODO --> read .lrc file if exists
 }
 
 QVariant TagUtils::readFlacTags(const QFileInfo &fileInfo)

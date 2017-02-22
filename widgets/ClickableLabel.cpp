@@ -58,14 +58,30 @@ void ClickableLabel::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
-void ClickableLabel::paintEvent(QPaintEvent*  event)
+void ClickableLabel::paintEvent(QPaintEvent* event)
 {
-    QPainter painter(this);
-    painter.setOpacity(m_opacity);
-    painter.setRenderHint(QPainter::TextAntialiasing);
+    if(pixmap())
+    {
+        QImage image(pixmap()->toImage());
+        QBrush brush(image);
+        QPen pen(Qt::transparent);
 
-    const QString elidedText = fontMetrics().elidedText(text(), Qt::ElideRight, contentsRect().width());
-    painter.drawText(contentsRect(), alignment(), elidedText);
+        QPainter painter(this);
+        painter.setPen(pen);
+        painter.setBrush(brush);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.drawRoundedRect(rect(), 10, 10);
+        setAlignment(Qt::AlignCenter);
+    }
+    else
+    {
+        QPainter painter(this);
+        painter.setOpacity(m_opacity);
+        painter.setRenderHint(QPainter::TextAntialiasing);
 
-    QLabel::paintEvent(event);
+        const QString elidedText = fontMetrics().elidedText(text(), Qt::ElideRight, contentsRect().width());
+        painter.drawText(contentsRect(), alignment(), elidedText);
+
+        QLabel::paintEvent(event);
+    }
 }

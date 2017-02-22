@@ -165,10 +165,16 @@ void AlbumView::clearLayout(QLayout* layout)
 
 quint8 AlbumView::albumsPerRow(quint16 width)
 {
+    if(width > 80)
     return (width - 80) / (Cover::COVER_WIDTH + 32);
+    else
+        return 1;
 }
 
 quint8 AlbumView::horizontalSpacerWidth(quint16 width)
 {
-    return (width - 80 - Cover::COVER_WIDTH * albumsPerRow(width)) / albumsPerRow(width);
+    if(albumsPerRow(width))
+        return (width - 80 - Cover::COVER_WIDTH * albumsPerRow(width)) / albumsPerRow(width);
+    else
+        return 0;
 }

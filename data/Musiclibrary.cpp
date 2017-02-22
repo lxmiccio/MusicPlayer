@@ -193,7 +193,7 @@ bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTi
     return false;
 }
 
-Track* MusicLibrary::addTrack(const QVariantMap& tags)
+Track* MusicLibrary::addTrack(QVariantMap& tags)
 {
     QMutexLocker locker(&m_mutex);
 
@@ -201,65 +201,78 @@ Track* MusicLibrary::addTrack(const QVariantMap& tags)
     Album* l_album = NULL;
     Track* l_track = NULL;
 
-    if(tags["artist"].toString().length() > 0)
+    if(tags["duration"].toInt() > 0)
     {
-        l_artist = artist(tags["artist"].toString());
-
-        if(!l_artist)
+        if(tags["artist"].toString().length() > 0)
         {
-            l_artist = new Artist(tags["artist"].toString());
-            m_artists.push_back(l_artist);
-            emit artistAdded(l_artist);
-        }
-    }
-    else
-    {
-        l_artist = artist("Unknown");
+            l_artist = artist(tags["artist"].toString());
 
-        if(!l_artist)
+            if(!l_artist)
+            {
+                l_artist = new Artist(tags["artist"].toString());
+                m_artists.push_back(l_artist);
+                emit artistAdded(l_artist);
+            }
+        }
+        else
         {
-            l_artist = new Artist("Unknown");
-            m_artists.push_back(l_artist);
-            emit artistAdded(l_artist);
+            l_artist = artist("Unknown");
+
+            if(!l_artist)
+            {
+                l_artist = new Artist("Unknown");
+                m_artists.push_back(l_artist);
+                emit artistAdded(l_artist);
+            }
         }
-    }
 
-    if(tags["album"].toString().length() > 0)
-    {
-        l_album = album(tags["album"].toString());
-
-        if(!l_album)
+        if(tags["album"].toString().length() > 0)
         {
-            l_album = new Album(tags["album"].toString(), l_artist);
-            l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
-            l_artist->addAlbum(*l_album);
-            emit albumAdded(l_album);
-        }
-    }
-    else
-    {
-        l_album = album("Unknown", l_artist->name());
+            l_album = album(tags["album"].toString(), l_artist->name());
 
-        if(!l_album)
+            if(!l_album)
+            {
+                l_album = new Album(tags["album"].toString(), l_artist);
+
+                if(tags["path"].toString().endsWith(".flac"))
+                {
+                    l_album->setCover(TagUtils::readFlacCover(QFileInfo(tags["path"].toString())));
+                }
+                else
+                {
+                    l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
+                }
+
+                l_artist->addAlbum(*l_album);
+                emit albumAdded(l_album);
+            }
+        }
+        else
         {
-            l_album = new Album("Unknown", l_artist);
-            l_artist->addAlbum(*l_album);
-            emit albumAdded(l_album);
+            l_album = album("Unknown", l_artist->name());
+
+            if(!l_album)
+            {
+                l_album = new Album("Unknown", l_artist);
+                l_artist->addAlbum(*l_album);
+                emit albumAdded(l_album);
+            }
         }
-    }
 
-    if(tags["title"].toString().length() > 0)
-    {
-        // tags["title"] = tags["patch"].toString().split("/").back().at(0);
-    }
+        if(tags["title"].toString().length() == 0)
+        {
+            QString title = tags["path"].toString().mid(tags["path"].toString().lastIndexOf("/") + 1);
+            tags["title"] = title.left(title.lastIndexOf("."));
+        }
 
-    l_track = const_cast<Track*>(l_album->track(tags["title"].toString()));
+        l_track = const_cast<Track*>(l_album->track(tags["title"].toString()));
 
-    if(!l_track)
-    {
-        l_track = new Track(tags, l_album);
-        l_album->addTrack(*l_track);
-        emit trackAdded(l_track);
+        if(!l_track)
+        {
+            l_track = new Track(tags, l_album);
+            l_album->addTrack(*l_track);
+            emit trackAdded(l_track);
+        }
     }
 
     return l_track;

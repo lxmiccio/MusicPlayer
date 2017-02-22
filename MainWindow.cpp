@@ -1,6 +1,5 @@
 #include "MainWindow.h"
 
-#include <QDebug>
 #include <QDir>
 #include <QFileDialog>
 #include <QMediaMetaData>
@@ -34,7 +33,7 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     QObject::connect(m_scrollableArea, SIGNAL(resized(QResizeEvent*)), m_albumView, SLOT(onScrollAreaResized(QResizeEvent*)));
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
-    m_trackView = new TrackView(this);
+    m_trackView = new TrackView();
     QObject::connect(m_trackView, SIGNAL(doubleClicked(const Track&)), this, SLOT(onItemDoubleClicked(const Track&)));
     QObject::connect(m_trackView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
 
@@ -58,17 +57,8 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     QObject::connect(m_audioEngine, SIGNAL(positionChanged(qint64)), m_audioControls, SLOT(onPositionChanged(qint64)));
     QObject::connect(m_audioEngine, SIGNAL(trackFinished()), m_audioControls, SLOT(onTrackFinished()));
 
-
     QObject::connect(m_audioEngine, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
     QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioEngine, SLOT(onTrackSelected(const Track&)));
-
-
-
-#if 0
-
-
-
-#endif
 
 
     m_horLayout = new QHBoxLayout();

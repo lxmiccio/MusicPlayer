@@ -88,7 +88,7 @@ INCLUDEPATH += $$PWD/widgets
 
 RESOURCES += resources.qrc
 
-unix|win32: LIBS += -L$$PWD/taglib/lib/ -lTagLib
+LIBS += -L$$PWD/taglib/lib/ -lTagLib
 
 INCLUDEPATH += $$PWD/taglib/include
 DEPENDPATH += $$PWD/taglib/include
