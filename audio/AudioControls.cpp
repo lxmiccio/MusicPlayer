@@ -5,7 +5,7 @@
 #include "ImageUtils.h"
 #include "Utils.h"
 
-AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
+AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcute(QKeySequence(Qt::CTRL + Qt::Key_M), true)
 {
     QSizePolicy sizePolicy;
 
@@ -173,6 +173,8 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent)
     QObject::connect(this, SIGNAL(positionChanged(qint64)), m_trackSlider, SLOT(onPositionChanged(qint64)));
     QObject::connect(this, SIGNAL(trackStarted(int)), m_trackSlider, SLOT(onTrackStarted(int)));
     QObject::connect(this, SIGNAL(trackFinished()), m_trackSlider, SLOT(onTrackFinished()));
+
+    QObject::connect(&m_volumeShortcute, SIGNAL(activated()), this, SLOT(onVolumeClicked()));
 }
 
 AudioControls::~AudioControls()

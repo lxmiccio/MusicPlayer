@@ -2,6 +2,7 @@
 #define AUDIOCONTROLS_H
 
 #include <QHBoxLayout>
+#include <QHotkey>
 #include <QLabel>
 #include <QObject>
 #include <QSlider>
@@ -81,6 +82,8 @@ class AudioControls : public QWidget
         RepeatMode_t m_repeatMode;
         ShuffleMode_t m_shuffleMode;
         VolumeMode_t m_volumeMode;
+
+        QHotkey m_volumeShortcute;
 
         QVBoxLayout* m_verticalLayout;
 

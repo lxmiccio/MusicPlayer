@@ -92,3 +92,5 @@ LIBS += -L$$PWD/taglib/lib/ -lTagLib
 
 INCLUDEPATH += $$PWD/taglib/include
 DEPENDPATH += $$PWD/taglib/include
+
+include($$PWD/../QHotkey/qhotkey.pri)
