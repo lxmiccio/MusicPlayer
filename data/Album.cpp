@@ -1,13 +1,12 @@
 #include "Album.h"
 
-Album::Album()
+Album::Album(QObject* parent) : QObject(parent)
 {
 }
 
-Album::Album(const QString& title, const Artist* artist)
-{    
-    c_artist = artist;
-
+Album::Album(const QString& title, Artist* artist, QObject* parent) : QObject(parent)
+{
+    m_artist = artist;
     m_title = title;
 }
 
@@ -38,10 +37,8 @@ const QVector<Track*>& Album::tracks() const
 
 const Track* Album::track(const QString& title) const
 {
-    foreach(Track* i_track, m_tracks)
-    {
-        if(i_track->title() == title)
-        {
+    foreach(Track* i_track, m_tracks) {
+        if(i_track->title() == title) {
             return i_track;
         }
     }
@@ -49,27 +46,23 @@ const Track* Album::track(const QString& title) const
     return NULL;
 }
 
-void Album::addTrack(Track& track)
+void Album::addTrack(Track* track)
 {
-    m_tracks.push_back(&track);
-    //m_cover = track.cover();
-
-    std::sort(m_tracks.begin(), m_tracks.end(), [] (const Track* track1, const Track* track2) -> bool {
-        return track1->track() < track2->track();
-    });
+    if(track) {
+        m_tracks.push_back(track);
+        std::sort(m_tracks.begin(), m_tracks.end());
+    }
 }
 
-bool Album::removeTrack(Track& track)
+bool Album::removeTrack(Track* track)
 {
-    return m_tracks.removeOne(&track);
+    return m_tracks.removeOne(track);
 }
 
 bool Album::removeTrack(const QString& title)
 {
-    foreach(Track* i_track, m_tracks)
-    {
-        if(i_track->title() == title)
-        {
+    foreach(Track* i_track, m_tracks) {
+        if(i_track->title() == title) {
             return m_tracks.removeOne(i_track);
         }
     }
@@ -77,17 +70,24 @@ bool Album::removeTrack(const QString& title)
     return false;
 }
 
-const Artist* Album::artist() const
+Artist* Album::artist() const
 {
-    return c_artist;
+    return m_artist;
 }
 
-void Album::setArtist(const Artist& artist)
+void Album::setArtist(Artist* artist)
 {
-    c_artist = &artist;
+    if(artist) {
+        m_artist = artist;
+    }
 }
 
 bool operator==(const Album& album1, const Album& album2)
 {
     return album1.title() == album2.title();
+}
+
+bool operator<(const Album& album1, const Album& album2)
+{
+    return album1.title() < album2.title();
 }

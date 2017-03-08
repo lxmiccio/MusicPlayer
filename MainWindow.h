@@ -4,6 +4,7 @@
 #include "AudioControls.h"
 #include "AudioEngine.h"
 #include "AlbumView.h"
+#include "artistview/ListArtistView.h"
 #include "BackgroundWidget.h"
 #include "ImageButton.h"
 #include "MusicLibrary.h"
@@ -24,6 +25,7 @@ class MainWindow : public BackgroundWidget
         const StackedWidget* c_stackedWidget;
 
         AlbumView* m_albumView;
+        ListArtistView* m_listArtistView;
         ScrollableArea* m_scrollableArea;
 
         TrackView* m_trackView;

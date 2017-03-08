@@ -1,14 +1,13 @@
-
 #include "Track.h"
 
 #include <QFileInfo>
 
-Track::Track()
+Track::Track(QObject* parent) : QObject(parent)
 {
 
 }
 
-Track::Track(const QVariantMap& tags, const Album* album)
+Track::Track(const QVariantMap& tags, Album* album, QObject* parent) : QObject(parent)
 {
     m_title = tags["title"].toString();
     m_lyrics = tags["lyrics"].toString();
@@ -17,10 +16,10 @@ Track::Track(const QVariantMap& tags, const Album* album)
     m_duration = tags["duration"].toUInt();
     m_path = tags["path"].toString();
 
-    c_album = album;
+    m_album = album;
 }
 
-Track::Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 duration, const QString& path, const Album* album)
+Track::Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 duration, const QString& path, Album* album, QObject* parent) : QObject(parent)
 {
     m_title = title;
     m_lyrics = lyrics;
@@ -29,7 +28,7 @@ Track::Track(quint16 track, const QString& title, const QString& lyrics, quint16
     m_duration = duration;
     m_path = path;
 
-    c_album = album;
+    m_album = album;
 }
 
 const QString& Track::title() const
@@ -42,16 +41,6 @@ void Track::setTitle(const QString& title)
     m_title = title;
 }
 
-const QString& Track::lyrics() const
-{
-    return m_lyrics;
-}
-
-void Track::setLyrics(const QString& lyrics)
-{
-    m_lyrics = lyrics;
-}
-
 quint16 Track::track() const
 {
     return m_track;
@@ -60,16 +49,6 @@ quint16 Track::track() const
 void Track::setTrack(quint8 track)
 {
     m_track = track;
-}
-
-quint16 Track::year() const
-{
-    return m_year;
-}
-
-void Track::setYear(quint8 year)
-{
-    m_year = year;
 }
 
 quint32 Track::duration() const
@@ -82,6 +61,26 @@ void Track::setDuration(quint32 duration)
     m_duration = duration;
 }
 
+quint16 Track::year() const
+{
+    return m_year;
+}
+
+void Track::setYear(quint8 year)
+{
+    m_year = year;
+}
+
+const QString& Track::lyrics() const
+{
+    return m_lyrics;
+}
+
+void Track::setLyrics(const QString& lyrics)
+{
+    m_lyrics = lyrics;
+}
+
 const QString& Track::path() const
 {
     return m_path;
@@ -92,19 +91,21 @@ void Track::setPath(const QString& path)
     m_path = path;
 }
 
-const Album* Track::album() const
+Album* Track::album() const
 {
-    return c_album;
+    return m_album;
 }
 
-void Track::setAlbum(Album& album)
+void Track::setAlbum(Album* album)
 {
-    c_album = &album;
+    if(album) {
+        m_album = album;
+    }
 }
 
-const Artist* Track::artist() const
+Artist* Track::artist() const
 {
-    return c_album ? c_album->artist() : NULL;
+    return m_album ? m_album->artist() : NULL;
 }
 
 bool operator==(const Track& track1, const Track& track2)

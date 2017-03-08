@@ -19,17 +19,17 @@ class MusicLibrary : public QObject
 
         const QVector<Artist*>& artists() const;
         Artist* artist(const QString& name) const;
-        bool removeArtist(Artist& artist);
+        bool removeArtist(Artist* artist);
         bool removeArtist(const QString& name);
 
         const QVector<Album*> albums() const;
         Album* album(const QString& title) const;
         Album* album(const QString& title, const QString& artistName) const;
-        bool removeAlbum(Album& album);
+        bool removeAlbum(Album* album);
         bool removeAlbum(const QString& albumName, const QString &artistName);
 
         const QVector<Track*> tracks() const;
-        bool removeTrack(Track& track);
+        bool removeTrack(Track* track);
         bool removeTrack(const QString& trackTitle, const QString& albumTitle);
 
         Track* addTrack(QVariantMap& tags);

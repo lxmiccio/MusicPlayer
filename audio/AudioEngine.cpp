@@ -41,7 +41,7 @@ void AudioEngine::onTrackSelected(const Track& track)
     m_playlist->clear();
     m_mediaPlaylist->clear();
 
-    const Album* album = track.album();
+    Album* album = track.album();
 
     if(album)
     {

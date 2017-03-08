@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QApplication application(argc, argv);
 
     qRegisterMetaType<QFileInfo>("QFileInfo");
-    qRegisterMetaType<Track>("Track");
+    qRegisterMetaType<Track*>("Track");
 
     QFontDatabase::addApplicationFont(":/fonts/sniglet-regular.ttf");
 

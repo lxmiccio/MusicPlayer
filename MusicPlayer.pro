@@ -41,7 +41,11 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/Slider.cpp \
     widgets/StackedWidget.cpp \
     main.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    artistview/ListArtistView.cpp \
+    artistview/ArtistWidget.cpp \
+    artistview/ArtistAlbumsView.cpp \
+    artistview/ArtistAlbumWidget.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -73,13 +77,18 @@ HEADERS  += albumview/AlbumView.h \
     widgets/Slider.h \
     widgets/ScrollableArea.h \
     widgets/StackedWidget.h \
-    MainWindow.h
+    MainWindow.h \
+    artistview/ListArtistView.h \
+    artistview/ArtistWidget.h \
+    artistview/ArtistAlbumsView.h \
+    artistview/ArtistAlbumWidget.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio
 INCLUDEPATH += $$PWD/data
 INCLUDEPATH += $$PWD/engine
 INCLUDEPATH += $$PWD/gui
+INCLUDEPATH += $$PWD/listartistview
 INCLUDEPATH += $$PWD/table
 INCLUDEPATH += $$PWD/tag
 INCLUDEPATH += $$PWD/trackview

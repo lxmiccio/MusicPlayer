@@ -10,8 +10,7 @@ MusicLibrary::MusicLibrary()
 
 MusicLibrary* MusicLibrary::instance()
 {
-    if(m_instance.isNull())
-    {
+    if(m_instance.isNull()) {
         m_instance = new MusicLibrary();
     }
 
@@ -25,10 +24,8 @@ const QVector<Artist*>& MusicLibrary::artists() const
 
 Artist* MusicLibrary::artist(const QString& name) const
 {
-    foreach(Artist* i_artist, m_artists)
-    {
-        if(i_artist->name() == name)
-        {
+    foreach(Artist* i_artist, m_artists) {
+        if(i_artist->name() == name) {
             return i_artist;
         }
     }
@@ -36,9 +33,9 @@ Artist* MusicLibrary::artist(const QString& name) const
     return NULL;
 }
 
-bool MusicLibrary::removeArtist(Artist& artist)
+bool MusicLibrary::removeArtist(Artist* artist)
 {
-    return m_artists.removeOne(&artist);
+    return m_artists.removeOne(artist);
 }
 
 bool MusicLibrary::removeArtist(const QString& name)
@@ -50,37 +47,20 @@ const QVector<Album*> MusicLibrary::albums() const
 {
     QVector<Album*> albums;
 
-    foreach(Artist* i_artist, m_artists)
-    {
-        foreach(Album* i_album, i_artist->albums())
-        {
+    foreach(Artist* i_artist, m_artists) {
+        foreach(Album* i_album, i_artist->albums()) {
             albums.push_back(i_album);
         }
     }
-
-    qSort(albums.begin(), albums.end(), [] (const Album* album1, const Album* album2) -> bool
-    {
-        if(album1->artist()->name() != album2->artist()->name())
-        {
-            return album1->artist()->name() < album2->artist()->name();
-        }
-        else
-        {
-            return album1->title() < album2->title();
-        }
-    });
 
     return albums;
 }
 
 Album* MusicLibrary::album(const QString& title) const
 {
-    foreach(Artist* i_artist, m_artists)
-    {
-        foreach(Album* i_album, i_artist->albums())
-        {
-            if(i_album->title() == title)
-            {
+    foreach(Artist* i_artist, m_artists) {
+        foreach(Album* i_album, i_artist->albums()) {
+            if(i_album->title() == title) {
                 return i_album;
             }
         }
@@ -91,14 +71,10 @@ Album* MusicLibrary::album(const QString& title) const
 
 Album* MusicLibrary::album(const QString& title, const QString& artistName) const
 {
-    foreach(Artist* i_artist, m_artists)
-    {
-        if(i_artist->name() == artistName)
-        {
-            foreach(Album* i_album, i_artist->albums())
-            {
-                if(i_album->title() == title)
-                {
+    foreach(Artist* i_artist, m_artists) {
+        if(i_artist->name() == artistName) {
+            foreach(Album* i_album, i_artist->albums()) {
+                if(i_album->title() == title) {
                     return i_album;
                 }
             }
@@ -108,12 +84,10 @@ Album* MusicLibrary::album(const QString& title, const QString& artistName) cons
     return NULL;
 }
 
-bool MusicLibrary::removeAlbum(Album& album)
+bool MusicLibrary::removeAlbum(Album* album)
 {
-    foreach(Artist* i_artist, m_artists)
-    {
-        if(i_artist->removeAlbum(album))
-        {
+    foreach(Artist* i_artist, m_artists) {
+        if(i_artist->removeAlbum(album)) {
             return true;
         }
     }
@@ -123,12 +97,9 @@ bool MusicLibrary::removeAlbum(Album& album)
 
 bool MusicLibrary::removeAlbum(const QString& albumName, const QString& artistName)
 {
-    if(artist(artistName))
-    {
+    if(artist(artistName)) {
         return artist(artistName)->removeAlbum(albumName);
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
@@ -137,44 +108,22 @@ const QVector<Track*> MusicLibrary::tracks() const
 {
     QVector<Track*> tracks;
 
-    foreach(Artist* i_artist, m_artists)
-    {
-        foreach(Album* i_album, i_artist->albums())
-        {
-            foreach(Track *i_track, i_album->tracks())
-            {
+    foreach(Artist* i_artist, m_artists) {
+        foreach(Album* i_album, i_artist->albums()) {
+            foreach(Track *i_track, i_album->tracks()) {
                 tracks.push_back(i_track);
             }
         }
     }
 
-    qSort(tracks.begin(), tracks.end(), [] (const Track* track1, const Track* track2) -> bool
-    {
-        if(track1->album()->artist()->name() != track2->album()->artist()->name())
-        {
-            return track1->album()->artist()->name() < track2->album()->artist()->name();
-        }
-        else if(track1->album()->title() != track2->album()->title())
-        {
-            return track1->album()->title() < track2->album()->title();
-        }
-        else
-        {
-            return track1->title() < track2->title();
-        }
-    });
-
     return tracks;
 }
 
-bool MusicLibrary::removeTrack(Track& track)
+bool MusicLibrary::removeTrack(Track* track)
 {
-    foreach(Artist* i_artist, m_artists)
-    {
-        foreach(Album* i_album, i_artist->albums())
-        {
-            if(i_album->removeTrack(track))
-            {
+    foreach(Artist* i_artist, m_artists) {
+        foreach(Album* i_album, i_artist->albums()) {
+            if(i_album->removeTrack(track)) {
                 return true;
             }
         }
@@ -185,8 +134,7 @@ bool MusicLibrary::removeTrack(Track& track)
 
 bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTitle)
 {
-    if(album(albumTitle) != NULL)
-    {
+    if(album(albumTitle) != NULL) {
         return album(albumTitle)->removeTrack(trackTitle);
     }
 
@@ -243,7 +191,7 @@ Track* MusicLibrary::addTrack(QVariantMap& tags)
                     l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
                 }
 
-                l_artist->addAlbum(*l_album);
+                l_artist->addAlbum(l_album);
                 emit albumAdded(l_album);
             }
         }
@@ -254,7 +202,7 @@ Track* MusicLibrary::addTrack(QVariantMap& tags)
             if(!l_album)
             {
                 l_album = new Album("Unknown", l_artist);
-                l_artist->addAlbum(*l_album);
+                l_artist->addAlbum(l_album);
                 emit albumAdded(l_album);
             }
         }
@@ -270,7 +218,7 @@ Track* MusicLibrary::addTrack(QVariantMap& tags)
         if(!l_track)
         {
             l_track = new Track(tags, l_album);
-            l_album->addTrack(*l_track);
+            l_album->addTrack(l_track);
             emit trackAdded(l_track);
         }
     }

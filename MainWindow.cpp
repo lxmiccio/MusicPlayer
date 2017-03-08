@@ -27,12 +27,18 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
 
     c_stackedWidget = stackedWidget;
 
+#if 0
     m_scrollableArea = new ScrollableArea();
     m_albumView = new AlbumView();
     m_scrollableArea->setWidget(m_albumView);
     QObject::connect(m_scrollableArea, SIGNAL(resized(QResizeEvent*)), m_albumView, SLOT(onScrollAreaResized(QResizeEvent*)));
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
+#else
 
+    m_scrollableArea = new ScrollableArea();
+    m_listArtistView = new ListArtistView();
+    m_scrollableArea->setWidget(m_listArtistView);
+#endif
     m_trackView = new TrackView();
     QObject::connect(m_trackView, SIGNAL(doubleClicked(const Track&)), this, SLOT(onItemDoubleClicked(const Track&)));
     QObject::connect(m_trackView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
