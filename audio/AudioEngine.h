@@ -24,6 +24,7 @@ class AudioEngine : public QObject
 
     public slots:
         void onTrackSelected(const Track& track);
+        void onTrackSelected(Track* track);
 
         void onBackwardClicked();
         void onPlayClicked();

@@ -7,13 +7,22 @@ ListArtistView::ListArtistView(QWidget* parent) : QWidget(parent)
     m_middleVerticalSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_albumView = new ArtistAlbumsView();
+    QObject::connect(this, SIGNAL(coverClicked(const Artist*)), m_albumView, SLOT(onArtistChanged(const Artist*)));
 
-    m_layout = new QVBoxLayout();
+    m_leftLayout = new QVBoxLayout();
+    m_leftLayout->addItem(m_upperSpacer);
+    m_leftLayout->addItem(m_lowerSpacer);
+
+    m_layout = new QSplitter();
     m_layout->setContentsMargins(40, 16, 40, 12);
-    m_layout->addItem(m_upperSpacer);
-    m_layout->addItem(m_lowerSpacer);
+    QWidget* widget = new QWidget();
+    widget->setLayout(m_leftLayout);
+    m_layout->addWidget(widget);
     m_layout->addWidget(m_albumView);
-    setLayout(m_layout);
+
+    m_mainL = new QVBoxLayout();
+    m_mainL->addWidget(m_layout);
+    this->setLayout(m_mainL);
 
     MusicLibrary* musicLibrary = MusicLibrary::instance();
     QObject::connect(musicLibrary, SIGNAL(albumAdded(const Album*)), this, SLOT(onAlbumAdded(const Album*)));
@@ -45,8 +54,6 @@ void ListArtistView::onAlbumAdded(const Album* album)
     {
         QMutexLocker locker(&m_mutex);
 
-        m_albumView->onArtistChanged(album->artist());
-
         if(!m_artists.contains(album->artist()))
         {
             Artist* artist = album->artist();
@@ -54,7 +61,7 @@ void ListArtistView::onAlbumAdded(const Album* album)
 
             ArtistWidget* artistWidget = new ArtistWidget(artist);
             m_artistWidgets.push_back(artistWidget);
-            QObject::connect(artistWidget, SIGNAL(coverClicked(const Artist&)), this, SLOT(onCoverClicked(const Artist&)));
+            QObject::connect(artistWidget, SIGNAL(coverClicked(const Artist*)), this, SLOT(onCoverClicked(const Artist*)));
 
             qSort(m_artists.begin(), m_artists.end(), [] (const Artist* artist1, const Artist* artist2) -> bool {
                     return artist1->name() < artist2->name();
@@ -64,13 +71,13 @@ void ListArtistView::onAlbumAdded(const Album* album)
                     return artistWidget1->artist().name() < artistWidget2->artist().name();
             });
 
-            m_layout->insertWidget(m_layout->count() - 2, artistWidget);
-            m_layout->insertItem(m_layout->count() - 2, m_middleVerticalSpacer);
+            m_leftLayout->insertWidget(m_leftLayout->count() - 2, artistWidget);
+            m_leftLayout->insertItem(m_leftLayout->count() - 2, m_middleVerticalSpacer);
         }
     }
 }
 
-void ListArtistView::onCoverClicked(const Artist& artist)
+void ListArtistView::onCoverClicked(const Artist* artist)
 {
     emit coverClicked(artist);
 }

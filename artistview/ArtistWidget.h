@@ -23,7 +23,7 @@ class ArtistWidget : public QWidget
         static const quint16 IMAGE_WIDTH = 60;
 
     signals:
-        void coverClicked(const Artist& artist);
+        void coverClicked(const Artist* artist);
 
     private slots:
         void onCoverClicked();

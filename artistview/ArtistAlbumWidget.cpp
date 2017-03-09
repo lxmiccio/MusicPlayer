@@ -1,9 +1,27 @@
 #include "ArtistAlbumWidget.h"
 
+#include <QApplication>
+#include <QFont>
+
+#include "AudioEngine.h"
+
 ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
 {
+    QFont font = QApplication::font();
+    font.setBold(true);
+    font.setPointSize(11);
+
     m_cover = new QLabel();
+
     m_albumTitle = new ElidedLabel();
+    m_albumTitle->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+    m_albumTitle->setFont(font);
+    m_albumTitle->setStyleSheet(QString("color: white;"));
+
+    m_upperLayoutLeftSpacer = new QSpacerItem(32, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_upperLayoutRightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_middleSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_lowerLayoutLeftSpacer = new QSpacerItem(ArtistAlbumWidget::IMAGE_WIDTH - 6, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_model = new TrackModel();
 
@@ -14,18 +32,28 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_trackList->setShowGrid(false);
     m_trackList->horizontalHeader()->hide();
     m_trackList->verticalHeader()->hide();
-    // QObject::connect(m_trackList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
+    QObject::connect(m_trackList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
+    QObject::connect(this, SIGNAL(trackClicked(Track*)), AudioEngine::instance(), SLOT(onTrackSelected(Track*)));
 
     m_delegate = new TrackDelegate(m_trackList);
     m_trackList->setItemDelegate(m_delegate);
 
     m_upperLayout = new QHBoxLayout();
     m_upperLayout->addWidget(m_cover);
+    m_upperLayout->addItem(m_upperLayoutLeftSpacer);
     m_upperLayout->addWidget(m_albumTitle);
+    m_upperLayout->addItem(m_upperLayoutRightSpacer);
+
+    m_lowerLayout = new QHBoxLayout();
+    m_lowerLayout->addItem(m_lowerLayoutLeftSpacer);
+    m_lowerLayout->addWidget(m_trackList);
 
     m_layout = new QVBoxLayout();
+    m_layout->setContentsMargins(0, 0, 0, 0);
+    m_layout->setSpacing(0);
     m_layout->addLayout(m_upperLayout);
-    m_layout->addWidget(m_trackList);
+    m_layout->addItem(m_middleSpacer);
+    m_layout->addLayout(m_lowerLayout);
 
     setLayout(m_layout);
 }
@@ -49,13 +77,24 @@ void ArtistAlbumWidget::setAlbum(Album* album)
 
         m_albumTitle->setText(m_album->title());
 
-        foreach(Track* i_track, album->tracks())
+        QVector<Track*> tracks = album->tracks();
+        std::sort(tracks.begin(), tracks.end(), Track::operator<);
+
+        foreach(Track* i_track, tracks)
         {
             TrackItem* item = new TrackItem(i_track);
             m_items.push_back(item);
             m_model->appendItem(i_track);
         }
+
+        m_trackList->fitHeight();
     }
+}
+
+void ArtistAlbumWidget::onDoubleClicked(const QModelIndex& index)
+{
+    Track* track = const_cast<Track*>(m_items.at(index.row())->track());
+    emit trackClicked(track);
 }
 
 void ArtistAlbumWidget::clear()

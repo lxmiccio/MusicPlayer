@@ -53,5 +53,5 @@ const Artist& ArtistWidget::artist() const
 
 void ArtistWidget::onCoverClicked()
 {
-    emit coverClicked(*c_artist);
+    emit coverClicked(c_artist);
 }

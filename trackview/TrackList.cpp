@@ -49,3 +49,33 @@ void TrackList::resizeEvent(QResizeEvent* event)
 
     QTableView::resizeEvent(event);
 }
+
+QSize TrackList::sizeHint()
+{
+    QSize hint = QTableView::sizeHint();
+
+    if(model())
+    {
+        quint16 width = verticalHeader()->width() + model()->columnCount() / 2;
+        for(quint8 i = 0; i < model()->columnCount(); ++i)
+        {
+           width += columnWidth(i);
+        }
+
+        quint16 height = horizontalHeader()->height() + model()->rowCount() / 2;
+        for (quint8 i = 0; i < model()->rowCount(); ++i)
+        {
+           height += rowHeight(i);
+        }
+
+        hint.setWidth(width);
+        hint.setHeight(height);
+    }
+
+    return hint;
+}
+
+void TrackList::fitHeight()
+{
+    setMinimumHeight(sizeHint().height());
+}

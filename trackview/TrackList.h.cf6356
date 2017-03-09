@@ -1,9 +1,8 @@
 #ifndef TRACKTABLEVIEW_H
 #define TRACKTABLEVIEW_H
 
-#include <QHeaderView>
 #include <QTableView>
-#include <QDebug>
+
 class TrackList : public QTableView
 {
         Q_OBJECT
@@ -11,8 +10,6 @@ class TrackList : public QTableView
     public:
         explicit TrackList(QWidget* parent = 0);
         ~TrackList();
-
-        void fitHeight();
 
         static const quint8 TRACK = 0;
         static const quint8 TITLE = 1;
@@ -27,7 +24,11 @@ class TrackList : public QTableView
 
     protected:
         virtual void resizeEvent(QResizeEvent* event);
-        virtual QSize sizeHint();
+        int sizeHintForRow(int row) {
+            QSize s = QSize();
+                s.setHeight(QTableView::sizeHint().width());
+                return s.height();
+        }
 };
 
 #endif // TRACKTABLEVIEW_H

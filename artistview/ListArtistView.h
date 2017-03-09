@@ -1,10 +1,10 @@
 #ifndef LISTARTISTVIEW_H
 #define LISTARTISTVIEW_H
 
-#include <QHBoxLayout>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QSpacerItem>
+#include <QSplitter>
 #include <QVBoxLayout>
 
 #include "ArtistAlbumsView.h"
@@ -23,7 +23,7 @@ class ListArtistView : public QWidget
         void onScrollAreaResized(QResizeEvent* event);
 
     signals:
-        void coverClicked(const Artist& artist);
+        void coverClicked(const Artist* artist);
 
     protected:
         void clearLayout(QLayout* layout);
@@ -33,14 +33,16 @@ class ListArtistView : public QWidget
 
     private slots:
         void onAlbumAdded(const Album* album);
-        void onCoverClicked(const Artist& artist);
+        void onCoverClicked(const Artist* artist);
 
     private:
         QMutex m_mutex;
 
         QVector<ArtistWidget*> m_artistWidgets;
         QVector<Artist*> m_artists;
-        QVBoxLayout* m_layout;
+        QVBoxLayout* m_mainL;
+        QSplitter* m_layout;
+        QVBoxLayout* m_leftLayout;
 
         ArtistAlbumsView* m_albumView;
 

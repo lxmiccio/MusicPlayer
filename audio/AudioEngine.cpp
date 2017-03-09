@@ -61,6 +61,14 @@ void AudioEngine::onTrackSelected(const Track& track)
     emit trackStarted(track);
 }
 
+void AudioEngine::onTrackSelected(Track* track)
+{
+    if(track)
+    {
+        onTrackSelected(*track);
+    }
+}
+
 void AudioEngine::onBackwardClicked()
 {
     if(m_mediaPlaylist->currentIndex() == 0)
