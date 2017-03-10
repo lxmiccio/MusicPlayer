@@ -46,7 +46,7 @@ SOURCES += albumview/AlbumView.cpp \
     artistview/ArtistWidget.cpp \
     artistview/ArtistAlbumsView.cpp \
     artistview/ArtistAlbumWidget.cpp \
-    widgets/HorizontalLine.cpp
+    widgets/Line.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -83,7 +83,7 @@ HEADERS  += albumview/AlbumView.h \
     artistview/ArtistWidget.h \
     artistview/ArtistAlbumsView.h \
     artistview/ArtistAlbumWidget.h \
-    widgets/HorizontalLine.h
+    widgets/Line.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

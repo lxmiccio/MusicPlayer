@@ -3,9 +3,29 @@
 ArtistAlbumsView::ArtistAlbumsView(QWidget* parent) : QWidget(parent)
 {
     m_layout = new QVBoxLayout();
-    m_layout->setContentsMargins(0, 0, 0, 0);
-    m_layout->setSpacing(12);
+    m_layout->setContentsMargins(16, 0, 0, 0);
+    m_layout->setSpacing(16);
     setLayout(m_layout);
+}
+
+void ArtistAlbumsView::clearLayout(QLayout* layout)
+{
+    QLayoutItem* i_item;
+
+    while((i_item = layout->takeAt(0)) != NULL)
+    {
+        if(i_item->layout())
+        {
+            clearLayout(i_item->layout());
+            delete i_item->layout();
+        }
+        if(i_item->widget())
+        {
+            delete i_item->widget();
+        }
+
+        delete i_item;
+    }
 }
 
 void ArtistAlbumsView::onArtistChanged(const Artist* artist)
@@ -33,7 +53,7 @@ void ArtistAlbumsView::onArtistChanged(const Artist* artist)
 
                 if(i != widgetsToAdd - 1)
                 {
-                    HorizontalLine* line = new HorizontalLine();
+                    Line* line = new Line(Qt::Horizontal);
                     m_horizontalLines.push_back(line);
                 }
             }
