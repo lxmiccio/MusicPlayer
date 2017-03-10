@@ -50,7 +50,9 @@ void Album::addTrack(Track* track)
 {
     if(track) {
         m_tracks.push_back(track);
-        std::sort(m_tracks.begin(), m_tracks.end());
+        std::sort(m_tracks.begin(), m_tracks.end(), [] (const Track* track1, const Track* track2) -> bool {
+            return track1->track() < track2->track();
+        });
     }
 }
 

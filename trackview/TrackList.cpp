@@ -56,14 +56,14 @@ QSize TrackList::sizeHint()
 
     if(model())
     {
-        quint16 width = verticalHeader()->width() + model()->columnCount() / 2;
+        quint16 width = verticalHeader()->width() + 4;
         for(quint8 i = 0; i < model()->columnCount(); ++i)
         {
            width += columnWidth(i);
         }
 
-        quint16 height = horizontalHeader()->height() + model()->rowCount() / 2;
-        for (quint8 i = 0; i < model()->rowCount(); ++i)
+        quint16 height = horizontalHeader()->height() + 4;
+        for(quint8 i = 0; i < model()->rowCount(); ++i)
         {
            height += rowHeight(i);
         }
@@ -75,7 +75,7 @@ QSize TrackList::sizeHint()
     return hint;
 }
 
-void TrackList::fitHeight()
+QSize TrackList::fittingSize()
 {
-    setMinimumHeight(sizeHint().height());
+    return(sizeHint());
 }

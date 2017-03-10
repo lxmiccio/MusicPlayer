@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QFont>
+#include <QDebug>
 
 #include "AudioEngine.h"
 
@@ -22,6 +23,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_upperLayoutRightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_middleSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_lowerLayoutLeftSpacer = new QSpacerItem(ArtistAlbumWidget::IMAGE_WIDTH - 6, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     m_model = new TrackModel();
 
@@ -39,12 +41,16 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_trackList->setItemDelegate(m_delegate);
 
     m_upperLayout = new QHBoxLayout();
+    m_upperLayout->setContentsMargins(0,0,0,0);
+    m_upperLayout->setSpacing(0);
     m_upperLayout->addWidget(m_cover);
     m_upperLayout->addItem(m_upperLayoutLeftSpacer);
     m_upperLayout->addWidget(m_albumTitle);
     m_upperLayout->addItem(m_upperLayoutRightSpacer);
 
     m_lowerLayout = new QHBoxLayout();
+    m_lowerLayout->setContentsMargins(0,0,0,0);
+    m_lowerLayout->setSpacing(0);
     m_lowerLayout->addItem(m_lowerLayoutLeftSpacer);
     m_lowerLayout->addWidget(m_trackList);
 
@@ -54,6 +60,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_layout->addLayout(m_upperLayout);
     m_layout->addItem(m_middleSpacer);
     m_layout->addLayout(m_lowerLayout);
+    m_layout->addItem(m_lowerSpacer);
 
     setLayout(m_layout);
 }
@@ -78,7 +85,6 @@ void ArtistAlbumWidget::setAlbum(Album* album)
         m_albumTitle->setText(m_album->title());
 
         QVector<Track*> tracks = album->tracks();
-        std::sort(tracks.begin(), tracks.end(), Track::operator<);
 
         foreach(Track* i_track, tracks)
         {
@@ -87,7 +93,8 @@ void ArtistAlbumWidget::setAlbum(Album* album)
             m_model->appendItem(i_track);
         }
 
-        m_trackList->fitHeight();
+        m_trackList->setMinimumHeight(m_trackList->fittingSize().height());
+        setMinimumHeight(sizeHint().height());
     }
 }
 

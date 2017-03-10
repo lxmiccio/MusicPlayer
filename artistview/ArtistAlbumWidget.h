@@ -27,6 +27,20 @@ class ArtistAlbumWidget : public QWidget
         static const quint16 IMAGE_HEIGHT = 100;
         static const quint16 IMAGE_WIDTH = 100;
 
+    protected:
+        virtual QSize sizeHint()
+        {
+            QSize hint = QWidget::sizeHint();
+
+            if(m_layout && m_trackList)
+            {
+                hint.setHeight(ArtistAlbumWidget::IMAGE_HEIGHT + 40 + m_trackList->fittingSize().height());
+            }
+
+            return hint;
+        }
+
+
     signals:
         void trackClicked(Track* track);
 
@@ -53,6 +67,7 @@ class ArtistAlbumWidget : public QWidget
         QSpacerItem* m_upperLayoutRightSpacer;
         QSpacerItem* m_middleSpacer;
         QSpacerItem* m_lowerLayoutLeftSpacer;
+        QSpacerItem* m_lowerSpacer;
 };
 
 #endif // ARTISTALBUMWIDGET_H

@@ -1,12 +1,10 @@
 #include "ArtistAlbumsView.h"
 
-#include <QDebug>
-
 ArtistAlbumsView::ArtistAlbumsView(QWidget* parent) : QWidget(parent)
 {
     m_layout = new QVBoxLayout();
-    m_layout->setContentsMargins(0,0,0,0);
-    m_layout->setSpacing(0);
+    m_layout->setContentsMargins(0, 0, 0, 0);
+    m_layout->setSpacing(12);
     setLayout(m_layout);
 }
 
@@ -32,13 +30,24 @@ void ArtistAlbumsView::onArtistChanged(const Artist* artist)
             {
                 ArtistAlbumWidget* widget = new ArtistAlbumWidget();
                 m_widgets.push_back(widget);
-                m_layout->addWidget(widget);
+
+                if(i != widgetsToAdd - 1)
+                {
+                    HorizontalLine* line = new HorizontalLine();
+                    m_horizontalLines.push_back(line);
+                }
             }
         }
 
-        for(quint8 i = 0; i < artist->albums().size(); i++) {
+        for(quint8 i = 0; i < artist->albums().size(); i++)
+        {
             m_widgets.at(i)->setAlbum(artist->albums().at(i));
             m_layout->addWidget(m_widgets.at(i));
+
+            if(i != artist->albums().size() - 1)
+            {
+               m_layout->addWidget(m_horizontalLines.at(i));
+            }
         }
 
         locker.unlock();

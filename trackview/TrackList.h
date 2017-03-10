@@ -3,7 +3,7 @@
 
 #include <QHeaderView>
 #include <QTableView>
-#include <QDebug>
+
 class TrackList : public QTableView
 {
         Q_OBJECT
@@ -12,7 +12,7 @@ class TrackList : public QTableView
         explicit TrackList(QWidget* parent = 0);
         ~TrackList();
 
-        void fitHeight();
+        QSize fittingSize();
 
         static const quint8 TRACK = 0;
         static const quint8 TITLE = 1;

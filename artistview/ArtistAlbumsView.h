@@ -8,6 +8,7 @@
 
 #include "Artist.h"
 #include "ArtistAlbumWidget.h"
+#include "HorizontalLine.h"
 
 class ArtistAlbumsView : public QWidget
 {
@@ -43,6 +44,7 @@ class ArtistAlbumsView : public QWidget
     private:
         QMutex m_mutex;
         QVector<ArtistAlbumWidget*> m_widgets;
+        QVector<HorizontalLine*> m_horizontalLines;
         QVBoxLayout* m_layout;
 };
 
