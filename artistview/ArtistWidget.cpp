@@ -1,5 +1,4 @@
 #include "ArtistWidget.h"
-#include <QDebug>
 
 ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : QWidget(parent)
 {
@@ -43,7 +42,7 @@ ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : QWidget(pare
 
 ArtistWidget::~ArtistWidget()
 {
-
+    //TODO
 }
 
 const Artist& ArtistWidget::artist() const

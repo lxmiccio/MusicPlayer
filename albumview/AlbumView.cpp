@@ -33,6 +33,8 @@ AlbumView::AlbumView(QWidget* parent) : QWidget(parent)
 
 AlbumView::~AlbumView()
 {
+    clearLayout(m_layout);
+    delete m_layout;
 #if 0
     qDeleteAll(m_covers);
     qDeleteAll(m_layouts);

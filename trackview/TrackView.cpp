@@ -37,7 +37,6 @@ TrackView::TrackView(QWidget* parent) : QWidget(parent)
     m_layout->addItem(m_spacer);
     m_layout->addWidget(m_trackList);
 
-
     QVector<TrackItem*> m_items;
     m_delegate = new TrackDelegate(m_trackList);
     m_trackList->setItemDelegate(m_delegate);

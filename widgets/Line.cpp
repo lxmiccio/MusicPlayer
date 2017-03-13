@@ -22,7 +22,7 @@ void Line::paintEvent(QPaintEvent* event)
     QPointF point1 = QPointF(event->rect().topLeft().x(), event->rect().topLeft().y());
     QPointF point2;
 
-    if(m_orientation = Qt::Horizontal)
+    if(m_orientation == Qt::Horizontal)
     {
         point2 = QPointF(event->rect().topRight().x(), event->rect().topRight().y());
     }

@@ -39,7 +39,9 @@ void Artist::addAlbum(Album* album)
 {
     if(album) {
         m_albums.push_back(album);
-        std::sort(m_albums.begin(), m_albums.end());
+        std::sort(m_albums.begin(), m_albums.end(), [] (const Album* album1, const Album* album2) -> bool {
+            return album1->title() < album2->title();
+        });
     }
 }
 

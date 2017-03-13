@@ -35,11 +35,13 @@ Artist* MusicLibrary::artist(const QString& name) const
 
 bool MusicLibrary::removeArtist(Artist* artist)
 {
+    QMutexLocker locker(&m_mutex);
     return m_artists.removeOne(artist);
 }
 
 bool MusicLibrary::removeArtist(const QString& name)
 {
+    QMutexLocker locker(&m_mutex);
     return m_artists.removeOne(artist(name));
 }
 
@@ -86,6 +88,8 @@ Album* MusicLibrary::album(const QString& title, const QString& artistName) cons
 
 bool MusicLibrary::removeAlbum(Album* album)
 {
+    QMutexLocker locker(&m_mutex);
+
     foreach(Artist* i_artist, m_artists) {
         if(i_artist->removeAlbum(album)) {
             return true;
@@ -97,6 +101,8 @@ bool MusicLibrary::removeAlbum(Album* album)
 
 bool MusicLibrary::removeAlbum(const QString& albumName, const QString& artistName)
 {
+    QMutexLocker locker(&m_mutex);
+
     if(artist(artistName)) {
         return artist(artistName)->removeAlbum(albumName);
     } else {
@@ -121,6 +127,8 @@ const QVector<Track*> MusicLibrary::tracks() const
 
 bool MusicLibrary::removeTrack(Track* track)
 {
+    QMutexLocker locker(&m_mutex);
+
     foreach(Artist* i_artist, m_artists) {
         foreach(Album* i_album, i_artist->albums()) {
             if(i_album->removeTrack(track)) {
@@ -134,6 +142,8 @@ bool MusicLibrary::removeTrack(Track* track)
 
 bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTitle)
 {
+    QMutexLocker locker(&m_mutex);
+
     if(album(albumTitle) != NULL) {
         return album(albumTitle)->removeTrack(trackTitle);
     }
@@ -184,11 +194,11 @@ Track* MusicLibrary::addTrack(QVariantMap& tags)
 
                 if(tags["path"].toString().endsWith(".flac"))
                 {
-                    l_album->setCover(TagUtils::readFlacCover(QFileInfo(tags["path"].toString())));
+                    //l_album->setCover(TagUtils::readFlacCover(QFileInfo(tags["path"].toString())));
                 }
                 else
                 {
-                    l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
+                   // l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
                 }
 
                 l_artist->addAlbum(l_album);

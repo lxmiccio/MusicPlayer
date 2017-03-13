@@ -1,5 +1,5 @@
-#ifndef LISTARTISTVIEW_H
-#define LISTARTISTVIEW_H
+#ifndef ARTISTVIEW_H
+#define ARTISTVIEW_H
 
 #include <QMutex>
 #include <QMutexLocker>
@@ -10,17 +10,15 @@
 #include "ArtistAlbumsView.h"
 #include "ArtistWidget.h"
 #include "MusicLibrary.h"
+#include "ScrollableArea.h"
 
-class ListArtistView : public QWidget
+class ArtistView : public QWidget
 {
         Q_OBJECT
 
     public:
-        ListArtistView(QWidget* parent = 0);
-        ~ListArtistView();
-
-    public slots:
-        void onScrollAreaResized(QResizeEvent* event);
+        ArtistView(QWidget* parent = 0);
+        ~ArtistView();
 
     signals:
         void coverClicked(const Artist* artist);
@@ -40,15 +38,19 @@ class ListArtistView : public QWidget
 
         QVector<ArtistWidget*> m_artistWidgets;
         QVector<Artist*> m_artists;
-        QVBoxLayout* m_mainL;
-        QSplitter* m_layout;
+        QVBoxLayout* m_layout;
+        QSplitter* m_splitter;
+
         QVBoxLayout* m_leftLayout;
+        ScrollableArea* m_leftLayoutScrollable;
+        TrackLoader* m_trackLoader;
 
         ArtistAlbumsView* m_albumView;
+        ScrollableArea* m_albumViewScrollable;
 
         QSpacerItem* m_lowerSpacer;
         QSpacerItem* m_upperSpacer;
         QSpacerItem* m_middleVerticalSpacer;
 };
 
-#endif // LISTARTISTVIEW_H
+#endif // ARTISTVIEW_H

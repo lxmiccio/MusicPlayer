@@ -2,6 +2,8 @@
 #define TAGUTILS_H
 
 #include <QString>
+#include <QMutex>
+#include <QMutexLocker>
 #include <QFileInfo>
 #include <QVariant>
 
@@ -26,6 +28,9 @@ class TagUtils
         static QString StringToQString(const TagLib::String& string);
 
         static QString extensionToMimetype(const QString &extension);
+        static QString randomString(quint8 length = 8);
+
+        static QMutex MUTEX;
 };
 
 #endif // TAGUTILS_H

@@ -2,7 +2,6 @@
 
 #include <QApplication>
 #include <QFont>
-#include <QDebug>
 
 #include "AudioEngine.h"
 

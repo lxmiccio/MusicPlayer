@@ -1,5 +1,7 @@
 #include "TrackLoaderThread.h"
 
+#include "MusicLibrary.h"
+
 static Track* loadTrack(QFileInfo &file)
 {
     Track* track = new Track();
@@ -10,7 +12,21 @@ static Track* loadTrack(QFileInfo &file)
     }
     else if(file.suffix() == "mp3")
     {
+#if 1
         track = TagUtils::readMp3(file);
+#else
+        QVariantMap tags;
+        tags["track"] = 1;
+        tags["title"] = file.fileName();
+        tags["path"] = file.canonicalFilePath();
+
+        tags["album"] = "album";
+        tags["artist"] = "artist";
+        tags["duration"] = 300;
+
+        MusicLibrary* musicLibrary = MusicLibrary::instance();
+        return musicLibrary->addTrack(tags);
+#endif
     }
 
     return track;

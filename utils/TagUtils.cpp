@@ -52,6 +52,7 @@ QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
 QString TagUtils::readFlacLyrics(const QFileInfo &fileInfo)
 {
     //TODO --> read .lrc file if exists
+    return QString();
 }
 
 QVariant TagUtils::readFlacTags(const QFileInfo &fileInfo)
@@ -138,6 +139,8 @@ QString TagUtils::readMp3Lyrics(const QFileInfo &fileInfo)
 QVariant TagUtils::readMp3Tags(const QFileInfo &fileInfo)
 {
     QVariantMap tags;
+
+#ifdef DEBUG
     TagLib::FileRef fileRef(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
 
     if(!fileRef.isNull() && fileRef.tag())
@@ -151,11 +154,37 @@ QVariant TagUtils::readMp3Tags(const QFileInfo &fileInfo)
 
         if(fileRef.audioProperties())
         {
-            tags["duration"] = fileRef.audioProperties()->length();
+            tags["duration"] = fileRef.audioProperties()->lengthInSeconds();
         }
     }
+#else
+    tags["track"] = 1;
+    tags["title"] = randomString(12);
+    tags["path"] = fileInfo.canonicalFilePath();
+
+    tags["album"] = randomString(10);
+    tags["artist"] = randomString();
+
+    tags["duration"] = 60;
+#endif
 
     return tags;
+}
+
+QString TagUtils::randomString(quint8 length)
+{
+    qsrand(length);
+    QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+
+    QString randomString;
+    for(quint8 i = 0; i < length; ++i)
+    {
+        quint8 index = qrand() % possibleCharacters.length();
+        QChar nextChar = possibleCharacters.at(index);
+        randomString.append(nextChar);
+    }
+
+    return randomString;
 }
 
 char* TagUtils::QStringToBuffer(const QString& string)
