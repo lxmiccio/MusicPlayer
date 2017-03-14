@@ -36,6 +36,28 @@ void AudioEngine::close()
     delete m_instance;
 }
 
+Playlist* AudioEngine::playlist()
+{
+    return m_playlist;
+}
+
+void AudioEngine::onPlaylistSelected(Playlist* playlist)
+{
+    if(playlist && !playlist->tracks().isEmpty())
+    {
+        m_playlist = playlist;
+        m_mediaPlaylist->clear();
+
+        foreach(const Track* i_track, m_playlist->tracks())
+        {
+            m_mediaPlaylist->addMedia(QUrl::fromLocalFile(i_track->path()));
+            m_mediaPlaylist->setCurrentIndex(0);
+        }
+
+        emit trackStarted(*m_playlist->tracks().at(0));
+    }
+}
+
 void AudioEngine::onTrackSelected(const Track& track)
 {
     m_playlist->clear();
@@ -112,22 +134,22 @@ void AudioEngine::onShuffleClicked(AudioControls::ShuffleMode_t shuffleMode)
 {
     switch (shuffleMode)
     {
-    case AudioControls::SHUFFLE_OFF:
-    {
-        m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
-        break;
-    }
+        case AudioControls::SHUFFLE_OFF:
+        {
+            m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+            break;
+        }
 
-    case AudioControls::SHUFFLE_ON:
-    {
-        m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Random);
-        break;
-    }
+        case AudioControls::SHUFFLE_ON:
+        {
+            m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Random);
+            break;
+        }
 
-    default:
-    {
-        break;
-    }
+        default:
+        {
+            break;
+        }
     }
 }
 
@@ -135,28 +157,28 @@ void AudioEngine::onRepeatClicked(AudioControls::RepeatMode_t repeatMode)
 {
     switch (repeatMode)
     {
-    case AudioControls::REPEAT_NONE:
-    {
-        m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
-        break;
-    }
+        case AudioControls::REPEAT_NONE:
+        {
+            m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+            break;
+        }
 
-    case AudioControls::REPEAT_ONE:
-    {
-        m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
-        break;
-    }
+        case AudioControls::REPEAT_ONE:
+        {
+            m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+            break;
+        }
 
-    case AudioControls::REPEAT_ALL:
-    {
-        m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Loop);
-        break;
-    }
+        case AudioControls::REPEAT_ALL:
+        {
+            m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Loop);
+            break;
+        }
 
-    default:
-    {
-        break;
-    }
+        default:
+        {
+            break;
+        }
     }
 }
 
@@ -164,22 +186,22 @@ void AudioEngine::onVolumeClicked(AudioControls::VolumeMode_t volumeMode)
 {
     switch (volumeMode)
     {
-    case AudioControls::VOLUME_MUTED:
-    {
-        m_mediaPlayer->setMuted(true);
-        break;
-    }
+        case AudioControls::VOLUME_MUTED:
+        {
+            m_mediaPlayer->setMuted(true);
+            break;
+        }
 
-    case AudioControls::VOLUME_NOT_MUTED:
-    {
-        m_mediaPlayer->setMuted(false);
-        break;
-    }
+        case AudioControls::VOLUME_NOT_MUTED:
+        {
+            m_mediaPlayer->setMuted(false);
+            break;
+        }
 
-    default:
-    {
-        break;
-    }
+        default:
+        {
+            break;
+        }
     }
 }
 

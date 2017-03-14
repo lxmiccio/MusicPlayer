@@ -11,6 +11,7 @@
 #include <QWidget>
 
 #include "BackgroundWidget.h"
+#include "ClickableLabel.h"
 #include "ImageButton.h"
 #include "TrackSlider.h"
 #include "Slider.h"
@@ -65,6 +66,7 @@ class AudioControls : public QWidget
     signals:
         void trackStarted(int duration);
         void trackFinished();
+        void currentTrackClicked();
         void backwardClicked();
         void playClicked();
         void pauseClicked();
@@ -83,15 +85,15 @@ class AudioControls : public QWidget
         ShuffleMode_t m_shuffleMode;
         VolumeMode_t m_volumeMode;
 
-        QHotkey m_volumeShortcute;
+        QHotkey m_volumeShortcut;
 
         QVBoxLayout* m_verticalLayout;
 
         QHBoxLayout* m_upperHorizontalLayout;
         QSpacerItem* m_upperSpacer1;
-        QLabel* m_artist;
+        ClickableLabel* m_artist;
         QLabel* m_dash;
-        QLabel* m_track;
+        ClickableLabel* m_track;
         QSpacerItem* m_upperSpacer2;
 
         QHBoxLayout* m_lowerHorizontalLayout;

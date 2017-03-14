@@ -18,11 +18,14 @@ class AudioEngine : public QObject
         static AudioEngine* instance();
         void close();
 
+        Playlist* playlist();
+
     protected:
         AudioEngine();
         ~AudioEngine();
 
     public slots:
+        void onPlaylistSelected(Playlist* playlist);
         void onTrackSelected(const Track& track);
         void onTrackSelected(Track* track);
 

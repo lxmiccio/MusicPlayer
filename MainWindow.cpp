@@ -45,6 +45,7 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_trackView, SLOT(onTrackStarted(const Track&)));
 
     m_audioControls = new AudioControls();
+    QObject::connect(m_audioControls, SIGNAL(currentTrackClicked()), this, SLOT(onCurrentTrackClicked()));
 
     m_audioEngine = AudioEngine::instance();
 
@@ -98,7 +99,11 @@ void MainWindow::onItemDoubleClicked(const Track& track)
 
 void MainWindow::coverClicked()
 {
+#if ALBUM_VIEW
     m_scrollableArea->show();
+#else
+    m_artistView->show();
+#endif
     m_trackView->hide();
 }
 
@@ -107,6 +112,13 @@ void MainWindow::onCoverClicked(const Album& album)
     m_trackView->show();
     m_trackView->onAlbumSelected(album);
     m_scrollableArea->hide();
+}
+
+void MainWindow::onCurrentTrackClicked()
+{
+    m_trackView->show();
+    m_trackView->onPlaylistSelected(m_audioEngine->playlist());
+    m_artistView->hide();
 }
 
 void MainWindow::onTrackStarted(const Track& track)

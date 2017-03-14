@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "BackgroundWidget.h"
+#include "Playlist.h"
 #include "Track.h"
 #include "TrackAlbum.h"
 #include "TrackDelegate.h"
@@ -27,6 +28,7 @@ class TrackView : public QWidget
 
     public slots:
         void onAlbumSelected(const Album& album);
+        void onPlaylistSelected(const Playlist* playlist);
         void onTrackStarted(const Track& track);
 
     signals:

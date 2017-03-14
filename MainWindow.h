@@ -46,6 +46,7 @@ class MainWindow : public BackgroundWidget
         void onCoverClicked(const Album& album);
         void onItemDoubleClicked(const Track& track);
         void onTrackStarted(const Track& track);
+        void onCurrentTrackClicked();
         void coverClicked();
 
     signals:

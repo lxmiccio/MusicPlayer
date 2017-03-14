@@ -72,8 +72,26 @@ void TrackView::onAlbumSelected(const Album& album)
     m_trackAlbum->setAlbum(&album);
 }
 
+void TrackView::onPlaylistSelected(const Playlist* playlist)
+{
+    if(playlist && !playlist->tracks().isEmpty())
+    {
+        clear();
+
+        foreach(const Track* i_track, playlist->tracks())
+        {
+            TrackItem* item = new TrackItem(i_track);
+            m_items.push_back(item);
+            m_model->appendItem(i_track);
+        }
+
+        m_trackAlbum->setAlbum(playlist->tracks().at(0)->album());
+    }
+}
+
 void TrackView::onTrackStarted(const Track& track)
 {
+    m_trackAlbum->setAlbum(track.album());
     emit trackStarted(track);
 }
 

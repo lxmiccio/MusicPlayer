@@ -5,7 +5,7 @@
 #include "ImageUtils.h"
 #include "Utils.h"
 
-AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcute(QKeySequence(Qt::CTRL + Qt::Key_M), true)
+AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcut(QKeySequence(Qt::CTRL + Qt::Key_M), true)
 {
     QSizePolicy sizePolicy;
 
@@ -18,7 +18,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
 
     m_upperSpacer1 = new QSpacerItem(0, 0, QSizePolicy::Expanding);
 
-    m_artist = new QLabel();
+    m_artist = new ClickableLabel();
     m_artist->hide();
     m_artist->setFont(font);
     m_artist->setStyleSheet(QString("color: white;"));
@@ -31,7 +31,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     sizePolicy.setRetainSizeWhenHidden(true);
     m_dash->setSizePolicy(sizePolicy);
 
-    m_track = new QLabel();
+    m_track = new ClickableLabel();
     m_track->hide();
     m_track->setFont(font);
     m_track->setStyleSheet(QString("color: white;"));
@@ -158,6 +158,9 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
 
     setLayout(m_verticalLayout);
 
+    QObject::connect(m_artist, SIGNAL(clicked()), SIGNAL(currentTrackClicked()));
+    QObject::connect(m_track, SIGNAL(clicked()), SIGNAL(currentTrackClicked()));
+
     QObject::connect(m_backward, SIGNAL(clicked()), this, SLOT(onBackwardClicked()));
     QObject::connect(m_play, SIGNAL(clicked()), this, SLOT(onPlayClicked()));
     QObject::connect(m_pause, SIGNAL(clicked()), this, SLOT(onPauseClicked()));
@@ -174,7 +177,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     QObject::connect(this, SIGNAL(trackStarted(int)), m_trackSlider, SLOT(onTrackStarted(int)));
     QObject::connect(this, SIGNAL(trackFinished()), m_trackSlider, SLOT(onTrackFinished()));
 
-    QObject::connect(&m_volumeShortcute, SIGNAL(activated()), this, SLOT(onVolumeClicked()));
+    QObject::connect(&m_volumeShortcut, SIGNAL(activated()), this, SLOT(onVolumeClicked()));
 }
 
 AudioControls::~AudioControls()
