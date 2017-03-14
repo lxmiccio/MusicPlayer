@@ -14,15 +14,10 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_cover = new QLabel();
 
     m_albumTitle = new ElidedLabel();
-    m_albumTitle->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+    m_albumTitle->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    m_albumTitle->setContentsMargins(36, 0, 0, 0);
     m_albumTitle->setFont(font);
     m_albumTitle->setStyleSheet(QString("color: white;"));
-
-    m_upperLayoutLeftSpacer = new QSpacerItem(32, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_upperLayoutRightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-    m_middleSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_lowerLayoutLeftSpacer = new QSpacerItem(ArtistAlbumWidget::IMAGE_WIDTH - 6, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     m_model = new TrackModel();
 
@@ -39,8 +34,15 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_delegate = new TrackDelegate(m_trackList);
     m_trackList->setItemDelegate(m_delegate);
 
+#if LOWER_ALIGNMENT
+    m_upperLayoutLeftSpacer = new QSpacerItem(32, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_upperLayoutRightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_middleSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_lowerLayoutLeftSpacer = new QSpacerItem(ArtistAlbumWidget::IMAGE_WIDTH - 6, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+
     m_upperLayout = new QHBoxLayout();
-    m_upperLayout->setContentsMargins(0,0,0,0);
+    m_upperLayout->setContentsMargins(0, 0, 0, 0);
     m_upperLayout->setSpacing(0);
     m_upperLayout->addWidget(m_cover);
     m_upperLayout->addItem(m_upperLayoutLeftSpacer);
@@ -48,7 +50,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_upperLayout->addItem(m_upperLayoutRightSpacer);
 
     m_lowerLayout = new QHBoxLayout();
-    m_lowerLayout->setContentsMargins(0,0,0,0);
+    m_lowerLayout->setContentsMargins(0, 0, 0, 0);
     m_lowerLayout->setSpacing(0);
     m_lowerLayout->addItem(m_lowerLayoutLeftSpacer);
     m_lowerLayout->addWidget(m_trackList);
@@ -60,6 +62,29 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_layout->addItem(m_middleSpacer);
     m_layout->addLayout(m_lowerLayout);
     m_layout->addItem(m_lowerSpacer);
+#endif
+
+    m_leftLayoutUpperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftLayoutLowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+    m_rightLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    m_leftLayout = new QVBoxLayout();
+    m_leftLayout->setContentsMargins(0, 0, 0, 0);
+    m_leftLayout->setSpacing(0);
+    m_leftLayout->addItem(m_leftLayoutUpperSpacer);
+    m_leftLayout->addWidget(m_cover);
+    m_leftLayout->addItem(m_leftLayoutLowerSpacer);
+
+    m_rightLayout = new QVBoxLayout();
+    m_rightLayout->setContentsMargins(0, 0, 0, 0);
+    m_rightLayout->setSpacing(0);
+    m_rightLayout->addWidget(m_albumTitle);
+    m_rightLayout->addItem(m_rightLayoutMiddleSpacer);
+    m_rightLayout->addWidget(m_trackList);
+
+    m_layout = new QHBoxLayout();
+    m_layout->addLayout(m_leftLayout);
+    m_layout->addLayout(m_rightLayout);
 
     setLayout(m_layout);
 }
@@ -83,7 +108,7 @@ void ArtistAlbumWidget::setAlbum(Album* album)
 
         m_albumTitle->setText(m_album->title());
 
-        QVector<Track*> tracks = album->tracks();
+        QVector<Track*> tracks = m_album->tracks();
 
         foreach(Track* i_track, tracks)
         {
@@ -93,7 +118,6 @@ void ArtistAlbumWidget::setAlbum(Album* album)
         }
 
         m_trackList->setMinimumHeight(m_trackList->fittingSize().height());
-        setMinimumHeight(sizeHint().height());
     }
 }
 

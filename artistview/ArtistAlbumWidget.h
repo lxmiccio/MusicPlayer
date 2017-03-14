@@ -59,6 +59,15 @@ class ArtistAlbumWidget : public QWidget
         TrackModel* m_model;
         TrackDelegate* m_delegate;
 
+        QSpacerItem* m_leftLayoutUpperSpacer;
+        QSpacerItem* m_leftLayoutLowerSpacer;
+        QSpacerItem* m_rightLayoutMiddleSpacer;
+
+        QHBoxLayout* m_layout;
+        QVBoxLayout* m_leftLayout;
+        QVBoxLayout* m_rightLayout;
+
+#if LOWER_ALIGNMENT
         QVBoxLayout* m_layout;
         QHBoxLayout* m_upperLayout;
         QHBoxLayout* m_lowerLayout;
@@ -68,6 +77,8 @@ class ArtistAlbumWidget : public QWidget
         QSpacerItem* m_middleSpacer;
         QSpacerItem* m_lowerLayoutLeftSpacer;
         QSpacerItem* m_lowerSpacer;
+#endif
+
 };
 
 #endif // ARTISTALBUMWIDGET_H
