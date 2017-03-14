@@ -8,6 +8,11 @@ ArtistAlbumsView::ArtistAlbumsView(QWidget* parent) : QWidget(parent)
     setLayout(m_layout);
 }
 
+ArtistAlbumsView::~ArtistAlbumsView()
+{
+    clearLayout(m_layout);
+}
+
 void ArtistAlbumsView::clearLayout(QLayout* layout)
 {
     QLayoutItem* i_item;

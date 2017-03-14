@@ -12,7 +12,9 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_leftLayout->addItem(m_upperSpacer);
     m_leftLayout->addItem(m_lowerSpacer);
     ScrollableArea* m_leftLayoutScrollable = new ScrollableArea();
-    m_leftLayoutScrollable->setLayout(m_leftLayout);
+    QWidget* widget = new QWidget();
+    widget->setLayout(m_leftLayout);
+    m_leftLayoutScrollable->setWidget(widget);
     QObject::connect(m_leftLayoutScrollable, SIGNAL(filesDropped(QVector<QFileInfo>)), m_trackLoader, SLOT(loadTracks(QVector<QFileInfo>)));
 
     m_albumView = new ArtistAlbumsView();
@@ -34,7 +36,8 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
 
 ArtistView::~ArtistView()
 {
-    //TODO
+    clearLayout(m_leftLayout);
+    clearLayout(m_layout);
 }
 
 void ArtistView::clearLayout(QLayout* layout)

@@ -194,11 +194,11 @@ Track* MusicLibrary::addTrack(QVariantMap& tags)
 
                 if(tags["path"].toString().endsWith(".flac"))
                 {
-                    //l_album->setCover(TagUtils::readFlacCover(QFileInfo(tags["path"].toString())));
+                    l_album->setCover(TagUtils::readFlacCover(QFileInfo(tags["path"].toString())));
                 }
                 else
                 {
-                   // l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
+                   l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
                 }
 
                 l_artist->addAlbum(l_album);

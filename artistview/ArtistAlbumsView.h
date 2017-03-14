@@ -16,6 +16,7 @@ class ArtistAlbumsView : public QWidget
 
     public:
         ArtistAlbumsView(QWidget* parent = 0);
+        ~ArtistAlbumsView();
         void clearLayout(QLayout* layout);
 
     public slots:

@@ -140,7 +140,7 @@ QVariant TagUtils::readMp3Tags(const QFileInfo &fileInfo)
 {
     QVariantMap tags;
 
-#ifdef DEBUG
+#ifndef DEBUG
     TagLib::FileRef fileRef(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
 
     if(!fileRef.isNull() && fileRef.tag())
@@ -173,7 +173,6 @@ QVariant TagUtils::readMp3Tags(const QFileInfo &fileInfo)
 
 QString TagUtils::randomString(quint8 length)
 {
-    qsrand(length);
     QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 
     QString randomString;

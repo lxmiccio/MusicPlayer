@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QFontDatabase>
+#include <QTime>
 
 #include "StackedWidget.h"
 #include "Track.h"
@@ -13,12 +14,14 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Track*>("Track");
 
     QFontDatabase::addApplicationFont(":/fonts/sniglet-regular.ttf");
-
     QFont font = QApplication::font();
     font.setFamily("Sniglet");
     font.setPointSize(9);
     font.setStyleStrategy(QFont::PreferAntialias);
     QApplication::setFont(font);
+
+    QTime time = QTime::currentTime();
+    qsrand((uint) time.msec());
 
     StackedWidget stackedWidget;
     stackedWidget.showMaximized();

@@ -35,6 +35,7 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 #else
     m_artistView = new ArtistView();
+    m_artistView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 #endif
 
     m_trackView = new TrackView();
