@@ -2,6 +2,7 @@
 #define ARTISTWIDGET_H
 
 #include <QHBoxLayout>
+#include <QPoint>
 
 #include "Artist.h"
 #include "ClickableLabel.h"
@@ -24,9 +25,11 @@ class ArtistWidget : public QWidget
 
     signals:
         void coverClicked(const Artist* artist);
+        void removeArtistWidgetClicked(ArtistWidget* widget);
 
     private slots:
         void onCoverClicked();
+        void onContextMenuRequested(QPoint pos);
 
     private:
         const Artist* c_artist;

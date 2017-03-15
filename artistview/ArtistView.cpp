@@ -51,6 +51,11 @@ void ArtistView::clearLayout(QLayout* layout)
             clearLayout(i_item->layout());
             delete i_item->layout();
         }
+
+        if(i_item->widget())
+        {
+            i_item->widget()->hide();
+        }
     }
 }
 
@@ -96,6 +101,22 @@ void ArtistView::repaintCovers()
     }
 }
 
+void ArtistView::repaintCoversAfterWidgetRemoved()
+{
+    QMutexLocker locker(&m_mutex);
+
+    clearLayout(m_leftLayout);
+    m_leftLayout->addItem(m_upperSpacer);
+    m_leftLayout->addItem(m_lowerSpacer);
+
+    foreach(ArtistWidget* i_artistWidget, m_artistWidgets)
+    {
+        m_leftLayout->insertWidget(m_leftLayout->count() - 2, i_artistWidget);
+        m_leftLayout->insertItem(m_leftLayout->count() - 2, m_middleVerticalSpacer);
+        i_artistWidget->show();
+    }
+}
+
 void ArtistView::onAlbumAdded(const Album* album)
 {
     if(album && album->artist())
@@ -110,6 +131,7 @@ void ArtistView::onAlbumAdded(const Album* album)
             ArtistWidget* artistWidget = new ArtistWidget(artist);
             m_artistWidgets.push_back(artistWidget);
             QObject::connect(artistWidget, SIGNAL(coverClicked(const Artist*)), this, SLOT(onCoverClicked(const Artist*)));
+            QObject::connect(artistWidget, SIGNAL(removeArtistWidgetClicked(ArtistWidget*)), this, SLOT(onRemoveArtistWidgetClicked(ArtistWidget*)));
 
             m_leftLayout->insertWidget(m_leftLayout->count() - 2, artistWidget);
             m_leftLayout->insertItem(m_leftLayout->count() - 2, m_middleVerticalSpacer);
@@ -120,4 +142,16 @@ void ArtistView::onAlbumAdded(const Album* album)
 void ArtistView::onCoverClicked(const Artist* artist)
 {
     emit coverClicked(artist);
+}
+
+void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
+{
+    if(widget)
+    {
+        m_artists.removeOne(const_cast<Artist*>(&widget->artist()));
+        m_artistWidgets.removeOne(widget);
+        repaintCoversAfterWidgetRemoved();
+        //TODO: Check if ArtistAlbumView had the deleted artist
+        //TODO: Stop the track if it belonged to the deleted artist?
+    }
 }

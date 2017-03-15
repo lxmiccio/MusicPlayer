@@ -28,10 +28,12 @@ class ArtistView : public QWidget
 
     private:
         void repaintCovers();
+        void repaintCoversAfterWidgetRemoved();
 
     private slots:
         void onAlbumAdded(const Album* album);
         void onCoverClicked(const Artist* artist);
+        void onRemoveArtistWidgetClicked(ArtistWidget* widget);
 
     private:
         QMutex m_mutex;

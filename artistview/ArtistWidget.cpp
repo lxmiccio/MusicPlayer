@@ -1,5 +1,8 @@
 #include "ArtistWidget.h"
 
+#include <QAction>
+#include <QMenu>
+
 ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : QWidget(parent)
 {
     c_artist = artist;
@@ -32,13 +35,15 @@ ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : QWidget(pare
     m_layout->addWidget(m_cover);
     m_layout->addWidget(m_artistName);
 
+    setContextMenuPolicy(Qt::CustomContextMenu);
     setMaximumSize(ArtistWidget::WIDGET_WIDTH, ArtistWidget::WIDGET_HEIGHT);
     setLayout(m_layout);
 
     QObject::connect(m_cover, SIGNAL(clicked()), this, SLOT(onCoverClicked()));
     QObject::connect(m_artistName, SIGNAL(clicked()), this, SLOT(onCoverClicked()));
-}
 
+    QObject::connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onContextMenuRequested(QPoint)));
+}
 
 ArtistWidget::~ArtistWidget()
 {
@@ -53,4 +58,15 @@ const Artist& ArtistWidget::artist() const
 void ArtistWidget::onCoverClicked()
 {
     emit coverClicked(c_artist);
+}
+
+void ArtistWidget::onContextMenuRequested(QPoint pos)
+{
+    QMenu* menu = new QMenu();
+
+    QAction action1("Remove", this);
+    QObject::connect(&action1, &QAction::triggered, [=] () { emit removeArtistWidgetClicked(this); });
+    menu->addAction(&action1);
+
+    menu->exec(mapToGlobal(pos));
 }
