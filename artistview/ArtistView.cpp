@@ -20,6 +20,7 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_albumView = new ArtistAlbumsView();
     m_albumViewScrollable = new ScrollableArea();
     m_albumViewScrollable->setWidget(m_albumView);
+    m_albumViewScrollable->hide();
     QObject::connect(this, SIGNAL(coverClicked(const Artist*)), m_albumView, SLOT(onArtistChanged(const Artist*)));
 
     m_splitter = new QSplitter();
@@ -40,6 +41,8 @@ ArtistView::~ArtistView()
     clearLayout(m_layout);
 }
 
+/* To improve performance the widgets into the given layout aren't deleted
+ * Because of that, before calling clearLayout, be sure to delete the widget that hasn't to be shown */
 void ArtistView::clearLayout(QLayout* layout)
 {
     QLayoutItem* i_item;
@@ -50,11 +53,6 @@ void ArtistView::clearLayout(QLayout* layout)
         {
             clearLayout(i_item->layout());
             delete i_item->layout();
-        }
-
-        if(i_item->widget())
-        {
-            i_item->widget()->hide();
         }
     }
 }
@@ -86,7 +84,7 @@ void ArtistView::repaintCovers()
     if(repaint)
     {
         qSort(m_artistWidgets.begin(), m_artistWidgets.end(), [] (const ArtistWidget* artistWidget1, const ArtistWidget* artistWidget2) -> bool {
-            return artistWidget1->artist().name() < artistWidget2->artist().name();
+            return artistWidget1->artist()->name() < artistWidget2->artist()->name();
         });
 
         clearLayout(m_leftLayout);
@@ -113,15 +111,17 @@ void ArtistView::repaintCoversAfterWidgetRemoved()
     {
         m_leftLayout->insertWidget(m_leftLayout->count() - 2, i_artistWidget);
         m_leftLayout->insertItem(m_leftLayout->count() - 2, m_middleVerticalSpacer);
-        i_artistWidget->show();
     }
 }
 
 void ArtistView::onAlbumAdded(const Album* album)
 {
+    //TODO Artists previously removed aren't shown anymore if they are added again */
     if(album && album->artist())
     {
         QMutexLocker locker(&m_mutex);
+
+        m_albumViewScrollable->show();
 
         if(!m_artists.contains(album->artist()))
         {
@@ -148,10 +148,36 @@ void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
 {
     if(widget)
     {
-        m_artists.removeOne(const_cast<Artist*>(&widget->artist()));
+        qint16 index = m_artistWidgets.indexOf(widget);
+        bool updateAlbumView = widget->artist() == m_albumView->artist();
+
+        m_artists.removeOne(const_cast<Artist*>(widget->artist()));
         m_artistWidgets.removeOne(widget);
+        widget->deleteLater();
+
+        if(updateAlbumView)
+        {
+            if(index == 0 && !m_artistWidgets.isEmpty())
+            {
+                m_albumView->onArtistChanged(m_artists.first());
+            }
+            else if(index == 0 && m_artistWidgets.isEmpty())
+            {
+                //TODO Handle no artists left
+                m_albumView->onArtistChanged(NULL);
+                m_albumViewScrollable->hide();
+            }
+            else if(index >= m_artistWidgets.size())
+            {
+                m_albumView->onArtistChanged(m_artists.last());
+            }
+            else
+            {
+                m_albumView->onArtistChanged(m_artists.at(index));
+            }
+        }
+
         repaintCoversAfterWidgetRemoved();
-        //TODO: Check if ArtistAlbumView had the deleted artist
         //TODO: Stop the track if it belonged to the deleted artist?
     }
 }

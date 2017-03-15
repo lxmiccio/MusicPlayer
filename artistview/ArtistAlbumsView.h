@@ -17,12 +17,15 @@ class ArtistAlbumsView : public QWidget
     public:
         ArtistAlbumsView(QWidget* parent = 0);
         ~ArtistAlbumsView();
+
+        const Artist* artist() const;
         void clearLayout(QLayout* layout);
 
     public slots:
         void onArtistChanged(const Artist* artist);
 
     private:
+        const Artist* c_artist;
         QMutex m_mutex;
         QVector<ArtistAlbumWidget*> m_widgets;
         QVector<Line*> m_lines;

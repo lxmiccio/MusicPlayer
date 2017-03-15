@@ -50,9 +50,9 @@ ArtistWidget::~ArtistWidget()
     //TODO
 }
 
-const Artist& ArtistWidget::artist() const
+const Artist* ArtistWidget::artist() const
 {
-    return *c_artist;
+    return c_artist;
 }
 
 void ArtistWidget::onCoverClicked()

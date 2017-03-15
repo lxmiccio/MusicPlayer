@@ -13,6 +13,11 @@ ArtistAlbumsView::~ArtistAlbumsView()
     clearLayout(m_layout);
 }
 
+const Artist* ArtistAlbumsView::artist() const
+{
+    return c_artist;
+}
+
 void ArtistAlbumsView::clearLayout(QLayout* layout)
 {
     QLayoutItem* i_item;
@@ -36,11 +41,13 @@ void ArtistAlbumsView::clearLayout(QLayout* layout)
 
 void ArtistAlbumsView::onArtistChanged(const Artist* artist)
 {
+    QMutexLocker locker(&m_mutex);
+    clearLayout(m_layout);
+
     if(artist)
     {
-        QMutexLocker locker(&m_mutex);
+        c_artist = artist;
 
-        clearLayout(m_layout);
         m_widgets.clear();
         m_lines.clear();
 

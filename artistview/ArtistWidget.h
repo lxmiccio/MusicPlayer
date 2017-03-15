@@ -16,7 +16,7 @@ class ArtistWidget : public QWidget
         explicit ArtistWidget(const Artist* artist, QWidget* parent = 0);
         ~ArtistWidget();
 
-        const Artist& artist() const;
+        const Artist* artist() const;
 
         static const quint16 WIDGET_HEIGHT = 60;
         static const quint16 WIDGET_WIDTH = 300;
