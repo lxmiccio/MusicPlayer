@@ -16,6 +16,9 @@ class TrackLoaderThread : public QObject
         Q_OBJECT
         QThread thread;
 
+    public:
+        ~TrackLoaderThread();
+
     public slots:
         void loadTracks(const QVector<QFileInfo>& tracks);
 

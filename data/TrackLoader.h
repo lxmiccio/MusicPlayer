@@ -15,6 +15,7 @@ class TrackLoader : public QObject
 
     public:
         TrackLoader();
+        ~TrackLoader();
         static Track* load(QFileInfo& file);
 
     public slots:

@@ -37,6 +37,7 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
 
 ArtistView::~ArtistView()
 {
+    delete m_trackLoader;
     clearLayout(m_leftLayout);
     clearLayout(m_layout);
 }

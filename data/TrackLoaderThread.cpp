@@ -32,6 +32,14 @@ static Track* loadTrack(QFileInfo &file)
     return track;
 }
 
+TrackLoaderThread::~TrackLoaderThread()
+{
+    m_future.cancel();
+    m_futureWatcher.cancel();
+    m_future.waitForFinished();
+    m_futureWatcher.waitForFinished();
+}
+
 void TrackLoaderThread::loadTracks(const QVector<QFileInfo>& tracks)
 {
     for(QVector<QFileInfo>::ConstIterator i_track = tracks.begin(); i_track < tracks.end(); ++i_track)

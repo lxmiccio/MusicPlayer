@@ -92,6 +92,10 @@ MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : Ba
 #endif
 }
 
+MainWindow::~MainWindow()
+{
+}
+
 void MainWindow::onItemDoubleClicked(const Track& track)
 {
     emit trackClicked(track);

@@ -4,6 +4,15 @@ TrackLoader::TrackLoader()
 {
 }
 
+TrackLoader::~TrackLoader()
+{
+    for(quint8 i = 0; i < m_threads.size() && i < m_trackLoaderThreads.size(); ++i)
+    {
+        delete m_trackLoaderThreads.at(i);
+        m_threads.at(i)->deleteLater();
+    }
+}
+
 void TrackLoader::loadTracks(const QVector<QFileInfo>& filesInfo)
 {
     QThread* thread = new QThread();

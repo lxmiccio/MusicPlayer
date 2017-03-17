@@ -41,6 +41,7 @@ class MainWindow : public BackgroundWidget
 
     public:
         MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
+        ~MainWindow();
 
     public slots:
         void onCoverClicked(const Album& album);
