@@ -32,11 +32,9 @@ class ElidedLabel : public QFrame
         virtual QSize sizeHint() const;
         virtual QSize minimumSizeHint() const;
 
-    public slots:
-        //void setWordWrap(bool wordWrap);
-
     signals:
-        void clicked();
+        void leftButtonClicked();
+        void rightButtonClicked();
         void textChanged(const QString& text);
 
     protected:

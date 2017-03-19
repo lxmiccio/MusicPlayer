@@ -1,25 +1,26 @@
-#include "BackgroundWidget.h"
+#include "ClickableWidget.h"
 
+#include <QApplication>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QWidget>
-
+#include <QDebug>
 #include "ImageUtils.h"
 
-BackgroundWidget::BackgroundWidget(QWidget* parent) : QWidget(parent), m_blurred(false)
+ClickableWidget::ClickableWidget(QWidget* parent) : QWidget(parent), m_blurred(false)
 {
     QWidget::setAutoFillBackground(false);
-
-    setBackgroundColor(Qt::transparent);
+    setFocusPolicy(Qt::StrongFocus);
+    m_backgroundColor = QColor(Qt::transparent);
 }
 
-void BackgroundWidget::setBackgroundColor(const QColor& backgroundColor)
+void ClickableWidget::setBackgroundColor(const QColor& backgroundColor)
 {
     m_backgroundColor = backgroundColor;
 }
 
-void BackgroundWidget::setBackgroundImage(const QPixmap& pixmap, bool blurred, bool blackWhite)
+void ClickableWidget::setBackgroundImage(const QPixmap& pixmap, bool blurred, bool blackWhite)
 {
     m_backgroundSlice = QPixmap();
 
@@ -33,7 +34,40 @@ void BackgroundWidget::setBackgroundImage(const QPixmap& pixmap, bool blurred, b
     repaint();
 }
 
-void BackgroundWidget::paintEvent(QPaintEvent* event)
+void ClickableWidget::mousePressEvent(QMouseEvent* event)
+{
+    QWidget::mousePressEvent(event);
+
+    if(!m_moved)
+    {
+        m_dragPoint = event->pos();
+        m_pressed = true;
+        m_time.start();
+    }
+}
+
+void ClickableWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+    QWidget::mouseReleaseEvent(event);
+
+    if(!m_moved && m_time.elapsed() < qApp->doubleClickInterval())
+    {
+        if(event->button() == Qt::LeftButton)
+        {
+            emit leftButtonClicked();
+        }
+
+        if(event->button() == Qt::RightButton)
+        {
+            emit rightButtonClicked();
+        }
+    }
+
+    m_moved = false;
+    m_pressed = false;
+}
+
+void ClickableWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
 
@@ -69,7 +103,7 @@ void BackgroundWidget::paintEvent(QPaintEvent* event)
     QWidget::paintEvent(event);
 }
 
-void BackgroundWidget::resizeEvent(QResizeEvent* event)
+void ClickableWidget::resizeEvent(QResizeEvent* event)
 {
     QWidget::resizeEvent(event);
 

@@ -21,6 +21,22 @@ class MainWindow : public BackgroundWidget
 {
         Q_OBJECT
 
+    public:
+        MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
+        ~MainWindow();
+
+    public slots:
+        void onCoverClicked(const Album& album);
+        void onItemDoubleClicked(const Track& track);
+        void onTrackStarted(const Track& track);
+        void onCurrentTrackClicked();
+        void coverClicked();
+
+    signals:
+        void trackClicked(const Track& track);
+        void trackAdded(const Track& track);
+        void trackStarted(const Track& track);
+
     private:
         const StackedWidget* c_stackedWidget;
 
@@ -38,22 +54,6 @@ class MainWindow : public BackgroundWidget
 
         MusicLibrary* m_musicLibrary;
         TrackLoader* m_trackLoader;
-
-    public:
-        MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
-        ~MainWindow();
-
-    public slots:
-        void onCoverClicked(const Album& album);
-        void onItemDoubleClicked(const Track& track);
-        void onTrackStarted(const Track& track);
-        void onCurrentTrackClicked();
-        void coverClicked();
-
-    signals:
-        void trackClicked(const Track& track);
-        void trackAdded(const Track& track);
-        void trackStarted(const Track& track);
 };
 
 #endif // MAINWINDOW_H

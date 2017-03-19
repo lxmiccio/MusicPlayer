@@ -2,6 +2,8 @@
 
 ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
 {
+    m_selectedArtistWidget = NULL;
+
     m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_upperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_middleVerticalSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -117,7 +119,6 @@ void ArtistView::repaintCoversAfterWidgetRemoved()
 
 void ArtistView::onAlbumAdded(const Album* album)
 {
-    //TODO Artists previously removed aren't shown anymore if they are added again */
     if(album && album->artist())
     {
         QMutexLocker locker(&m_mutex);
@@ -131,7 +132,7 @@ void ArtistView::onAlbumAdded(const Album* album)
 
             ArtistWidget* artistWidget = new ArtistWidget(artist);
             m_artistWidgets.push_back(artistWidget);
-            QObject::connect(artistWidget, SIGNAL(coverClicked(const Artist*)), this, SLOT(onCoverClicked(const Artist*)));
+            QObject::connect(artistWidget, SIGNAL(widgetClicked(ArtistWidget*)), this, SLOT(onArtistWidgetClicked(ArtistWidget*)));
             QObject::connect(artistWidget, SIGNAL(removeArtistWidgetClicked(ArtistWidget*)), this, SLOT(onRemoveArtistWidgetClicked(ArtistWidget*)));
 
             m_leftLayout->insertWidget(m_leftLayout->count() - 2, artistWidget);
@@ -140,9 +141,20 @@ void ArtistView::onAlbumAdded(const Album* album)
     }
 }
 
-void ArtistView::onCoverClicked(const Artist* artist)
+void ArtistView::onArtistWidgetClicked(ArtistWidget* widget)
 {
-    emit coverClicked(artist);
+    if(widget != m_selectedArtistWidget)
+    {
+        if(m_selectedArtistWidget)
+        {
+            m_selectedArtistWidget->focusOut();
+        }
+
+        m_selectedArtistWidget = widget;
+        widget->focusIn();
+    }
+
+    emit coverClicked(widget->artist());
 }
 
 void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
@@ -164,7 +176,6 @@ void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
             }
             else if(index == 0 && m_artistWidgets.isEmpty())
             {
-                //TODO Handle no artists left
                 m_albumView->onArtistChanged(NULL);
                 m_albumViewScrollable->hide();
             }

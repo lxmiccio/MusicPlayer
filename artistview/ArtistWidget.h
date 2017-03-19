@@ -2,13 +2,15 @@
 #define ARTISTWIDGET_H
 
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QPoint>
 
 #include "Artist.h"
 #include "ClickableLabel.h"
+#include "ClickableWidget.h"
 #include "ElidedLabel.h"
 
-class ArtistWidget : public QWidget
+class ArtistWidget : public ClickableWidget
 {
         Q_OBJECT
 
@@ -17,6 +19,8 @@ class ArtistWidget : public QWidget
         ~ArtistWidget();
 
         const Artist* artist() const;
+        void focusIn();
+        void focusOut();
 
         static const quint16 WIDGET_HEIGHT = 60;
         static const quint16 WIDGET_WIDTH = 300;
@@ -24,17 +28,20 @@ class ArtistWidget : public QWidget
         static const quint16 IMAGE_WIDTH = 60;
 
     signals:
-        void coverClicked(const Artist* artist);
         void removeArtistWidgetClicked(ArtistWidget* widget);
+        void widgetClicked(ArtistWidget* widget);//const Artist* artist);
+
+    protected:
+        virtual void paintEvent(QPaintEvent* event);
 
     private slots:
-        void onCoverClicked();
+        void onLeftButtonClicked();
         void onContextMenuRequested(QPoint pos);
 
     private:
         const Artist* c_artist;
-
-        ClickableLabel* m_cover;
+        bool m_focussed;
+        QLabel* m_cover;
         ElidedLabel* m_artistName;
         QHBoxLayout* m_layout;
 };

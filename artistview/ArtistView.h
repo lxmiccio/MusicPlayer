@@ -32,12 +32,14 @@ class ArtistView : public QWidget
 
     private slots:
         void onAlbumAdded(const Album* album);
-        void onCoverClicked(const Artist* artist);
+        void onArtistWidgetClicked(ArtistWidget* widget);
         void onRemoveArtistWidgetClicked(ArtistWidget* widget);
 
     private:
         QMutex m_mutex;
 
+
+        ArtistWidget* m_selectedArtistWidget;
         QVector<ArtistWidget*> m_artistWidgets;
         QVector<Artist*> m_artists;
         QVBoxLayout* m_layout;

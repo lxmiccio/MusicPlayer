@@ -154,8 +154,17 @@ void ElidedLabel::mouseReleaseEvent(QMouseEvent* event)
 {
     QFrame::mouseReleaseEvent(event);
 
-    if(m_time.elapsed() < qApp->doubleClickInterval()) {
-        emit clicked();
+    if(m_time.elapsed() < qApp->doubleClickInterval())
+    {
+        if(event->button() == Qt::LeftButton)
+        {
+            emit leftButtonClicked();
+        }
+
+        if(event->button() == Qt::RightButton)
+        {
+            emit rightButtonClicked();
+        }
     }
 }
 

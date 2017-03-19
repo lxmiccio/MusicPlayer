@@ -1,24 +1,8 @@
 #include "MainWindow.h"
 
-#include <QDir>
-#include <QFileDialog>
-#include <QMediaMetaData>
-#include <QString>
-#include <QStringList>
-
-#include <QStandardItem>
-#include <QScrollArea>
-#include <QHeaderView>
-#include <QList>
-#include <QScrollBar>
-
-#include <taglib/fileref.h>
-#include <taglib/tag.h>
-
-#include "Cover.h"
 #include "ImageUtils.h"
 #include "ScrollableArea.h"
-#include "TrackItem.h"
+
 
 MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : BackgroundWidget(parent)
 {

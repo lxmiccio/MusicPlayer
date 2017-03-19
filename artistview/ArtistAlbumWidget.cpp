@@ -65,6 +65,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
 #endif
 
     m_leftLayoutUpperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_leftLayoutLowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_rightLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -73,6 +74,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_leftLayout->setSpacing(0);
     m_leftLayout->addItem(m_leftLayoutUpperSpacer);
     m_leftLayout->addWidget(m_cover);
+    m_leftLayout->addItem(m_leftLayoutMiddleSpacer);
     m_leftLayout->addItem(m_leftLayoutLowerSpacer);
 
     m_rightLayout = new QVBoxLayout();

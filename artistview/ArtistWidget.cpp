@@ -2,12 +2,14 @@
 
 #include <QAction>
 #include <QMenu>
+#include <QPaintEvent>
+#include <QPainter>
 
-ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : QWidget(parent)
+ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : ClickableWidget(parent), m_focussed(false)
 {
     c_artist = artist;
 
-    m_cover = new ClickableLabel();
+    m_cover = new QLabel();
     m_cover->setFixedWidth(ArtistWidget::IMAGE_WIDTH);
 
     if(c_artist->albums().size() > 0)
@@ -39,9 +41,7 @@ ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : QWidget(pare
     setMaximumSize(ArtistWidget::WIDGET_WIDTH, ArtistWidget::WIDGET_HEIGHT);
     setLayout(m_layout);
 
-    QObject::connect(m_cover, SIGNAL(clicked()), this, SLOT(onCoverClicked()));
-    QObject::connect(m_artistName, SIGNAL(clicked()), this, SLOT(onCoverClicked()));
-
+    QObject::connect(this, SIGNAL(leftButtonClicked()), this, SLOT(onLeftButtonClicked()));
     QObject::connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onContextMenuRequested(QPoint)));
 }
 
@@ -50,23 +50,54 @@ ArtistWidget::~ArtistWidget()
     //TODO
 }
 
+void ArtistWidget::focusIn()
+{
+    m_focussed = true;
+    repaint();
+}
+
+void ArtistWidget::focusOut()
+{
+    m_focussed = false;
+    repaint();
+}
+
 const Artist* ArtistWidget::artist() const
 {
     return c_artist;
 }
 
-void ArtistWidget::onCoverClicked()
+void ArtistWidget::paintEvent(QPaintEvent *event)
 {
-    emit coverClicked(c_artist);
+    QPainter painter(this);
+
+    if(m_focussed)
+    {
+        painter.save();
+        painter.setBrush(QColor(0, 0, 0, 10));
+        painter.setPen(QColor(0, 0, 0, 10));
+        painter.drawRect(event->rect());
+        painter.restore();
+        QWidget::paintEvent(event);
+    }
+    else
+    {
+        ClickableWidget::paintEvent(event);
+    }
+}
+
+void ArtistWidget::onLeftButtonClicked()
+{
+    emit widgetClicked(this);
 }
 
 void ArtistWidget::onContextMenuRequested(QPoint pos)
 {
     QMenu* menu = new QMenu();
 
-    QAction action1("Remove", this);
-    QObject::connect(&action1, &QAction::triggered, [=] () { emit removeArtistWidgetClicked(this); });
-    menu->addAction(&action1);
+    QAction removeAction("Remove", this);
+    QObject::connect(&removeAction, &QAction::triggered, [=] () { emit removeArtistWidgetClicked(this); });
+    menu->addAction(&removeAction);
 
     menu->exec(mapToGlobal(pos));
 }

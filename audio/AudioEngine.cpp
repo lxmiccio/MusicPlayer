@@ -60,6 +60,9 @@ void AudioEngine::onPlaylistSelected(Playlist* playlist)
 
 void AudioEngine::onTrackSelected(const Track& track)
 {
+    QMediaPlaylist::PlaybackMode playbackMode = m_mediaPlaylist->playbackMode();
+    m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+
     m_playlist->clear();
     m_mediaPlaylist->clear();
 
@@ -80,6 +83,7 @@ void AudioEngine::onTrackSelected(const Track& track)
         m_mediaPlaylist->addMedia(QUrl::fromLocalFile(track.path()));
     }
 
+    m_mediaPlaylist->setPlaybackMode(playbackMode);
     emit trackStarted(track);
 }
 
