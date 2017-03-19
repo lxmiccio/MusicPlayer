@@ -62,43 +62,22 @@ void ArtistView::clearLayout(QLayout* layout)
 
 void ArtistView::repaintCovers()
 {
-    QMutexLocker locker(&m_mutex);
-
-    QVector<Artist*> unsortedArtist;
-    foreach(Artist* i_artist, m_artists)
-    {
-        unsortedArtist.push_back(i_artist);
-    }
-
     qSort(m_artists.begin(), m_artists.end(), [] (const Artist* artist1, const Artist* artist2) -> bool {
         return artist1->name() < artist2->name();
     });
 
-    bool repaint = false;
-    for(quint16 i = 0; i < m_artists.size(); ++i)
+    qSort(m_artistWidgets.begin(), m_artistWidgets.end(), [] (const ArtistWidget* artistWidget1, const ArtistWidget* artistWidget2) -> bool {
+        return artistWidget1->artist()->name() < artistWidget2->artist()->name();
+    });
+
+    clearLayout(m_leftLayout);
+    m_leftLayout->addItem(m_upperSpacer);
+    m_leftLayout->addItem(m_lowerSpacer);
+
+    foreach(ArtistWidget* i_artistWidget, m_artistWidgets)
     {
-        if(m_artists.at(i) != unsortedArtist.at(i))
-        {
-            repaint = true;
-            break;
-        }
-    }
-
-    if(repaint)
-    {
-        qSort(m_artistWidgets.begin(), m_artistWidgets.end(), [] (const ArtistWidget* artistWidget1, const ArtistWidget* artistWidget2) -> bool {
-            return artistWidget1->artist()->name() < artistWidget2->artist()->name();
-        });
-
-        clearLayout(m_leftLayout);
-        m_leftLayout->addItem(m_upperSpacer);
-        m_leftLayout->addItem(m_lowerSpacer);
-
-        foreach(ArtistWidget* i_artistWidget, m_artistWidgets)
-        {
-            m_leftLayout->insertWidget(m_leftLayout->count() - 2, i_artistWidget);
-            m_leftLayout->insertItem(m_leftLayout->count() - 2, m_middleVerticalSpacer);
-        }
+        m_leftLayout->insertWidget(m_leftLayout->count() - 2, i_artistWidget);
+        m_leftLayout->insertItem(m_leftLayout->count() - 2, m_middleVerticalSpacer);
     }
 }
 
@@ -135,8 +114,7 @@ void ArtistView::onAlbumAdded(const Album* album)
             QObject::connect(artistWidget, SIGNAL(widgetClicked(ArtistWidget*)), this, SLOT(onArtistWidgetClicked(ArtistWidget*)));
             QObject::connect(artistWidget, SIGNAL(removeArtistWidgetClicked(ArtistWidget*)), this, SLOT(onRemoveArtistWidgetClicked(ArtistWidget*)));
 
-            m_leftLayout->insertWidget(m_leftLayout->count() - 2, artistWidget);
-            m_leftLayout->insertItem(m_leftLayout->count() - 2, m_middleVerticalSpacer);
+            repaintCovers();
         }
     }
 }
@@ -190,6 +168,7 @@ void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
         }
 
         repaintCoversAfterWidgetRemoved();
+
         //TODO: Stop the track if it belonged to the deleted artist?
     }
 }
