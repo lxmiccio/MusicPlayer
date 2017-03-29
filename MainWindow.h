@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "AlbumView.h"
+#include "ArtistView.h"
 #include "AudioControls.h"
 #include "AudioEngine.h"
-#include "AlbumView.h"
-#include "artistview/ArtistView.h"
 #include "BackgroundWidget.h"
 #include "ImageButton.h"
 #include "MusicLibrary.h"

@@ -127,7 +127,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     m_volumeSlider->setFixedHeight(6);
     m_volumeSlider->setMinimumWidth(120);
     m_volumeSlider->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_volumeSlider->setValue(100);
+    m_volumeSlider->setValue(Settings::volume());
 
     m_lowerHorizontalLayout = new QHBoxLayout();
     m_lowerHorizontalLayout->addWidget(m_backward);

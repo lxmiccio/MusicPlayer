@@ -14,6 +14,7 @@
 #include "ClickableLabel.h"
 #include "ImageButton.h"
 #include "TrackSlider.h"
+#include "Settings.h"
 #include "Slider.h"
 #include "Track.h"
 

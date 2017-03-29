@@ -3,7 +3,6 @@
 #include "ImageUtils.h"
 #include "ScrollableArea.h"
 
-
 MainWindow::MainWindow(const StackedWidget* stackedWidget, QWidget* parent) : BackgroundWidget(parent)
 {
     QImage backgroud(":/images/tove-lo.jpg");

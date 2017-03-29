@@ -10,7 +10,7 @@ AudioEngine::AudioEngine()
 
     m_mediaPlayer = new QMediaPlayer();
     m_mediaPlayer->setPlaylist(m_mediaPlaylist);
-    m_mediaPlayer->setVolume(100);
+    m_mediaPlayer->setVolume(Settings::volume());
 
     QObject::connect(m_mediaPlaylist, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
     QObject::connect(m_mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
@@ -212,6 +212,7 @@ void AudioEngine::onVolumeClicked(AudioControls::VolumeMode_t volumeMode)
 void AudioEngine::onVolumeValueChanged(int value)
 {
     m_mediaPlayer->setVolume(value);
+    Settings::setVolume(value);
 }
 
 void AudioEngine::onCurrentIndexChanged(int index)

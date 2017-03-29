@@ -8,6 +8,7 @@
 
 #include "AudioControls.h"
 #include "Playlist.h"
+#include "Settings.h"
 #include "Track.h"
 
 class AudioEngine : public QObject

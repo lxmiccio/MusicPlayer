@@ -27,4 +27,8 @@ int main(int argc, char *argv[])
     stackedWidget.showMaximized();
 
     return application.exec();
+
+    /* TODO: MainWindow should be a QMainWindow in order to display the menu, not a QWidget.
+     * Try to have a BackgroundWidget as a member of MainWindow and check if the menu inherits the background.
+     * If not, have BackgroundWidgete to subclass QMainWindows instead that QWidget. */
 }

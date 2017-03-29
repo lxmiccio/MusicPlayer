@@ -26,6 +26,7 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     QObject::connect(this, SIGNAL(coverClicked(const Artist*)), m_albumView, SLOT(onArtistChanged(const Artist*)));
 
     m_splitter = new QSplitter();
+    m_splitter->setHandleWidth(3);
     m_splitter->setContentsMargins(40, 16, 40, 12);
     m_splitter->addWidget(m_leftLayoutScrollable);
     m_splitter->addWidget(m_albumViewScrollable);
