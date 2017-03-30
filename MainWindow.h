@@ -1,59 +1,32 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "AlbumView.h"
-#include "ArtistView.h"
-#include "AudioControls.h"
-#include "AudioEngine.h"
-#include "BackgroundWidget.h"
-#include "ImageButton.h"
-#include "MusicLibrary.h"
-#include "ScrollableArea.h"
-#include "StackedWidget.h"
-#include "TagUtils.h"
-#include "Track.h"
-#include "TrackDelegate.h"
-#include "TrackItem.h"
-#include "TrackLoader.h"
-#include "TrackView.h"
+#include <QAction>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QStackedWidget>
 
-class MainWindow : public BackgroundWidget
+class MainWindow : public QMainWindow
 {
         Q_OBJECT
 
     public:
-        MainWindow(const StackedWidget* stackedWidget, QWidget* parent = 0);
-        ~MainWindow();
+        explicit MainWindow(QWidget* parent = 0);
+        QStackedWidget* stackedWidget();
 
     public slots:
-        void onCoverClicked(const Album& album);
-        void onItemDoubleClicked(const Track& track);
-        void onTrackStarted(const Track& track);
-        void onCurrentTrackClicked();
-        void coverClicked();
-
-    signals:
-        void trackClicked(const Track& track);
-        void trackAdded(const Track& track);
-        void trackStarted(const Track& track);
+        void previousView();
 
     private:
-        const StackedWidget* c_stackedWidget;
+        QStackedWidget* m_stackedWidget;
 
-        AlbumView* m_albumView;
-        ArtistView* m_artistView;
-        ScrollableArea* m_scrollableArea;
-
-        TrackView* m_trackView;
-
-        AudioControls* m_audioControls;
-        AudioEngine* m_audioEngine;
-
-        QHBoxLayout* m_horLayout;
-        QVBoxLayout* m_layout;
-
-        MusicLibrary* m_musicLibrary;
-        TrackLoader* m_trackLoader;
+        QAction* showArtistView;
+        QAction* showAlbumView;
+        QMenuBar* m_menuBar;
+        QMenu* m_viewsMenu;
 };
 
 #endif // MAINWINDOW_H

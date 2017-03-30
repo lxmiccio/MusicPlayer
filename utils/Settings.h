@@ -13,8 +13,20 @@ namespace SettingsFiles
 class Settings
 {
     public:
+        enum View
+        {
+            ARTIST_VIEW = 0,
+            ALBUM_VIEW
+        };
+
         static void setVolume(quint8 volume);
         static quint8 volume();
+
+        static void setView(Settings::View view);
+        static Settings::View view();
+
+    private:
+        static Settings::View stringToView(QString string);
 };
 
 #endif // SETTINGS_H

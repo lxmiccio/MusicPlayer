@@ -3,7 +3,7 @@
 #include <QFontDatabase>
 #include <QTime>
 
-#include "StackedWidget.h"
+#include "MainWindow.h"
 #include "Track.h"
 
 int main(int argc, char *argv[])
@@ -23,12 +23,12 @@ int main(int argc, char *argv[])
     QTime time = QTime::currentTime();
     qsrand((uint) time.msec());
 
-    StackedWidget stackedWidget;
-    stackedWidget.showMaximized();
+    MainWindow mainWindow;
+    mainWindow.showMaximized();
 
     return application.exec();
 
-    /* TODO: MainWindow should be a QMainWindow in order to display the menu, not a QWidget.
-     * Try to have a BackgroundWidget as a member of MainWindow and check if the menu inherits the background.
-     * If not, have BackgroundWidgete to subclass QMainWindows instead that QWidget. */
+    /* TODO: Move the scrollbar containing ArtistView from MainWidget to ArtistView.
+     * Introduce TrackView on the MenuBar.
+     * Move LoaderThread to MusicLibrary, so that all the views will use the same. */
 }

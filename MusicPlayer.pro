@@ -39,16 +39,16 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/ImageButton.cpp \
     widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
-    widgets/StackedWidget.cpp \
     main.cpp \
-    MainWindow.cpp \
     artistview/ArtistWidget.cpp \
     artistview/ArtistAlbumsView.cpp \
     artistview/ArtistAlbumWidget.cpp \
     widgets/Line.cpp \
     artistview/ArtistView.cpp \
     widgets/ClickableWidget.cpp \
-    utils/Settings.cpp
+    utils/Settings.cpp \
+    MainWidget.cpp \
+    MainWindow.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -79,15 +79,15 @@ HEADERS  += albumview/AlbumView.h \
     widgets/ImageButton.h \
     widgets/Slider.h \
     widgets/ScrollableArea.h \
-    widgets/StackedWidget.h \
-    MainWindow.h \
     artistview/ArtistWidget.h \
     artistview/ArtistAlbumsView.h \
     artistview/ArtistAlbumWidget.h \
     widgets/Line.h \
     artistview/ArtistView.h \
     widgets/ClickableWidget.h \
-    utils/Settings.h
+    utils/Settings.h \
+    MainWidget.h \
+    MainWindow.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

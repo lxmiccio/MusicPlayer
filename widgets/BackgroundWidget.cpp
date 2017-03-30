@@ -1,12 +1,5 @@
 #include "BackgroundWidget.h"
 
-#include <QPaintEvent>
-#include <QPainter>
-#include <QPixmap>
-#include <QWidget>
-
-#include "ImageUtils.h"
-
 BackgroundWidget::BackgroundWidget(QWidget* parent) : QWidget(parent), m_blurred(false)
 {
     QWidget::setAutoFillBackground(false);

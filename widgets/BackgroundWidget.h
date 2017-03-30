@@ -1,7 +1,12 @@
 #ifndef BACKGROUNDWIDGET_H
 #define BACKGROUNDWIDGET_H
 
+#include <QPaintEvent>
+#include <QPainter>
+#include <QPixmap>
 #include <QWidget>
+
+#include "ImageUtils.h"
 
 class BackgroundWidget : public QWidget
 {
