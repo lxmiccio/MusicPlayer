@@ -21,14 +21,12 @@ int main(int argc, char *argv[])
     QApplication::setFont(font);
 
     QTime time = QTime::currentTime();
-    qsrand((uint) time.msec());
+    qsrand(static_cast<uint>(time.msec()));
 
     MainWindow mainWindow;
     mainWindow.showMaximized();
 
     return application.exec();
 
-    /* TODO: Move the scrollbar containing ArtistView from MainWidget to ArtistView.
-     * Introduce TrackView on the MenuBar.
-     * Move LoaderThread to MusicLibrary, so that all the views will use the same. */
+    /* TODO: Introduce TrackView on the MenuBar. */
 }

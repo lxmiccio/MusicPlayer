@@ -13,7 +13,7 @@ TrackLoader::~TrackLoader()
     }
 }
 
-void TrackLoader::loadTracks(const QVector<QFileInfo>& filesInfo)
+void TrackLoader::readTags(const QVector<QFileInfo>& files)
 {
     QThread* thread = new QThread();
 
@@ -23,25 +23,25 @@ void TrackLoader::loadTracks(const QVector<QFileInfo>& filesInfo)
     m_threads.push_back(thread);
     m_trackLoaderThreads.push_back(trackLoaderThread);
 
-    QObject::connect(thread, SIGNAL(finished()), trackLoaderThread, SLOT(deleteLater()));
-    QObject::connect(trackLoaderThread, SIGNAL(trackLoaded(Track*)), this, SLOT(onTrackLoaded(Track*)));
-    QObject::connect(trackLoaderThread, SIGNAL(tracksLoaded()), this, SLOT(onTracksLoaded()));
+    QObject::connect(trackLoaderThread, SIGNAL(tagsRead(QVariantMap*)), this, SIGNAL(tagsRead(QVariantMap*)));
+    QObject::connect(trackLoaderThread, SIGNAL(finished()), this, SLOT(onThreadFinished()));
+    QObject::connect(trackLoaderThread, SIGNAL(finished()), trackLoaderThread, SLOT(deleteLater()));
+    QObject::connect(trackLoaderThread, SIGNAL(finished()), thread, SLOT(quit()));
+    QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
     thread->start();
-    trackLoaderThread->loadTracks(filesInfo);
+    trackLoaderThread->readTags(files);
 }
 
-void TrackLoader::onTrackLoaded(Track* track)
-{
-    emit trackLoaded(track);
-}
-
-void TrackLoader::onTracksLoaded()
+void TrackLoader::onThreadFinished()
 {
     TrackLoaderThread* sender = static_cast<TrackLoaderThread*>(QObject::sender());
     qint8 index = m_trackLoaderThreads.indexOf(sender);
 
-    delete m_trackLoaderThreads.at(index);
-    m_trackLoaderThreads.removeAt(index);
-    m_threads.removeAt(index);
+    if(index != -1)
+    {
+        m_trackLoaderThreads.removeAt(index);
+        m_threads.removeAt(index);
+        delete sender;
+    }
 }

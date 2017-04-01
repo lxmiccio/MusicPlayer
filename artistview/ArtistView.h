@@ -38,7 +38,6 @@ class ArtistView : public QWidget
     private:
         QMutex m_mutex;
 
-
         ArtistWidget* m_selectedArtistWidget;
         QVector<ArtistWidget*> m_artistWidgets;
         QVector<Artist*> m_artists;
@@ -47,7 +46,6 @@ class ArtistView : public QWidget
 
         QVBoxLayout* m_leftLayout;
         ScrollableArea* m_leftLayoutScrollable;
-        TrackLoader* m_trackLoader;
 
         ArtistAlbumsView* m_albumView;
         ScrollableArea* m_albumViewScrollable;

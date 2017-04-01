@@ -8,8 +8,6 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_upperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_middleVerticalSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    m_trackLoader = new TrackLoader();
-
     m_leftLayout = new QVBoxLayout();
     m_leftLayout->addItem(m_upperSpacer);
     m_leftLayout->addItem(m_lowerSpacer);
@@ -17,7 +15,7 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     QWidget* widget = new QWidget();
     widget->setLayout(m_leftLayout);
     m_leftLayoutScrollable->setWidget(widget);
-    QObject::connect(m_leftLayoutScrollable, SIGNAL(filesDropped(QVector<QFileInfo>)), m_trackLoader, SLOT(loadTracks(QVector<QFileInfo>)));
+    QObject::connect(m_leftLayoutScrollable, SIGNAL(filesDropped(QVector<QFileInfo>)), MusicLibrary::instance(), SLOT(onTracksToLoad(QVector<QFileInfo>)));
 
     m_albumView = new ArtistAlbumsView();
     m_albumViewScrollable = new ScrollableArea();
@@ -40,7 +38,6 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
 
 ArtistView::~ArtistView()
 {
-    delete m_trackLoader;
     clearLayout(m_leftLayout);
     clearLayout(m_layout);
 }

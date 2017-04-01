@@ -6,21 +6,20 @@
 #include <QMutexLocker>
 #include <QSpacerItem>
 #include <QVBoxLayout>
+#include <QWidget>
 
 #include "Album.h"
 #include "BackgroundWidget.h"
 #include "Cover.h"
+#include "ScrollableArea.h"
 
-class AlbumView : public QWidget
+class AlbumView : public ScrollableArea
 {
         Q_OBJECT
 
     public:
         explicit AlbumView(QWidget* parent = 0);
         ~AlbumView();
-
-    public slots:
-        void onScrollAreaResized(QResizeEvent* event);
 
     signals:
         void coverClicked(const Album& album);
@@ -29,6 +28,7 @@ class AlbumView : public QWidget
         void clearLayout(QLayout* layout);
         quint8 albumsPerRow(quint16 width);
         quint8 horizontalSpacerWidth(quint16 width);
+        virtual void resizeEvent(QResizeEvent* event);
 
     private:
         void repaintCovers();
@@ -43,6 +43,7 @@ class AlbumView : public QWidget
         QVector<Cover*> m_covers;
         QVector<QHBoxLayout*> m_layouts;
         QVBoxLayout* m_layout;
+        QWidget* m_widget;
 
         QSpacerItem* m_leftSpacer;
         QSpacerItem* m_lowerSpacer;

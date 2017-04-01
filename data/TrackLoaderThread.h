@@ -6,7 +6,6 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QObject>
-#include <QThread>
 
 #include "TagUtils.h"
 #include "Track.h"
@@ -14,26 +13,24 @@
 class TrackLoaderThread : public QObject
 {
         Q_OBJECT
-        QThread thread;
 
     public:
         ~TrackLoaderThread();
 
     public slots:
-        void loadTracks(const QVector<QFileInfo>& tracks);
+        void readTags(const QVector<QFileInfo>& files);
 
     private slots:
-        void onTrackLoaded(int index);
-        void onTracksLoaded();
+        void onTagsRead(int index);
 
     signals:
-        void trackLoaded(Track* tracks);
-        void tracksLoaded();
+        void tagsRead(QVariantMap* tags);
+        void finished();
 
     private:
-        QVector<QFileInfo> m_tracks;
-        QFuture<Track*> m_future;
-        QFutureWatcher<Track*> m_futureWatcher;
+        QVector<QFileInfo> m_files;
+        QFuture<QVariantMap*> m_future;
+        QFutureWatcher<QVariantMap*> m_futureWatcher;
 };
 
 #endif // LOADERTHREAD_H

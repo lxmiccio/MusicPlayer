@@ -9,6 +9,9 @@
 #include "Album.h"
 #include "Artist.h"
 #include "Track.h"
+#include "TrackLoader.h"
+
+class TrackLoader;
 
 class MusicLibrary : public QObject
 {
@@ -32,19 +35,30 @@ class MusicLibrary : public QObject
         bool removeTrack(Track* track);
         bool removeTrack(const QString& trackTitle, const QString& albumTitle);
 
-        Track* addTrack(QVariantMap& tags);
+    public slots:
+        void onTracksToLoad(const QVector<QFileInfo>& filesInfo);
+        void onArtistRemoved(const Artist* artist);
+        void onAlbumRemoved(const Album* album);
+        void onTrackRemoved(const Track* track);
 
     signals:
         void artistAdded(const Artist* artist);
+        void artistRemoved(const Artist* artist);
         void albumAdded(const Album* album);
+        void albumRemoved(const Album* album);
         void trackAdded(const Track* track);
+        void trackRemoved(const Track* track);
 
     protected:
         MusicLibrary();
 
+    private slots:
+        void addTrack(QVariantMap* tags);
+
     private:
         static QPointer<MusicLibrary> m_instance;
         QVector<Artist*> m_artists;
+        TrackLoader* m_trackLoader;
 
         QMutex m_mutex;
 };

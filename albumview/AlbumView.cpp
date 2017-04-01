@@ -3,8 +3,9 @@
 #include <QResizeEvent>
 
 #include "MusicLibrary.h"
+#include <QDebug>
 
-AlbumView::AlbumView(QWidget* parent) : QWidget(parent)
+AlbumView::AlbumView(QWidget* parent) : ScrollableArea(parent)
 {
     m_leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -20,15 +21,18 @@ AlbumView::AlbumView(QWidget* parent) : QWidget(parent)
     m_layout->setContentsMargins(40, 16, 40, 12);
     m_layout->addItem(m_upperSpacer);
     m_layout->addItem(m_lowerSpacer);
-    setLayout(m_layout);
+
+    m_widget = new QWidget();
+    m_widget->setLayout(m_layout);
+    setWidget(m_widget);
 
     m_albumCurrentColumn = 0;
     m_currentColumn = 0;
     m_currentRow = 1;
     m_albumsPerRow = albumsPerRow(rect().size().width());
 
-    MusicLibrary* musicLibrary = MusicLibrary::instance();
-    QObject::connect(musicLibrary, SIGNAL(albumAdded(const Album*)), this, SLOT(onAlbumAdded(const Album*)));
+    QObject::connect(this, SIGNAL(filesDropped(QVector<QFileInfo>)), MusicLibrary::instance(), SLOT(onTracksToLoad(QVector<QFileInfo>)));
+    QObject::connect(MusicLibrary::instance(), SIGNAL(albumAdded(const Album*)), this, SLOT(onAlbumAdded(const Album*)));
 }
 
 AlbumView::~AlbumView()
@@ -43,7 +47,7 @@ AlbumView::~AlbumView()
 #endif
 }
 
-void AlbumView::onScrollAreaResized(QResizeEvent* event)
+void AlbumView::resizeEvent(QResizeEvent* event)
 {
     m_middleHorizontalSpacer->changeSize(horizontalSpacerWidth(event->size().width()), 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -168,7 +172,7 @@ void AlbumView::clearLayout(QLayout* layout)
 quint8 AlbumView::albumsPerRow(quint16 width)
 {
     if(width > 80)
-    return (width - 80) / (Cover::COVER_WIDTH + 32);
+        return (width - 80) / (Cover::COVER_WIDTH + 32);
     else
         return 1;
 }

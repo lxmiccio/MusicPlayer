@@ -6,6 +6,8 @@ QPointer<MusicLibrary> MusicLibrary::m_instance = 0;
 
 MusicLibrary::MusicLibrary()
 {
+    m_trackLoader = new TrackLoader();
+    QObject::connect(m_trackLoader, SIGNAL(tagsRead(QVariantMap*)), this, SLOT(addTrack(QVariantMap*)));
 }
 
 MusicLibrary* MusicLibrary::instance()
@@ -151,87 +153,91 @@ bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTi
     return false;
 }
 
-Track* MusicLibrary::addTrack(QVariantMap& tags)
+void MusicLibrary::addTrack(QVariantMap* tags)
 {
-    QMutexLocker locker(&m_mutex);
-
-    Artist* l_artist = NULL;
-    Album* l_album = NULL;
-    Track* l_track = NULL;
-
-    if(tags["duration"].toInt() > 0)
+    if(tags)
     {
-        if(tags["artist"].toString().length() > 0)
-        {
-            l_artist = artist(tags["artist"].toString());
+        QMutexLocker locker(&m_mutex);
 
+        Artist* l_artist = NULL;
+        Album* l_album = NULL;
+        Track* l_track = NULL;
+
+        if(tags->value("duration", 0).toInt() > 0)
+        {
+            QString l_artistName = tags->value("artist", "Unknown").toString();
+            QString l_albumTitle = tags->value("album", "Unknown").toString();
+            QString l_path = tags->value("path", "Unknown").toString();
+            QString l_trackTitle = tags->value("title", "").toString();
+
+            l_artist = artist(l_artistName);
             if(!l_artist)
             {
-                l_artist = new Artist(tags["artist"].toString());
+                l_artist = new Artist(l_artistName);
                 m_artists.push_back(l_artist);
                 emit artistAdded(l_artist);
             }
-        }
-        else
-        {
-            l_artist = artist("Unknown");
 
-            if(!l_artist)
-            {
-                l_artist = new Artist("Unknown");
-                m_artists.push_back(l_artist);
-                emit artistAdded(l_artist);
-            }
-        }
-
-        if(tags["album"].toString().length() > 0)
-        {
-            l_album = album(tags["album"].toString(), l_artist->name());
-
+            l_album = album(l_albumTitle, l_artist->name());
             if(!l_album)
             {
-                l_album = new Album(tags["album"].toString(), l_artist);
+                l_album = new Album(l_albumTitle, l_artist);
 
-                if(tags["path"].toString().endsWith(".flac"))
+                //TODO: Cover should be loaded on a different thread
+                if(l_path.endsWith(".flac"))
                 {
-                    l_album->setCover(TagUtils::readFlacCover(QFileInfo(tags["path"].toString())));
+                    l_album->setCover(TagUtils::readFlacCover(QFileInfo(l_path)));
                 }
-                else
+                else if(l_path.endsWith(".mp3"))
                 {
-                   l_album->setCover(TagUtils::readMp3Cover(QFileInfo(tags["path"].toString())));
+                    l_album->setCover(TagUtils::readMp3Cover(QFileInfo(l_path)));
                 }
 
                 l_artist->addAlbum(l_album);
                 emit albumAdded(l_album);
             }
-        }
-        else
-        {
-            l_album = album("Unknown", l_artist->name());
 
-            if(!l_album)
+            if(l_trackTitle.length() == 0)
             {
-                l_album = new Album("Unknown", l_artist);
-                l_artist->addAlbum(l_album);
-                emit albumAdded(l_album);
+                l_trackTitle = l_path.mid(l_path.lastIndexOf("/") + 1);
+                l_trackTitle = l_trackTitle.left(l_trackTitle.lastIndexOf("."));
+                tags->insert("title", l_trackTitle);
+            }
+
+            l_track = const_cast<Track*>(l_album->track(l_trackTitle));
+            if(!l_track)
+            {
+                //TODO: Load lyrics
+
+                l_track = new Track(*tags, l_album);
+                l_album->addTrack(l_track);
+                emit trackAdded(l_track);
             }
         }
 
-        if(tags["title"].toString().length() == 0)
-        {
-            QString title = tags["path"].toString().mid(tags["path"].toString().lastIndexOf("/") + 1);
-            tags["title"] = title.left(title.lastIndexOf("."));
-        }
-
-        l_track = const_cast<Track*>(l_album->track(tags["title"].toString()));
-
-        if(!l_track)
-        {
-            l_track = new Track(tags, l_album);
-            l_album->addTrack(l_track);
-            emit trackAdded(l_track);
-        }
+        delete tags;
     }
+}
 
-    return l_track;
+void MusicLibrary::onTracksToLoad(const QVector<QFileInfo>& filesInfo)
+{
+    m_trackLoader->readTags(filesInfo);
+}
+
+void MusicLibrary::onArtistRemoved(const Artist* artist)
+{
+    if(removeArtist(const_cast<Artist*>(artist)))
+        emit artistRemoved(artist);
+}
+
+void MusicLibrary::onAlbumRemoved(const Album* album)
+{
+    if(removeAlbum(const_cast<Album*>(album)))
+        emit albumRemoved(album);
+}
+
+void MusicLibrary::onTrackRemoved(const Track* track)
+{
+    if(removeTrack(const_cast<Track*>(track)))
+        emit trackRemoved(track);
 }

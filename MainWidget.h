@@ -1,20 +1,19 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QWidget>
+
 #include "AlbumView.h"
 #include "ArtistView.h"
 #include "AudioControls.h"
 #include "AudioEngine.h"
 #include "BackgroundWidget.h"
-#include "ImageButton.h"
-#include "MusicLibrary.h"
-#include "ScrollableArea.h"
+#include "ImageUtils.h"
 #include "MainWindow.h"
-#include "TagUtils.h"
+#include "Settings.h"
 #include "Track.h"
-#include "TrackDelegate.h"
-#include "TrackItem.h"
-#include "TrackLoader.h"
 #include "TrackView.h"
 
 class MainWidget : public BackgroundWidget
@@ -42,20 +41,16 @@ class MainWidget : public BackgroundWidget
     public:
         const MainWindow* c_mainWindow;
 
-        AlbumView* m_albumView;
-        ArtistView* m_artistView;
-        ScrollableArea* m_scrollableArea;
-
-        TrackView* m_trackView;
-
         AudioControls* m_audioControls;
         AudioEngine* m_audioEngine;
 
+        Settings::View m_currentView;
+        AlbumView* m_albumView;
+        ArtistView* m_artistView;
+        TrackView* m_trackView;
+
         QHBoxLayout* m_horLayout;
         QVBoxLayout* m_layout;
-
-        MusicLibrary* m_musicLibrary;
-        TrackLoader* m_trackLoader;
 };
 
 #endif // MAINWIDGET_H

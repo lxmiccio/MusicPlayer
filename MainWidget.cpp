@@ -1,8 +1,5 @@
 #include "MainWidget.h"
 
-#include "ImageUtils.h"
-#include "ScrollableArea.h"
-
 MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
 {
     QImage backgroud(":/images/tove-lo.jpg");
@@ -11,10 +8,8 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_artistView = new ArtistView();
     m_artistView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    m_scrollableArea = new ScrollableArea();
     m_albumView = new AlbumView();
-    m_scrollableArea->setWidget(m_albumView);
-    QObject::connect(m_scrollableArea, SIGNAL(resized(QResizeEvent*)), m_albumView, SLOT(onScrollAreaResized(QResizeEvent*)));
+    m_albumView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
     if(Settings::view() == Settings::ARTIST_VIEW)
@@ -54,11 +49,10 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     QObject::connect(m_audioEngine, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
     QObject::connect(this, SIGNAL(trackClicked(const Track&)), m_audioEngine, SLOT(onTrackSelected(const Track&)));
 
-
     m_horLayout = new QHBoxLayout();
     m_horLayout->setMargin(0);
     m_horLayout->setSpacing(0);
-    m_horLayout->addWidget(m_scrollableArea);
+    m_horLayout->addWidget(m_albumView);
     m_horLayout->addWidget(m_artistView);
     m_horLayout->addWidget(m_trackView);
 
@@ -70,11 +64,6 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_layout->addWidget(m_audioControls);
     setLayout(m_layout);
 
-    m_musicLibrary = MusicLibrary::instance();
-    m_trackLoader = new TrackLoader();
-#ifdef ALBUM_VIEW
-    QObject::connect(m_scrollableArea, SIGNAL(filesDropped(QVector<QFileInfo>)), m_trackLoader, SLOT(loadTracks(QVector<QFileInfo>)));
-#endif
 }
 
 MainWidget::~MainWidget()
@@ -83,14 +72,26 @@ MainWidget::~MainWidget()
 
 void MainWidget::onShowArtistViewTriggered()
 {
-    m_albumView->hide();
-    m_artistView->show();
+    if(m_currentView != Settings::ARTIST_VIEW)
+    {
+        m_currentView = Settings::ARTIST_VIEW;
+        Settings::setView(m_currentView);
+
+        m_albumView->hide();
+        m_artistView->show();
+    }
 }
 
 void MainWidget::onShowAlbumViewTriggered()
 {
-    m_artistView->hide();
-    m_albumView->show();
+    if(m_currentView != Settings::ALBUM_VIEW)
+    {
+        m_currentView = Settings::ALBUM_VIEW;
+        Settings::setView(m_currentView);
+
+        m_artistView->hide();
+        m_albumView->show();
+    }
 }
 
 void MainWidget::onItemDoubleClicked(const Track& track)
@@ -100,11 +101,15 @@ void MainWidget::onItemDoubleClicked(const Track& track)
 
 void MainWidget::coverClicked()
 {
-#if ALBUM_VIEW
-    m_scrollableArea->show();
-#else
-    m_artistView->show();
-#endif
+    if(m_currentView == Settings::ARTIST_VIEW)
+    {
+        m_artistView->show();
+    }
+    else
+    {
+        m_albumView->show();
+    }
+
     m_trackView->hide();
 }
 
@@ -112,7 +117,9 @@ void MainWidget::onCoverClicked(const Album& album)
 {
     m_trackView->show();
     m_trackView->onAlbumSelected(album);
-    m_scrollableArea->hide();
+
+    m_artistView->hide();
+    m_albumView->hide();
 }
 
 void MainWidget::onCurrentTrackClicked()

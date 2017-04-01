@@ -1,35 +1,19 @@
 #include "TrackLoaderThread.h"
 
-#include "MusicLibrary.h"
-
-static Track* loadTrack(QFileInfo &file)
+static QVariantMap* loadTrack(QFileInfo &file)
 {
-    Track* track = new Track();
+    QVariantMap* map = new QVariantMap();
 
     if(file.suffix() == "flac")
     {
-        track = TagUtils::readFlac(file);
+        TagUtils::readFlacTags(file, map);
     }
     else if(file.suffix() == "mp3")
     {
-#if 1
-        track = TagUtils::readMp3(file);
-#else
-        QVariantMap tags;
-        tags["track"] = 1;
-        tags["title"] = file.fileName();
-        tags["path"] = file.canonicalFilePath();
-
-        tags["album"] = "album";
-        tags["artist"] = "artist";
-        tags["duration"] = 300;
-
-        MusicLibrary* musicLibrary = MusicLibrary::instance();
-        return musicLibrary->addTrack(tags);
-#endif
+        TagUtils::readMp3Tags(file, map);
     }
 
-    return track;
+    return map;
 }
 
 TrackLoaderThread::~TrackLoaderThread()
@@ -40,29 +24,24 @@ TrackLoaderThread::~TrackLoaderThread()
     m_futureWatcher.waitForFinished();
 }
 
-void TrackLoaderThread::loadTracks(const QVector<QFileInfo>& tracks)
+void TrackLoaderThread::readTags(const QVector<QFileInfo>& files)
 {
-    for(QVector<QFileInfo>::ConstIterator i_track = tracks.begin(); i_track < tracks.end(); ++i_track)
+    for(QVector<QFileInfo>::ConstIterator i_file = files.begin(); i_file < files.end(); ++i_file)
     {
-        if(i_track->suffix() == "flac" || i_track->suffix() == "mp3")
+        if(i_file->suffix() == "flac" || i_file->suffix() == "mp3")
         {
-            m_tracks.push_back(*i_track);
+            m_files.push_back(*i_file);
         }
     }
 
-    QObject::connect(&m_futureWatcher, SIGNAL(resultReadyAt(int)), this, SLOT(onTrackLoaded(int)));
-    QObject::connect(&m_futureWatcher, SIGNAL(finished()), this, SLOT(onTracksLoaded()));
+    QObject::connect(&m_futureWatcher, SIGNAL(resultReadyAt(int)), this, SLOT(onTagsRead(int)));
+    QObject::connect(&m_futureWatcher, SIGNAL(finished()), this, SIGNAL(finished()));
 
-    m_future = QtConcurrent::mapped(m_tracks.begin(), m_tracks.end(), loadTrack);
+    m_future = QtConcurrent::mapped(m_files.begin(), m_files.end(), loadTrack);
     m_futureWatcher.setFuture(m_future);
 }
 
-void TrackLoaderThread::onTrackLoaded(int index)
+void TrackLoaderThread::onTagsRead(int index)
 {
-    emit trackLoaded(m_future.resultAt(index));
-}
-
-void TrackLoaderThread::onTracksLoaded()
-{
-    emit tracksLoaded();
+    emit tagsRead(m_future.resultAt(index));
 }
