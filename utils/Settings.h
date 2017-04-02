@@ -16,7 +16,9 @@ class Settings
         enum View
         {
             ARTIST_VIEW = 0,
-            ALBUM_VIEW
+            ALBUM_VIEW,
+            TRACK_VIEW,
+            PLAYING_VIEW
         };
 
         static void setVolume(quint8 volume);

@@ -7,12 +7,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_stackedWidget = new QStackedWidget();
     setCentralWidget(m_stackedWidget);
 
-    showArtistView = new QAction("ArtistView");
-    showAlbumView = new QAction("AlbumView");
+    m_showArtistView = new QAction("ArtistView");
+    m_showAlbumView = new QAction("AlbumView");
+    m_showTrackView = new QAction("TrackView");
 
     m_viewsMenu = new QMenu("Views");
-    m_viewsMenu->addAction(showArtistView);
-    m_viewsMenu->addAction(showAlbumView);
+    m_viewsMenu->addAction(m_showArtistView);
+    m_viewsMenu->addAction(m_showAlbumView);
+    m_viewsMenu->addAction(m_showTrackView);
 
     m_menuBar = new QMenuBar(this);
     m_menuBar->addMenu(m_viewsMenu);
@@ -20,8 +22,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     MainWidget* mainWidget = new MainWidget(this);
     m_stackedWidget->addWidget(mainWidget);
-    QObject::connect(showArtistView, SIGNAL(triggered(bool)), mainWidget, SLOT(onShowArtistViewTriggered()));
-    QObject::connect(showAlbumView, SIGNAL(triggered(bool)), mainWidget, SLOT(onShowAlbumViewTriggered()));
+    QObject::connect(m_showArtistView, SIGNAL(triggered(bool)), mainWidget, SLOT(onShowArtistViewTriggered()));
+    QObject::connect(m_showAlbumView, SIGNAL(triggered(bool)), mainWidget, SLOT(onShowAlbumViewTriggered()));
+    QObject::connect(m_showTrackView, SIGNAL(triggered(bool)), mainWidget, SLOT(onShowTrackViewTriggered()));
 }
 
 QStackedWidget* MainWindow::stackedWidget()

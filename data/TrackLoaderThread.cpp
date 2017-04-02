@@ -11,6 +11,7 @@ static QVariantMap* loadTrack(QFileInfo &file)
     else if(file.suffix() == "mp3")
     {
         TagUtils::readMp3Tags(file, map);
+        TagUtils::readMp3Lyrics(file, map);
     }
 
     return map;

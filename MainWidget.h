@@ -27,6 +27,7 @@ class MainWidget : public BackgroundWidget
     public slots:
         void onShowArtistViewTriggered();
         void onShowAlbumViewTriggered();
+        void onShowTrackViewTriggered();
         void onCoverClicked(const Album& album);
         void onItemDoubleClicked(const Track& track);
         void onTrackStarted(const Track& track);
@@ -38,7 +39,9 @@ class MainWidget : public BackgroundWidget
         void trackAdded(const Track& track);
         void trackStarted(const Track& track);
 
-    public:
+    private:
+        void showView(Settings::View view);
+
         const MainWindow* c_mainWindow;
 
         AudioControls* m_audioControls;
@@ -48,6 +51,7 @@ class MainWidget : public BackgroundWidget
         AlbumView* m_albumView;
         ArtistView* m_artistView;
         TrackView* m_trackView;
+        TrackView* m_playingView;
 
         QHBoxLayout* m_horLayout;
         QVBoxLayout* m_layout;

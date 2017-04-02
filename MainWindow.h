@@ -23,10 +23,11 @@ class MainWindow : public QMainWindow
     private:
         QStackedWidget* m_stackedWidget;
 
-        QAction* showArtistView;
-        QAction* showAlbumView;
-        QMenuBar* m_menuBar;
+        QAction* m_showArtistView;
+        QAction* m_showAlbumView;
+        QAction* m_showTrackView;
         QMenu* m_viewsMenu;
+        QMenuBar* m_menuBar;
 };
 
 #endif // MAINWINDOW_H

@@ -29,11 +29,8 @@ class TagUtils
         static void readFlacTags(const QFileInfo& fileInfo, QVariantMap* map);
 
         static QPixmap readMp3Cover(const QFileInfo& fileInfo);
-        static QString readMp3Lyrics(const QFileInfo& fileInfo);
+        static void readMp3Lyrics(const QFileInfo& fileInfo, QVariantMap* map);
         static void readMp3Tags(const QFileInfo& fileInfo, QVariantMap* map);
-
-        static char* QStringToBuffer(const QString& string);
-        static QString StringToQString(const TagLib::String& string);
 
         static QString extensionToMimetype(const QString &extension);
 };

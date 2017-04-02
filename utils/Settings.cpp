@@ -36,6 +36,11 @@ void Settings::setView(Settings::View view)
             settings.setValue("DEFAULT/view", "ALBUM_VIEW");
             break;
         }
+        case View::TRACK_VIEW:
+        {
+            settings.setValue("DEFAULT/view", "TRACK_VIEW");
+            break;
+        }
         default:
         {
             settings.setValue("DEFAULT/view", "ARTIST_VIEW");
@@ -57,6 +62,10 @@ Settings::View Settings::stringToView(QString string)
     if(string == "ALBUM_VIEW")
     {
         view = View::ALBUM_VIEW;
+    }
+    else if(string == "TRACK_VIEW")
+    {
+        view = View::TRACK_VIEW;
     }
 
     return view;

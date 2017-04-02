@@ -2,7 +2,7 @@
 
 QPixmap TagUtils::readFlacCover(const QFileInfo &fileInfo)
 {
-    TagLib::FLAC::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
+    TagLib::FLAC::File file(fileInfo.canonicalFilePath().toStdString().data());
     const TagLib::List<TagLib::FLAC::Picture*>& pictureList = file.pictureList();
 
     if(pictureList.size() > 0)
@@ -30,14 +30,14 @@ void TagUtils::readFlacTags(const QFileInfo &fileInfo, QVariantMap* map)
 {
     if(map)
     {
-        TagLib::FLAC::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
+        TagLib::FLAC::File file(fileInfo.canonicalFilePath().toStdString().data());
 
         if(file.isValid() && file.tag())
         {
             map->insert("track", file.tag()->track());
-            map->insert("title", TagUtils::StringToQString(file.tag()->title()));
-            map->insert("album", TagUtils::StringToQString(file.tag()->album()));
-            map->insert("artist", TagUtils::StringToQString(file.tag()->artist()));
+            map->insert("title", file.tag()->title().toCString(true));
+            map->insert("album", file.tag()->album().toCString(true));
+            map->insert("artist", file.tag()->artist().toCString(true));
             map->insert("path", fileInfo.canonicalFilePath());
 
             if(file.audioProperties())
@@ -50,8 +50,8 @@ void TagUtils::readFlacTags(const QFileInfo &fileInfo, QVariantMap* map)
 
 QPixmap TagUtils::readMp3Cover(const QFileInfo &fileInfo)
 {
+    TagLib::MPEG::File file(fileInfo.canonicalFilePath().toStdString().data());
     QPixmap cover;
-    TagLib::MPEG::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
 
     if(file.ID3v2Tag())
     {
@@ -70,26 +70,28 @@ QPixmap TagUtils::readMp3Cover(const QFileInfo &fileInfo)
     return cover;
 }
 
-QString TagUtils::readMp3Lyrics(const QFileInfo &fileInfo)
+void TagUtils::readMp3Lyrics(const QFileInfo &fileInfo, QVariantMap* map)
 {
-    QString lyrics;
-    TagLib::MPEG::File file(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
-
-    if(file.ID3v2Tag())
+    if(map)
     {
-        TagLib::ID3v2::FrameList frameList = file.ID3v2Tag()->frameListMap()["USLT"];
-        if(!frameList.isEmpty())
+        TagLib::MPEG::File file(fileInfo.canonicalFilePath().toStdString().data());
+        QString lyrics;
+
+        if(file.ID3v2Tag())
         {
-            TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame*>(frameList.front());
-            if(frame)
+            TagLib::ID3v2::FrameList frameList = file.ID3v2Tag()->frameListMap()["USLT"];
+            if(!frameList.isEmpty())
             {
-                lyrics = frame->text().toCString(true);
-                lyrics.replace("\r", "\r\n");
+                TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame*>(frameList.front());
+                if(frame)
+                {
+                    lyrics = frame->text().toCString(true);
+                    lyrics.replace("\r", "\r\n");
+                    map->insert("lyrics", lyrics);
+                }
             }
         }
     }
-
-    return lyrics;
 }
 
 void TagUtils::readMp3Tags(const QFileInfo &fileInfo, QVariantMap* map)
@@ -97,14 +99,14 @@ void TagUtils::readMp3Tags(const QFileInfo &fileInfo, QVariantMap* map)
     if(map)
     {
 #ifndef DEBUG
-        TagLib::FileRef fileRef(TagUtils::QStringToBuffer(fileInfo.canonicalFilePath()));
+        TagLib::FileRef fileRef(fileInfo.canonicalFilePath().toStdString().data());
 
         if(!fileRef.isNull() && fileRef.tag())
         {
             map->insert("track", fileRef.tag()->track());
-            map->insert("title", TagUtils::StringToQString(fileRef.tag()->title()));
-            map->insert("album", TagUtils::StringToQString(fileRef.tag()->album()));
-            map->insert("artist", TagUtils::StringToQString(fileRef.tag()->artist()));
+            map->insert("title", fileRef.tag()->title().toCString(true));
+            map->insert("album", fileRef.tag()->album().toCString(true));
+            map->insert("artist", fileRef.tag()->artist().toCString(true));
             map->insert("path", fileInfo.canonicalFilePath());
 
             if(fileRef.audioProperties())
@@ -121,16 +123,6 @@ void TagUtils::readMp3Tags(const QFileInfo &fileInfo, QVariantMap* map)
         map->insert("duration", 60));
 #endif
     }
-}
-
-char* TagUtils::QStringToBuffer(const QString& string)
-{
-    return string.toUtf8().data();
-}
-
-QString TagUtils::StringToQString(const TagLib::String& string)
-{
-    return QString(string.toCString(true));
 }
 
 QString TagUtils::extensionToMimetype(const QString& extension)
