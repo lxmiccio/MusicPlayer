@@ -3,7 +3,6 @@
 #include <QResizeEvent>
 
 #include "MusicLibrary.h"
-#include <QDebug>
 
 AlbumView::AlbumView(QWidget* parent) : ScrollableArea(parent)
 {

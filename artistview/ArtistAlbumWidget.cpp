@@ -19,20 +19,9 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_albumTitle->setFont(font);
     m_albumTitle->setStyleSheet(QString("color: white;"));
 
-    m_model = new TrackModel();
-
-    m_trackList = new TrackList();
-    m_trackList->setModel(m_model);
-
-    m_trackList->setSelectionBehavior(QAbstractItemView::SelectRows);
-    m_trackList->setShowGrid(false);
-    m_trackList->horizontalHeader()->hide();
-    m_trackList->verticalHeader()->hide();
+    m_trackList = new TrackList(TrackView::REDUCED);
     QObject::connect(m_trackList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
     QObject::connect(this, SIGNAL(trackClicked(Track*)), AudioEngine::instance(), SLOT(onTrackSelected(Track*)));
-
-    m_delegate = new TrackDelegate(m_trackList);
-    m_trackList->setItemDelegate(m_delegate);
 
 #if LOWER_ALIGNMENT
     m_upperLayoutLeftSpacer = new QSpacerItem(32, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -116,7 +105,7 @@ void ArtistAlbumWidget::setAlbum(Album* album)
         {
             TrackItem* item = new TrackItem(i_track);
             m_items.push_back(item);
-            m_model->appendItem(i_track);
+            m_trackList->appendItem(i_track);
         }
 
         m_trackList->setMinimumHeight(m_trackList->fittingSize().height());
@@ -134,5 +123,5 @@ void ArtistAlbumWidget::clear()
     qDeleteAll(m_items);
     m_items.clear();
 
-    m_model->clear();
+    m_trackList->clear();
 }

@@ -5,7 +5,9 @@
 #include <QModelIndex>
 #include <QVariant>
 
-#include <TrackItem.h>
+#include "TrackItem.h"
+
+class TrackItem;
 
 class TrackModel : public QAbstractItemModel
 {

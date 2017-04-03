@@ -2,6 +2,7 @@
 #define TRACKITEM_H
 
 #include "Track.h"
+#include "TrackModel.h"
 #include "Utils.h"
 
 class TrackItem
@@ -32,11 +33,10 @@ class TrackItem
 
     private:
         const Track* c_track;
+        QList<QVariant> m_data;
 
         TrackItem* m_parent;
         QList<TrackItem*> m_childs;
-
-        QList<QVariant> m_data;
 };
 
 #endif // TRACKITEM_H

@@ -1,9 +1,14 @@
 #ifndef TRACKDELEGATE_H
 #define TRACKDELEGATE_H
 
+#include <QApplication>
+#include <QPainter>
+#include <QScrollBar>
 #include <QStyledItemDelegate>
 
 #include "TrackList.h"
+
+class TrackList;
 
 class TrackDelegate : public QStyledItemDelegate
 {

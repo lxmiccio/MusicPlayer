@@ -4,20 +4,15 @@
 #include <QHeaderView>
 #include <QTableView>
 
+#include "TrackDelegate.h"
+#include "TrackModel.h"
+#include "TrackView.h"
+
 class TrackList : public QTableView
 {
         Q_OBJECT
 
     public:
-        explicit TrackList(QWidget* parent = 0);
-        ~TrackList();
-
-        QSize fittingSize();
-
-        static const quint8 TRACK = 0;
-        static const quint8 TITLE = 1;
-        static const quint8 DURATION = 2;
-
         static const quint8 TRACK_WIDTH = 100;
         static const quint8 DURATION_WIDTH = 100;
 
@@ -25,9 +20,28 @@ class TrackList : public QTableView
         static const quint8 MARGIN = 10;
         static const quint8 RIGHT_MARGIN = 38;
 
+        explicit TrackList(quint8 mode, QWidget* parent = 0);
+        ~TrackList();
+
+        QSize fittingSize();
+        quint8 mode() const;
+
+        int rowCount() const;
+        int columnCount() const;
+        void propendItem(const Track* track);
+        void appendItem(const Track* track);
+        void insertItemAt(const Track* track, int row);
+        void removeFirstItem();
+        void removeLastItem();
+        void removeItemAt(int row);
+        void clear();
+
     protected:
         virtual void resizeEvent(QResizeEvent* event);
         virtual QSize sizeHint();
+
+    private:
+        quint8 m_mode;
 };
 
 #endif // TRACKTABLEVIEW_H

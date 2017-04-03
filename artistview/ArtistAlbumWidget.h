@@ -43,8 +43,6 @@ class ArtistAlbumWidget : public QWidget
 
         QVector<TrackItem*> m_items;
         TrackList* m_trackList;
-        TrackModel* m_model;
-        TrackDelegate* m_delegate;
 
         QSpacerItem* m_leftLayoutUpperSpacer;
         QSpacerItem* m_leftLayoutMiddleSpacer;

@@ -2,10 +2,7 @@
 
 TrackModel::TrackModel(QObject* parent) : QAbstractItemModel(parent)
 {
-    QList<QVariant> rootData;
-    rootData << "Track" << "Title" << "Duration";
-
-    m_rootItem = new TrackItem(rootData);
+    m_rootItem = new TrackItem(QList<QVariant>() << "Track" << "Title" << "Album" << "Artist" << "Duration");
 }
 
 TrackModel::~TrackModel()

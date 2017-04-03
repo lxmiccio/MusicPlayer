@@ -16,13 +16,27 @@
 #include "TrackLyrics.h"
 #include "TrackModel.h"
 
+class TrackDelegate;
+class TrackItem;
+class TrackList;
+class TrackModel;
+
 class TrackView : public QWidget
 {
         Q_OBJECT
 
     public:
-        explicit TrackView(QWidget* parent = 0);
+        explicit TrackView(quint8 mode, QWidget* parent = 0);
         ~TrackView();
+
+        static const quint8 TRACK = 1;
+        static const quint8 TITLE = 2;
+        static const quint8 ALBUM = 4;
+        static const quint8 ARTIST = 8;
+        static const quint8 DURATION = 16;
+
+        static const quint8 FULL = TRACK | TITLE | ALBUM | ARTIST | DURATION;
+        static const quint8 REDUCED = TRACK | TITLE | DURATION;
 
         static const quint16 WIDGET_HEIGHT = 415;
 
@@ -49,13 +63,13 @@ class TrackView : public QWidget
         QSpacerItem* m_spacer;
 
         TrackList* m_trackList;
-        TrackModel* m_model;
-        TrackDelegate* m_delegate;
 
         QVector<TrackItem*> m_items;
 
         QVBoxLayout* m_leftLayout;
         QHBoxLayout* m_layout;
+
+        quint8 m_mode;
 };
 
 #endif // TRACKVIEW_H

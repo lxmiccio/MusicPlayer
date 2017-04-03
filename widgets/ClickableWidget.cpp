@@ -5,7 +5,6 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QWidget>
-#include <QDebug>
 #include "ImageUtils.h"
 
 ClickableWidget::ClickableWidget(QWidget* parent) : QWidget(parent), m_blurred(false)

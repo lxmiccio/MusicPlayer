@@ -3,15 +3,22 @@
 TrackItem::TrackItem(const QList<QVariant>& data, TrackItem* parent)
 {
     c_track = NULL;
-    m_parent = parent;
+
     m_data = data;
+    m_parent = parent;
 }
 
 TrackItem::TrackItem(const Track* track, TrackItem* parent)
 {
     c_track = track;
+
+    m_data << QVariant(track->track())
+           << QVariant(track->title())
+           << QVariant(track->album()->title())
+           << QVariant(track->artist()->name())
+           << QVariant(Utils::secondsToMinutes(track->duration()));
+
     m_parent = parent;
-    m_data << QVariant(track->track()) << QVariant(track->title()) << QVariant(Utils::secondsToMinutes(track->duration()));
 }
 
 TrackItem::~TrackItem()
@@ -91,8 +98,7 @@ void TrackItem::removeChildAt(int row)
 {
     if(row < m_childs.size())
     {
-        delete m_childs.at(row);
-        m_childs.removeAt(row);
+        delete m_childs.takeAt(row);
     }
 }
 

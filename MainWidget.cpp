@@ -12,9 +12,9 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_albumView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
-    m_trackView = new TrackView();
+    m_trackView = new TrackView(TrackView::FULL);
 
-    m_playingView = new TrackView();
+    m_playingView = new TrackView(TrackView::REDUCED);
     QObject::connect(m_playingView, SIGNAL(doubleClicked(const Track&)), this, SLOT(onItemDoubleClicked(const Track&)));
     QObject::connect(m_playingView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
     QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_playingView, SLOT(onTrackStarted(const Track&)));
@@ -48,6 +48,7 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_horLayout->setSpacing(0);
     m_horLayout->addWidget(m_albumView);
     m_horLayout->addWidget(m_artistView);
+    m_horLayout->addWidget(m_trackView);
     m_horLayout->addWidget(m_playingView);
 
     m_layout = new QVBoxLayout();
