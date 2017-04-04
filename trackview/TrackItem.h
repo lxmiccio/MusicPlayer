@@ -25,7 +25,7 @@ class TrackItem
         void appendChild(TrackItem* item);
         void insertChildAt(TrackItem* item, int row);
         void removeFirstChild();
-        void removeLastChild();
+        void removeChild(TrackItem* item);
         void removeChildAt(int row);
         void clear();
 

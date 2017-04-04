@@ -55,6 +55,7 @@ void AudioEngine::onPlaylistSelected(Playlist* playlist)
         }
 
         emit trackStarted(*m_playlist->tracks().at(0));
+        emit trackStarted(m_playlist->tracks().at(0));
     }
 }
 
@@ -85,6 +86,7 @@ void AudioEngine::onTrackSelected(const Track& track)
 
     m_mediaPlaylist->setPlaybackMode(playbackMode);
     emit trackStarted(track);
+    emit trackStarted(&track);
 }
 
 void AudioEngine::onTrackSelected(Track* track)

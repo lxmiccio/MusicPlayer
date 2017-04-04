@@ -6,19 +6,20 @@ TrackAlbum::TrackAlbum(QWidget* parent) : QWidget(parent)
 {
     m_cover = new ClickableLabel(this);
     m_cover->setFixedWidth(TrackAlbum::IMAGE_WIDTH);
-    QObject::connect(m_cover, SIGNAL(clicked()), this, SLOT(onCoverClicked()));
+    m_cover->setFixedHeight(TrackAlbum::IMAGE_HEIGHT);
+    QObject::connect(m_cover, SIGNAL(clicked()), SIGNAL(coverClicked()));
 
     m_spacer1 = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_artistName = new QLabel();
-    m_artistName->setWordWrap(true);
     m_artistName->setStyleSheet(QString("color: white;"));
+    m_artistName->setWordWrap(true);
 
     m_spacer2 = new QSpacerItem(0, 4, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_albumTitle = new QLabel();
-    m_albumTitle->setWordWrap(true);
     m_albumTitle->setStyleSheet(QString("color: white;"));
+    m_albumTitle->setWordWrap(true);
 
     m_spacer3 = new QSpacerItem(0, 48, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -67,9 +68,4 @@ void TrackAlbum::setAlbum(const Album* album)
         m_albumTitle->setText(album->title());
         m_artistName->setText(album->artist()->name());
     }
-}
-
-void TrackAlbum::onCoverClicked()
-{
-    emit coverClicked();
 }

@@ -2,13 +2,16 @@
 #define TRACKLYRICS_H
 
 #include <QLabel>
-#include <QVBoxLayout>
+#include <QScrollBar>
 #include <QWidget>
 
+#include "AudioEngine.h"
+#include "GuiUtils.h"
 #include "ScrollableArea.h"
 #include "Track.h"
+#include "TrackAlbum.h"
 
-class TrackLyrics : public QWidget
+class TrackLyrics : public ScrollableArea
 {
         Q_OBJECT
 
@@ -16,13 +19,10 @@ class TrackLyrics : public QWidget
         TrackLyrics(QWidget* parent = 0);
 
     public slots:
-        void onTrackStarted(const Track& track);
+        void onTrackStarted(const Track* track);
 
     private:
         const Track* c_track;
-
-        QVBoxLayout* m_layout;
-        ScrollableArea* m_scrollableArea;
         QLabel* m_lyrics;
 };
 

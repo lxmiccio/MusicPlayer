@@ -12,6 +12,7 @@
 #include "BackgroundWidget.h"
 #include "ImageUtils.h"
 #include "MainWindow.h"
+#include "ScrollableArea.h"
 #include "Settings.h"
 #include "Track.h"
 #include "TrackView.h"
@@ -50,6 +51,7 @@ class MainWidget : public BackgroundWidget
         Settings::View m_currentView;
         AlbumView* m_albumView;
         ArtistView* m_artistView;
+        ScrollableArea* m_scrollableTrackView;
         TrackView* m_trackView;
         TrackView* m_playingView;
 

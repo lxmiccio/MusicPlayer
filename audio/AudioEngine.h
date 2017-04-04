@@ -48,6 +48,7 @@ class AudioEngine : public QObject
     signals:
         void positionChanged(qint64 position);
         void trackStarted(const Track& track);
+        void trackStarted(const Track* track);
         void trackFinished();
 
     private:

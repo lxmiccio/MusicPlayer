@@ -29,12 +29,15 @@ class TrackList : public QTableView
         int rowCount() const;
         int columnCount() const;
         void propendItem(const Track* track);
-        void appendItem(const Track* track);
         void insertItemAt(const Track* track, int row);
         void removeFirstItem();
         void removeLastItem();
         void removeItemAt(int row);
         void clear();
+
+    public slots:
+        void appendItem(const Track* track);
+        void removeItem(const Track* track);
 
     protected:
         virtual void resizeEvent(QResizeEvent* event);

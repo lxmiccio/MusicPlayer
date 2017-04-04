@@ -28,6 +28,7 @@ class TrackModel : public QAbstractItemModel
         void insertItemAt(const Track* track, int row);
         void removeFirstItem();
         void removeLastItem();
+        void removeItem(const Track* track);
         void removeItemAt(int row);
         void clear();
 

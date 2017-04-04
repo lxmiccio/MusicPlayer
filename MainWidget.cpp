@@ -99,18 +99,14 @@ void MainWidget::coverClicked()
 
 void MainWidget::onCoverClicked(const Album& album)
 {
-    m_playingView->show();
     m_playingView->onAlbumSelected(album);
-
-    m_artistView->hide();
-    m_albumView->hide();
+    showView(Settings::PLAYING_VIEW);
 }
 
 void MainWidget::onCurrentTrackClicked()
 {
-    m_playingView->show();
     m_playingView->onPlaylistSelected(m_audioEngine->playlist());
-    m_artistView->hide();
+    showView(Settings::PLAYING_VIEW);
 }
 
 void MainWidget::onTrackStarted(const Track& track)

@@ -1,37 +1,28 @@
 #include "TrackLyrics.h"
 
-#include <QScrollBar>
-
-#include "AudioEngine.h"
-#include "GuiUtils.h"
-#include "TrackAlbum.h"
-
-TrackLyrics::TrackLyrics(QWidget* parent) : QWidget(parent)
+TrackLyrics::TrackLyrics(QWidget* parent) : ScrollableArea(parent)
 {
     m_lyrics = new QLabel();
     m_lyrics->setStyleSheet(QString("color: white;"));
     m_lyrics->setWordWrap(true);
 
-    m_scrollableArea = new ScrollableArea();
-    m_scrollableArea->verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
-    m_scrollableArea->setWidget(m_lyrics);
+    setMinimumWidth(TrackAlbum::WIDGET_WIDTH);
+    setWidget(m_lyrics);
+    verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
 
-    m_layout = new QVBoxLayout();
-    m_layout->setMargin(0);
-    m_layout->setSpacing(0);
-    m_layout->addWidget(m_scrollableArea);
-
-    setFixedWidth(TrackAlbum::WIDGET_HEIGHT);
-    setFixedWidth(TrackAlbum::WIDGET_WIDTH);
-    setLayout(m_layout);
-
-    QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted(const Track&)));
+    QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted(const Track*)));
 }
 
-void TrackLyrics::onTrackStarted(const Track& track)
+void TrackLyrics::onTrackStarted(const Track* track)
 {
-    c_track = &track;
+    if(track)
+    {
+        if(track != c_track)
+        {
+            c_track = track;
+            m_lyrics->setText(c_track->lyrics());
+        }
 
-    m_lyrics->setText(c_track->lyrics());
-    m_scrollableArea->verticalScrollBar()->setSliderPosition(0);
+        verticalScrollBar()->setSliderPosition(0);
+    }
 }

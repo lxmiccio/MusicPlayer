@@ -27,9 +27,6 @@ class TrackAlbum : public QWidget
     signals:
         void coverClicked();
 
-    private slots:
-        void onCoverClicked();
-
     private:
         const Album* c_album;
 

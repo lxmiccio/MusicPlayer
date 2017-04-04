@@ -16,6 +16,8 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QWidget(parent)
         m_trackLyrics = NULL;
         m_leftLayout = NULL;
         m_spacer = NULL;
+
+        m_scrollableArea = new ScrollableArea();
     }
     else
     {
@@ -23,13 +25,14 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QWidget(parent)
         QObject::connect(m_trackAlbum, SIGNAL(coverClicked()), this, SLOT(onCoverClicked()));
 
         m_trackLyrics = new TrackLyrics();
-        QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_trackLyrics, SLOT(onTrackStarted(const Track&)));
 
         m_leftLayout = new QVBoxLayout();
         m_leftLayout->addWidget(m_trackAlbum);
         m_leftLayout->addWidget(m_trackLyrics);
 
         m_spacer = new QSpacerItem(48, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+        m_scrollableArea = NULL;
     }
 
     m_trackList = new TrackList(m_mode);
@@ -37,16 +40,22 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QWidget(parent)
 
     m_layout = new QHBoxLayout();
     m_layout->setContentsMargins(40, 16, 40, 12);
-    if(m_mode == TrackView::REDUCED)
+    m_layout->setSpacing(0);
+
+    if(m_mode == TrackView::FULL)
+    {
+        m_scrollableArea->setWidget(m_trackList);
+        m_layout->addWidget(m_trackList);
+    }
+    else
     {
         m_layout->addLayout(m_leftLayout);
         m_layout->addItem(m_spacer);
+        m_layout->addWidget(m_trackList);
     }
-    m_layout->addWidget(m_trackList);
-
-    setLayout(m_layout);
 
     setMinimumHeight(TrackView::WIDGET_HEIGHT);
+    setLayout(m_layout);
 }
 
 TrackView::~TrackView()

@@ -63,6 +63,7 @@ class TrackView : public QWidget
         QSpacerItem* m_spacer;
 
         TrackList* m_trackList;
+        ScrollableArea* m_scrollableArea;
 
         QVector<TrackItem*> m_items;
 
