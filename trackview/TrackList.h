@@ -13,6 +13,12 @@ class TrackList : public QTableView
         Q_OBJECT
 
     public:
+        static const quint8 TRACK_INDEX = 0;
+        static const quint8 TITLE_INDEX = 1;
+        static const quint8 ALBUM_INDEX = 2;
+        static const quint8 ARTIST_INDEX = 3;
+        static const quint8 DURATION_INDEX = 4;
+
         static const quint8 TRACK_WIDTH = 100;
         static const quint8 DURATION_WIDTH = 100;
 

@@ -169,9 +169,8 @@ void TrackModel::removeLastItem()
 void TrackModel::removeItem(const Track* track)
 {
     this->beginRemoveRows(QModelIndex(), m_rootItem->rowCount() - 1, m_rootItem->rowCount() - 1);
-    m_rootItem->removeLastChild();
+    m_rootItem->removeChildAt(m_rootItem->indexOf(const_cast<Track*>(track)));
     this->endRemoveRows();
-
 }
 
 void TrackModel::removeItemAt(int row)

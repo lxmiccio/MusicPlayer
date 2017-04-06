@@ -63,9 +63,20 @@ int TrackItem::rowCount() const
     return m_childs.count();
 }
 
-int TrackItem::indexOf(TrackItem* item)
+int TrackItem::indexOf(Track* track)
 {
-    return m_childs.indexOf(item);
+    int index = -1;
+
+    for(quint16 i = 0; i < m_childs.size(); ++i)
+    {
+        if(m_childs.at(i)->track() == track)
+        {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
 }
 
 void TrackItem::prependChild(TrackItem* item)

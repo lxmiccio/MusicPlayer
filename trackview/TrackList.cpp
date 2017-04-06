@@ -89,6 +89,12 @@ void TrackList::appendItem(const Track* track)
     trackModel->appendItem(track);
 }
 
+void TrackList::removeItem(const Track* track)
+{
+    TrackModel* trackModel = static_cast<TrackModel*>(model());
+    trackModel->removeItem(track);
+}
+
 void TrackList::insertItemAt(const Track* track, int row)
 {
     TrackModel* trackModel = static_cast<TrackModel*>(model());
@@ -125,20 +131,20 @@ void TrackList::resizeEvent(QResizeEvent* event)
 
     if(m_mode == TrackView::FULL)
     {
-        setColumnWidth(0, TrackList::TRACK_WIDTH);
-        setColumnWidth(1, width / 3);
-        setColumnWidth(2, width / 3);
-        setColumnWidth(3, width / 3);
-        setColumnWidth(4, TrackList::DURATION_WIDTH);
+        setColumnWidth(TrackList::TRACK_INDEX, TrackList::TRACK_WIDTH);
+        setColumnWidth(TrackList::TITLE_INDEX, width / 3);
+        setColumnWidth(TrackList::ALBUM_INDEX, width / 3);
+        setColumnWidth(TrackList::ARTIST_INDEX, width / 3);
+        setColumnWidth(TrackList::DURATION_INDEX, TrackList::DURATION_WIDTH);
     }
     else
     {
-        this->setColumnWidth(0, TrackList::TRACK_WIDTH);
-        this->setColumnWidth(1, width);
-        this->setColumnWidth(4, TrackList::DURATION_WIDTH);
+        this->setColumnWidth(TrackList::TRACK_INDEX, TrackList::TRACK_WIDTH);
+        this->setColumnWidth(TrackList::TITLE_INDEX, width);
+        this->setColumnWidth(TrackList::DURATION_INDEX, TrackList::DURATION_WIDTH);
 
-        this->setColumnHidden(2, true);
-        this->setColumnHidden(3, true);
+        this->setColumnHidden(TrackList::ALBUM_INDEX, true);
+        this->setColumnHidden(TrackList::ARTIST_INDEX, true);
     }
 
     QTableView::resizeEvent(event);

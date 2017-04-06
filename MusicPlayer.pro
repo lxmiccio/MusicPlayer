@@ -48,7 +48,8 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/ClickableWidget.cpp \
     utils/Settings.cpp \
     MainWidget.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    trackview/TrackFilterProxy.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -87,7 +88,8 @@ HEADERS  += albumview/AlbumView.h \
     widgets/ClickableWidget.h \
     utils/Settings.h \
     MainWidget.h \
-    MainWindow.h
+    MainWindow.h \
+    trackview/TrackFilterProxy.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/audio

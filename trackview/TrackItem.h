@@ -21,12 +21,14 @@ class TrackItem
         int columnCount() const;
         int rowCount() const;
 
+        int indexOf(Track* track);
         void prependChild(TrackItem* item);
         void appendChild(TrackItem* item);
         void insertChildAt(TrackItem* item, int row);
         void removeFirstChild();
         void removeChild(TrackItem* item);
         void removeChildAt(int row);
+        void removeLastChild();
         void clear();
 
         const Track* track() const;
