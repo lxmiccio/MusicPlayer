@@ -19,8 +19,8 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_albumTitle->setFont(font);
     m_albumTitle->setStyleSheet(QString("color: white;"));
 
-    m_trackList = new TrackList(TrackView::REDUCED);
-    QObject::connect(m_trackList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
+    m_trackView = new TrackView(PlayingView::REDUCED);
+    QObject::connect(m_trackView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
     QObject::connect(this, SIGNAL(trackClicked(Track*)), AudioEngine::instance(), SLOT(onTrackSelected(Track*)));
 
 #if LOWER_ALIGNMENT
@@ -42,7 +42,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_lowerLayout->setContentsMargins(0, 0, 0, 0);
     m_lowerLayout->setSpacing(0);
     m_lowerLayout->addItem(m_lowerLayoutLeftSpacer);
-    m_lowerLayout->addWidget(m_trackList);
+    m_lowerLayout->addWidget(m_trackView);
 
     m_layout = new QVBoxLayout();
     m_layout->setContentsMargins(0, 0, 0, 0);
@@ -71,7 +71,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_rightLayout->setSpacing(0);
     m_rightLayout->addWidget(m_albumTitle);
     m_rightLayout->addItem(m_rightLayoutMiddleSpacer);
-    m_rightLayout->addWidget(m_trackList);
+    m_rightLayout->addWidget(m_trackView);
 
     m_layout = new QHBoxLayout();
     m_layout->addLayout(m_leftLayout);
@@ -105,10 +105,10 @@ void ArtistAlbumWidget::setAlbum(Album* album)
         {
             TrackItem* item = new TrackItem(i_track);
             m_items.push_back(item);
-            m_trackList->appendItem(i_track);
+            m_trackView->appendItem(i_track);
         }
 
-        m_trackList->setMinimumHeight(m_trackList->fittingSize().height());
+        m_trackView->setMinimumHeight(m_trackView->fittingSize().height());
     }
 }
 
@@ -123,5 +123,5 @@ void ArtistAlbumWidget::clear()
     qDeleteAll(m_items);
     m_items.clear();
 
-    m_trackList->clear();
+    m_trackView->clear();
 }

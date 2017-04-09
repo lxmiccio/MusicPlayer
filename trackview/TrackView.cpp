@@ -1,123 +1,178 @@
 #include "TrackView.h"
 
-#include <QHeaderView>
+#include <QCommonStyle>
 #include <QResizeEvent>
 #include <QScrollBar>
 
-#include "ImageUtils.h"
+const quint8 TrackView::TRACK_INDEX;
+const quint8 TrackView::TITLE_INDEX;
+const quint8 TrackView::ALBUM_INDEX;
+const quint8 TrackView::ARTIST_INDEX;
+const quint8 TrackView::DURATION_INDEX;
 
-TrackView::TrackView(quint8 mode, QWidget* parent) : QWidget(parent)
+TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
 {
     m_mode = mode;
 
-    if(m_mode == TrackView::FULL)
-    {
-        m_trackAlbum = NULL;
-        m_trackLyrics = NULL;
-        m_leftLayout = NULL;
-        m_spacer = NULL;
+    m_trackModel = new TrackModel();
 
-        m_scrollableArea = new ScrollableArea();
-    }
-    else
-    {
-        m_trackAlbum = new TrackAlbum();
-        QObject::connect(m_trackAlbum, SIGNAL(coverClicked()), this, SLOT(onCoverClicked()));
+    m_filterProxy = new TrackFilterProxy();
+    m_filterProxy->setDynamicSortFilter(true);
+    m_filterProxy->setSourceModel(m_trackModel);
+    m_filterProxy->sort(0, Qt::AscendingOrder);
+    QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex,int,int)), m_filterProxy, SLOT(invalidate()));
+    setModel(m_filterProxy);
 
-        m_trackLyrics = new TrackLyrics();
+    m_trackDelegate = new TrackDelegate(this);
+    setItemDelegate(m_trackDelegate);
 
-        m_leftLayout = new QVBoxLayout();
-        m_leftLayout->addWidget(m_trackAlbum);
-        m_leftLayout->addWidget(m_trackLyrics);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setShowGrid(false);
+    horizontalHeader()->hide();
+    verticalHeader()->hide();
 
-        m_spacer = new QSpacerItem(48, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setStyleSheet(QString("QTableView {"
+                          "background: transparent;"
+                          "border: 0px;"
+                          "}"
 
-        m_scrollableArea = NULL;
-    }
+                          "QTableView > QWidget > QWidget {"
+                          "background: transparent;"
+                          "border: 0px;"
+                          "}"));
 
-    m_trackList = new TrackList(m_mode);
-    QObject::connect(m_trackList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
+    verticalScrollBar()->setStyle(new QCommonStyle());
+    verticalScrollBar()->setStyleSheet(QString("QScrollBar:vertical {"
+                                               "background: transparent;"
+                                               "border: 0px;"
+                                               "margin: 0px 0px 0px 0px;"
+                                               "width: 10px;"
+                                               "}"
 
-    m_layout = new QHBoxLayout();
-    m_layout->setContentsMargins(40, 16, 40, 12);
-    m_layout->setSpacing(0);
+                                               "QScrollBar::handle:vertical {"
+                                               "border-image: url(:/images/scroll-bar.jpg);"
+                                               "border-radius: 2px;"
+                                               "margin: 2px 0px 2px 4px;"
+                                               "}"
 
-    if(m_mode == TrackView::FULL)
-    {
-        m_scrollableArea->setWidget(m_trackList);
-        m_layout->addWidget(m_trackList);
-    }
-    else
-    {
-        m_layout->addLayout(m_leftLayout);
-        m_layout->addItem(m_spacer);
-        m_layout->addWidget(m_trackList);
-    }
-
-    setMinimumHeight(TrackView::WIDGET_HEIGHT);
-    setLayout(m_layout);
+                                               "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,"
+                                               "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {"
+                                               "border: 0px;"
+                                               "height: 0px;"
+                                               "}"));
 }
 
 TrackView::~TrackView()
 {
-#if 0
-    qDeleteAll(m_items);
-    delete m_trackList;
-    delete m_layout;
-#endif
-}
-void TrackView::onAlbumSelected(const Album& album)
-{
-    clear();
 
-    foreach(Track* i_track, album.tracks())
-    {
-        TrackItem* item = new TrackItem(i_track);
-        m_items.push_back(item);
-        m_trackList->appendItem(i_track);
-    }
-
-    m_trackAlbum->setAlbum(&album);
 }
 
-void TrackView::onPlaylistSelected(const Playlist* playlist)
+QSize TrackView::fittingSize()
 {
-    if(playlist && !playlist->tracks().isEmpty())
-    {
-        clear();
-
-        foreach(const Track* i_track, playlist->tracks())
-        {
-            TrackItem* item = new TrackItem(i_track);
-            m_items.push_back(item);
-            m_trackList->appendItem(i_track);
-        }
-
-        m_trackAlbum->setAlbum(playlist->tracks().at(0)->album());
-    }
+    return sizeHint();
 }
 
-void TrackView::onTrackStarted(const Track& track)
+quint8 TrackView::mode() const
 {
-    m_trackAlbum->setAlbum(track.album());
-    emit trackStarted(track);
+    return m_mode;
 }
 
-void TrackView::onDoubleClicked(const QModelIndex& index)
+int TrackView::rowCount() const
 {
-    const Track* track = m_items.at(index.row())->track();
-    emit doubleClicked(*track);
+    return m_trackModel->rowCount();
 }
 
-void TrackView::onCoverClicked()
+int TrackView::columnCount() const
 {
-    emit coverClicked();
+    return m_trackModel->columnCount();
+}
+
+void TrackView::propendItem(const Track* track)
+{
+    m_trackModel->propendItem(track);
+}
+
+void TrackView::appendItem(const Track* track)
+{
+    m_trackModel->appendItem(track);
+}
+
+void TrackView::removeItem(const Track* track)
+{
+    m_trackModel->removeItem(track);
+}
+
+void TrackView::insertItemAt(const Track* track, int row)
+{
+    m_trackModel->insertItemAt(track, row);
+}
+
+void TrackView::removeFirstItem()
+{
+    m_trackModel->removeFirstItem();
+}
+
+void TrackView::removeLastItem()
+{
+    m_trackModel->removeLastItem();
+}
+
+void TrackView::removeItemAt(int row)
+{
+    m_trackModel->removeItemAt(row);
 }
 
 void TrackView::clear()
 {
-    qDeleteAll(m_items);
-    m_items.clear();
+    m_trackModel->clear();
+}
 
-    m_trackList->clear();
+void TrackView::resizeEvent(QResizeEvent* event)
+{
+    int width = event->size().width() - TrackView::TRACK_WIDTH - TrackView::DURATION_WIDTH;
+
+    if(m_mode == PlayingView::FULL)
+    {
+        setColumnWidth(TrackView::TRACK_INDEX, TrackView::TRACK_WIDTH);
+        setColumnWidth(TrackView::TITLE_INDEX, width / 3);
+        setColumnWidth(TrackView::ALBUM_INDEX, width / 3);
+        setColumnWidth(TrackView::ARTIST_INDEX, width / 3);
+        setColumnWidth(TrackView::DURATION_INDEX, TrackView::DURATION_WIDTH);
+    }
+    else
+    {
+        setColumnWidth(TrackView::TRACK_INDEX, TrackView::TRACK_WIDTH);
+        setColumnWidth(TrackView::TITLE_INDEX, width);
+        setColumnWidth(TrackView::DURATION_INDEX, TrackView::DURATION_WIDTH);
+
+        setColumnHidden(TrackView::ALBUM_INDEX, true);
+        setColumnHidden(TrackView::ARTIST_INDEX, true);
+    }
+
+    QTableView::resizeEvent(event);
+}
+
+QSize TrackView::sizeHint()
+{
+    QSize hint = QTableView::sizeHint();
+
+    if(model())
+    {
+        quint16 width = verticalHeader()->width() + 4;
+        for(quint8 i = 0; i < model()->columnCount(); ++i)
+        {
+            width += columnWidth(i);
+        }
+
+        quint16 height = horizontalHeader()->height() + 4;
+        for(quint8 i = 0; i < model()->rowCount(); ++i)
+        {
+            height += rowHeight(i);
+        }
+
+        hint.setWidth(width);
+        hint.setHeight(height);
+    }
+
+    return hint;
 }

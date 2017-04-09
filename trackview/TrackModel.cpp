@@ -3,13 +3,11 @@
 TrackModel::TrackModel(QObject* parent) : QAbstractItemModel(parent)
 {
     m_rootItem = new TrackItem(QList<QVariant>() << "Track" << "Title" << "Album" << "Artist" << "Duration");
+
 }
 
 TrackModel::~TrackModel()
 {
-#if 0
-    delete m_rootItem;
-#endif
 }
 
 QVariant TrackModel::headerData(int column, Qt::Orientation orientation, int role) const

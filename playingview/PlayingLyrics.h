@@ -1,5 +1,5 @@
-#ifndef TRACKLYRICS_H
-#define TRACKLYRICS_H
+#ifndef PLAYINGLYRICS_H
+#define PLAYINGLYRICS_H
 
 #include <QLabel>
 #include <QScrollBar>
@@ -9,14 +9,14 @@
 #include "GuiUtils.h"
 #include "ScrollableArea.h"
 #include "Track.h"
-#include "TrackAlbum.h"
+#include "PlayingAlbum.h"
 
-class TrackLyrics : public ScrollableArea
+class PlayingLyrics : public ScrollableArea
 {
         Q_OBJECT
 
     public:
-        TrackLyrics(QWidget* parent = 0);
+        PlayingLyrics(QWidget* parent = 0);
 
     public slots:
         void onTrackStarted(const Track* track);
@@ -26,4 +26,4 @@ class TrackLyrics : public ScrollableArea
         QLabel* m_lyrics;
 };
 
-#endif // TRACKLYRICS_H
+#endif // PLAYINGLYRICS_H

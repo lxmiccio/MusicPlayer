@@ -12,9 +12,10 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_albumView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
-    m_trackView = new TrackView(TrackView::FULL);
+    m_trackView = new TrackView(PlayingView::FULL);
+    QObject::connect(MusicLibrary::instance(), SIGNAL(trackAdded(const Track*)), m_trackView, SLOT(appendItem(const Track*)));
 
-    m_playingView = new TrackView(TrackView::REDUCED);
+    m_playingView = new PlayingView(PlayingView::REDUCED);
     QObject::connect(m_playingView, SIGNAL(doubleClicked(const Track&)), this, SLOT(onItemDoubleClicked(const Track&)));
     QObject::connect(m_playingView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
     QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_playingView, SLOT(onTrackStarted(const Track&)));
@@ -85,16 +86,7 @@ void MainWidget::onItemDoubleClicked(const Track& track)
 
 void MainWidget::coverClicked()
 {
-    if(m_currentView == Settings::ARTIST_VIEW)
-    {
-        m_artistView->show();
-    }
-    else
-    {
-        m_albumView->show();
-    }
-
-    m_playingView->hide();
+    showView(Settings::view());
 }
 
 void MainWidget::onCoverClicked(const Album& album)
@@ -118,6 +110,11 @@ void MainWidget::showView(Settings::View view)
 {
     if(view != m_currentView)
     {
+        if(view == Settings::PLAYING_VIEW && m_currentView != Settings::PLAYING_VIEW)
+        {
+            m_previousView = m_currentView;
+        }
+
         m_currentView = view;
 
         if(m_currentView != Settings::PLAYING_VIEW)
@@ -130,9 +127,9 @@ void MainWidget::showView(Settings::View view)
         m_trackView->hide();
         m_playingView->hide();
 
-        if(view == Settings::ARTIST_VIEW) m_artistView->show();
-        else if(view == Settings::ALBUM_VIEW) m_albumView->show();
-        else if(view == Settings::TRACK_VIEW) m_trackView->show();
-        else if(view == Settings::PLAYING_VIEW) m_playingView->show();
+        if(m_currentView == Settings::ARTIST_VIEW) m_artistView->show();
+        else if(m_currentView == Settings::ALBUM_VIEW) m_albumView->show();
+        else if(m_currentView == Settings::TRACK_VIEW) m_trackView->show();
+        else if(m_currentView == Settings::PLAYING_VIEW) m_playingView->show();
     }
 }

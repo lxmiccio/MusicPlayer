@@ -7,10 +7,13 @@
 
 #include "TrackItem.h"
 
+class TrackFilterProxy;
 class TrackItem;
 
 class TrackModel : public QAbstractItemModel
 {
+        Q_OBJECT
+
     public:
         explicit TrackModel(QObject* parent = 0);
         ~TrackModel();
@@ -32,7 +35,7 @@ class TrackModel : public QAbstractItemModel
         void removeItemAt(int row);
         void clear();
 
-    private:
+    public:
         TrackItem* m_rootItem;
 };
 

@@ -1,12 +1,12 @@
-#include "TrackAlbum.h"
+#include "PlayingAlbum.h"
 
 #include "Cover.h"
 
-TrackAlbum::TrackAlbum(QWidget* parent) : QWidget(parent)
+PlayingAlbum::PlayingAlbum(QWidget* parent) : QWidget(parent)
 {
     m_cover = new ClickableLabel(this);
-    m_cover->setFixedWidth(TrackAlbum::IMAGE_WIDTH);
-    m_cover->setFixedHeight(TrackAlbum::IMAGE_HEIGHT);
+    m_cover->setFixedWidth(PlayingAlbum::IMAGE_WIDTH);
+    m_cover->setFixedHeight(PlayingAlbum::IMAGE_HEIGHT);
     QObject::connect(m_cover, SIGNAL(clicked()), SIGNAL(coverClicked()));
 
     m_spacer1 = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -33,11 +33,11 @@ TrackAlbum::TrackAlbum(QWidget* parent) : QWidget(parent)
     m_layout->addWidget(m_albumTitle);
     m_layout->addItem(m_spacer3);
 
-    setFixedWidth(TrackAlbum::WIDGET_WIDTH);
+    setFixedWidth(PlayingAlbum::WIDGET_WIDTH);
     setLayout(m_layout);
 }
 
-TrackAlbum::~TrackAlbum()
+PlayingAlbum::~PlayingAlbum()
 {
 #if 0
     delete m_cover;
@@ -50,7 +50,7 @@ TrackAlbum::~TrackAlbum()
 #endif
 }
 
-void TrackAlbum::setAlbum(const Album* album)
+void PlayingAlbum::setAlbum(const Album* album)
 {
     if(album)
     {
@@ -58,11 +58,11 @@ void TrackAlbum::setAlbum(const Album* album)
 
         if(c_album->cover().isNull())
         {
-            m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(TrackAlbum::IMAGE_WIDTH, TrackAlbum::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(PlayingAlbum::IMAGE_WIDTH, PlayingAlbum::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         }
         else
         {
-            m_cover->setPixmap(QPixmap(c_album->cover().scaled(TrackAlbum::IMAGE_WIDTH, TrackAlbum::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+            m_cover->setPixmap(QPixmap(c_album->cover().scaled(PlayingAlbum::IMAGE_WIDTH, PlayingAlbum::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
         }
 
         m_albumTitle->setText(album->title());

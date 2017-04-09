@@ -1,5 +1,5 @@
-#ifndef TRACKALBUM_H
-#define TRACKALBUM_H
+#ifndef PLAYINGALBUM_H
+#define PLAYINGALBUM_H
 
 #include <QLabel>
 #include <QSpacerItem>
@@ -9,13 +9,13 @@
 #include "Album.h"
 #include "ClickableLabel.h"
 
-class TrackAlbum : public QWidget
+class PlayingAlbum : public QWidget
 {
         Q_OBJECT
 
     public:
-        explicit TrackAlbum(QWidget* parent = 0);
-        ~TrackAlbum();
+        explicit PlayingAlbum(QWidget* parent = 0);
+        ~PlayingAlbum();
 
         void setAlbum(const Album* album);
 
@@ -39,4 +39,4 @@ class TrackAlbum : public QWidget
         QVBoxLayout* m_layout;
 };
 
-#endif // TRACKALBUM_H
+#endif // PLAYINGALBUM_H

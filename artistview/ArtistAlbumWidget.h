@@ -12,7 +12,7 @@
 #include "ElidedLabel.h"
 
 #include "TrackItem.h"
-#include "TrackList.h"
+#include "TrackView.h"
 #include "TrackModel.h"
 #include "TrackDelegate.h"
 
@@ -42,7 +42,7 @@ class ArtistAlbumWidget : public QWidget
         ElidedLabel* m_albumTitle;
 
         QVector<TrackItem*> m_items;
-        TrackList* m_trackList;
+        TrackView* m_trackView;
 
         QSpacerItem* m_leftLayoutUpperSpacer;
         QSpacerItem* m_leftLayoutMiddleSpacer;

@@ -1,19 +1,19 @@
-#include "TrackLyrics.h"
+#include "PlayingLyrics.h"
 
-TrackLyrics::TrackLyrics(QWidget* parent) : ScrollableArea(parent)
+PlayingLyrics::PlayingLyrics(QWidget* parent) : ScrollableArea(parent)
 {
     m_lyrics = new QLabel();
     m_lyrics->setStyleSheet(QString("color: white;"));
     m_lyrics->setWordWrap(true);
 
-    setMinimumWidth(TrackAlbum::WIDGET_WIDTH);
+    setMinimumWidth(PlayingAlbum::WIDGET_WIDTH);
     setWidget(m_lyrics);
     verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
 
     QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted(const Track*)));
 }
 
-void TrackLyrics::onTrackStarted(const Track* track)
+void PlayingLyrics::onTrackStarted(const Track* track)
 {
     if(track)
     {

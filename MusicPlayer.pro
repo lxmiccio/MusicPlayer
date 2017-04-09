@@ -13,6 +13,10 @@ TEMPLATE = app
 
 SOURCES += albumview/AlbumView.cpp \
     albumview/Cover.cpp \
+    artistview/ArtistAlbumsView.cpp \
+    artistview/ArtistAlbumWidget.cpp \
+    artistview/ArtistView.cpp \
+    artistview/ArtistWidget.cpp \
     audio/AudioControls.cpp \
     audio/AudioEngine.cpp \
     audio/TrackSlider.cpp \
@@ -23,36 +27,36 @@ SOURCES += albumview/AlbumView.cpp \
     data/Track.cpp \
     data/TrackLoader.cpp \
     data/TrackLoaderThread.cpp \
-    trackview/TrackAlbum.cpp \
     trackview/TrackDelegate.cpp \
+    trackview/TrackFilterProxy.cpp \
     trackview/TrackItem.cpp \
-    trackview/TrackList.cpp \
-    trackview/TrackLyrics.cpp \
     trackview/TrackModel.cpp \
-    trackview/TrackView.cpp \
     utils/ImageUtils.cpp \
+    utils/Settings.cpp \
     utils/TagUtils.cpp \
     utils/Utils.cpp \
     widgets/BackgroundWidget.cpp \
     widgets/ClickableLabel.cpp \
+    widgets/ClickableWidget.cpp \
     widgets/ElidedLabel.cpp \
     widgets/ImageButton.cpp \
+    widgets/Line.cpp \
     widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
-    main.cpp \
-    artistview/ArtistWidget.cpp \
-    artistview/ArtistAlbumsView.cpp \
-    artistview/ArtistAlbumWidget.cpp \
-    widgets/Line.cpp \
-    artistview/ArtistView.cpp \
-    widgets/ClickableWidget.cpp \
-    utils/Settings.cpp \
     MainWidget.cpp \
     MainWindow.cpp \
-    trackview/TrackFilterProxy.cpp
+    main.cpp \
+    playingview/PlayingView.cpp \
+    playingview/PlayingAlbum.cpp \
+    playingview/PlayingLyrics.cpp \
+    trackview/TrackView.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
+    artistview/ArtistAlbumsView.h \
+    artistview/ArtistAlbumWidget.h \
+    artistview/ArtistView.h \
+    artistview/ArtistWidget.h \
     audio/AudioControls.h \
     audio/AudioEngine.h \
     audio/TrackSlider.h \
@@ -64,40 +68,36 @@ HEADERS  += albumview/AlbumView.h \
     data/TrackLoader.h \
     data/TrackLoaderThread.h \
     trackview/TrackDelegate.h \
+    trackview/TrackFilterProxy.h \
     trackview/TrackItem.h \
-    trackview/TrackView.h \
-    trackview/TrackLyrics.h \
-    trackview/TrackList.h \
     trackview/TrackModel.h \
-    trackview/TrackAlbum.h \
     utils/GuiUtils.h \
     utils/ImageUtils.h \
+    utils/Settings.h \
     utils/TagUtils.h \
     utils/Utils.h \
     widgets/BackgroundWidget.h \
     widgets/ClickableLabel.h \
+    widgets/ClickableWidget.h \
     widgets/ElidedLabel.h \
     widgets/ImageButton.h \
+    widgets/Line.h \
     widgets/Slider.h \
     widgets/ScrollableArea.h \
-    artistview/ArtistWidget.h \
-    artistview/ArtistAlbumsView.h \
-    artistview/ArtistAlbumWidget.h \
-    widgets/Line.h \
-    artistview/ArtistView.h \
-    widgets/ClickableWidget.h \
-    utils/Settings.h \
     MainWidget.h \
     MainWindow.h \
-    trackview/TrackFilterProxy.h
+    playingview/PlayingAlbum.h \
+    playingview/PlayingLyrics.h \
+    playingview/PlayingView.h \
+    trackview/TrackView.h
 
 INCLUDEPATH += $$PWD/albumview
+INCLUDEPATH += $$PWD/artistview
 INCLUDEPATH += $$PWD/audio
 INCLUDEPATH += $$PWD/data
 INCLUDEPATH += $$PWD/engine
 INCLUDEPATH += $$PWD/gui
-INCLUDEPATH += $$PWD/ArtistView
-INCLUDEPATH += $$PWD/table
+INCLUDEPATH += $$PWD/playingview
 INCLUDEPATH += $$PWD/tag
 INCLUDEPATH += $$PWD/trackview
 INCLUDEPATH += $$PWD/utils

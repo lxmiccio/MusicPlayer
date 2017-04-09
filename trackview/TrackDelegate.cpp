@@ -1,8 +1,8 @@
 #include "TrackDelegate.h"
 
-TrackDelegate::TrackDelegate(const TrackList* trackList, QObject* parent) : QStyledItemDelegate(parent)
+TrackDelegate::TrackDelegate(const TrackView* trackView, QObject* parent) : QStyledItemDelegate(parent)
 {
-    c_trackList = trackList;
+    c_trackView = trackView;
 }
 
 QWidget* TrackDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
@@ -25,7 +25,7 @@ void TrackDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
             rect = QRect(QPoint(option.rect.topLeft().x() + 10, option.rect.topLeft().y()), option.rect.bottomRight());
             painter->fillRect(rect, QColor(0, 0, 0, 10));
         }
-        else if(index.column() == c_trackList->columnCount())
+        else if(index.column() == c_trackView->columnCount())
         {
             rect = QRect(option.rect.topLeft(), QPoint(option.rect.bottomRight().x() - 10, option.rect.bottomRight().y()));
             painter->fillRect(rect, QColor(0, 0, 0, 10));
@@ -52,14 +52,14 @@ void TrackDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
 
     if(index.column() == 0)
     {
-        painter->drawText(option.rect.adjusted(TrackList::LEFT_MARGIN, 0, -TrackList::MARGIN, 0), Qt::AlignVCenter | Qt::AlignLeft, text);
+        painter->drawText(option.rect.adjusted(TrackView::LEFT_MARGIN, 0, -TrackView::MARGIN, 0), Qt::AlignVCenter | Qt::AlignLeft, text);
     }
-    else if(index.column() == c_trackList->columnCount())
+    else if(index.column() == c_trackView->columnCount())
     {
-        painter->drawText(option.rect.adjusted(TrackList::MARGIN, 0, -TrackList::RIGHT_MARGIN, 0), Qt::AlignVCenter | Qt::AlignRight, text);
+        painter->drawText(option.rect.adjusted(TrackView::MARGIN, 0, -TrackView::RIGHT_MARGIN, 0), Qt::AlignVCenter | Qt::AlignRight, text);
     }
     else
     {
-        painter->drawText(option.rect.adjusted(TrackList::MARGIN, 0, -TrackList::MARGIN, 0), Qt::AlignVCenter | Qt::AlignLeft, text);
+        painter->drawText(option.rect.adjusted(TrackView::MARGIN, 0, -TrackView::MARGIN, 0), Qt::AlignVCenter | Qt::AlignLeft, text);
     }
 }

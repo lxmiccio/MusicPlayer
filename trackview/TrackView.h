@@ -1,74 +1,62 @@
 #ifndef TRACKVIEW_H
 #define TRACKVIEW_H
 
-#include <QHBoxLayout>
-#include <QSpacerItem>
-#include <QStandardItemModel>
-#include <QVBoxLayout>
+#include <QHeaderView>
+#include <QTableView>
 
-#include "BackgroundWidget.h"
-#include "Playlist.h"
-#include "Track.h"
-#include "TrackAlbum.h"
 #include "TrackDelegate.h"
-#include "TrackItem.h"
-#include "TrackList.h"
-#include "TrackLyrics.h"
+#include "TrackFilterProxy.h"
 #include "TrackModel.h"
+#include "PlayingView.h"
 
 class TrackDelegate;
-class TrackItem;
-class TrackList;
-class TrackModel;
+class TrackFilterProxy;
 
-class TrackView : public QWidget
+class TrackView : public QTableView
 {
         Q_OBJECT
 
     public:
+        static const quint8 TRACK_INDEX = 0;
+        static const quint8 TITLE_INDEX = 1;
+        static const quint8 ALBUM_INDEX = 2;
+        static const quint8 ARTIST_INDEX = 3;
+        static const quint8 DURATION_INDEX = 4;
+
+        static const quint8 TRACK_WIDTH = 100;
+        static const quint8 DURATION_WIDTH = 100;
+
+        static const quint8 LEFT_MARGIN = 38;
+        static const quint8 MARGIN = 10;
+        static const quint8 RIGHT_MARGIN = 38;
+
         explicit TrackView(quint8 mode, QWidget* parent = 0);
         ~TrackView();
 
-        static const quint8 TRACK = 1;
-        static const quint8 TITLE = 2;
-        static const quint8 ALBUM = 4;
-        static const quint8 ARTIST = 8;
-        static const quint8 DURATION = 16;
+        QSize fittingSize();
+        quint8 mode() const;
 
-        static const quint8 FULL = TRACK | TITLE | ALBUM | ARTIST | DURATION;
-        static const quint8 REDUCED = TRACK | TITLE | DURATION;
-
-        static const quint16 WIDGET_HEIGHT = 415;
-
-    public slots:
-        void onAlbumSelected(const Album& album);
-        void onPlaylistSelected(const Playlist* playlist);
-        void onTrackStarted(const Track& track);
-
-    signals:
-        void doubleClicked(const Track&);
-        void coverClicked();
-        void trackStarted(const Track&);
-
-    private slots:
-        void onDoubleClicked(const QModelIndex& index);
-        void onCoverClicked();
-
-    private:
+        int rowCount() const;
+        int columnCount() const;
+        void propendItem(const Track* track);
+        void insertItemAt(const Track* track, int row);
+        void removeFirstItem();
+        void removeLastItem();
+        void removeItemAt(int row);
         void clear();
 
-        TrackAlbum* m_trackAlbum;
-        TrackLyrics* m_trackLyrics;
+    public slots:
+        void appendItem(const Track* track);
+        void removeItem(const Track* track);
 
-        QSpacerItem* m_spacer;
+    protected:
+        virtual void resizeEvent(QResizeEvent* event);
+        virtual QSize sizeHint();
 
-        TrackList* m_trackList;
-        ScrollableArea* m_scrollableArea;
-
-        QVector<TrackItem*> m_items;
-
-        QVBoxLayout* m_leftLayout;
-        QHBoxLayout* m_layout;
+    private:
+        TrackModel* m_trackModel;
+        TrackFilterProxy* m_filterProxy;
+        TrackDelegate* m_trackDelegate;
 
         quint8 m_mode;
 };

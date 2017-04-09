@@ -1,32 +1,56 @@
 #include "TrackFilterProxy.h"
 
-TrackFilterProxy::TrackFilterProxy(quint8 mode, QObject* parent) : QSortFilterProxyModel(parent)
+TrackFilterProxy::TrackFilterProxy(QObject* parent) : QSortFilterProxyModel(parent)
 {
-    m_mode = mode;
 }
 
 bool TrackFilterProxy::lessThan(const QModelIndex& left, const QModelIndex& right) const
 {
-#if 0
-    quint8 columns = sourceModel()->columnCount();
+    static QVector<quint8> indexesToCompare;
 
-    QVariant leftData = sourceModel()->data(left);
-    QVariant rightData = sourceModel()->data(right);
-
-    if (leftData.type() == QVariant::DateTime) {
-        return leftData.toDateTime() < rightData.toDateTime();
-    } else {
-        QRegExp *emailPattern = new QRegExp("([\\w\\.]*@[\\w\\.]*)");
-
-        QString leftString = leftData.toString();
-        if(left.column() == 1 && emailPattern->indexIn(leftString) != -1)
-            leftString = emailPattern->cap(1);
-
-        QString rightString = rightData.toString();
-        if(right.column() == 1 && emailPattern->indexIn(rightString) != -1)
-            rightString = emailPattern->cap(1);
-
-        return QString::localeAwareCompare(leftString, rightString) < 0;
+    if(indexesToCompare.isEmpty())
+    {
+        indexesToCompare.append(TrackView::ARTIST_INDEX);
+        indexesToCompare.append(TrackView::ALBUM_INDEX);
+        indexesToCompare.append(TrackView::TRACK_INDEX);
+        indexesToCompare.append(TrackView::TITLE_INDEX);
+        /*
+        indexesToCompare.append(TrackView::ARTIST_INDEX);
+        indexesToCompare.append(TrackView::ALBUM_INDEX);
+        indexesToCompare.append(TrackView::TRACK_INDEX);
+        indexesToCompare.append(TrackView::TITLE_INDEX);
+        */
     }
-#endif
+
+    int leftRow = left.row();
+    int rightRow = right.row();
+
+    for(quint8 i = 0; i < indexesToCompare.size(); ++i)
+    {
+        QModelIndex leftIndex = sourceModel()->index(leftRow, indexesToCompare.at(i), QModelIndex());
+        QModelIndex rightIndex = sourceModel()->index(rightRow, indexesToCompare.at(i), QModelIndex());
+
+        if(indexesToCompare.at(i) == 0)
+        {
+            int leftData = sourceModel()->data(leftIndex).toInt();
+            int rightData = sourceModel()->data(rightIndex).toInt();
+
+            if(leftData != rightData)
+            {
+                return leftData < rightData;
+            }
+        }
+        else
+        {
+            QString leftData = sourceModel()->data(leftIndex).toString();
+            QString rightData = sourceModel()->data(rightIndex).toString();
+
+            if(QString::compare(leftData, rightData) != 0)
+            {
+                return QString::compare(leftData, rightData) < 0;
+            }
+        }
+    }
+
+    return false;
 }

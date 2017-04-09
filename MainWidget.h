@@ -15,7 +15,7 @@
 #include "ScrollableArea.h"
 #include "Settings.h"
 #include "Track.h"
-#include "TrackView.h"
+#include "PlayingView.h"
 
 class MainWidget : public BackgroundWidget
 {
@@ -48,12 +48,13 @@ class MainWidget : public BackgroundWidget
         AudioControls* m_audioControls;
         AudioEngine* m_audioEngine;
 
+        Settings::View m_previousView;
         Settings::View m_currentView;
         AlbumView* m_albumView;
         ArtistView* m_artistView;
         ScrollableArea* m_scrollableTrackView;
         TrackView* m_trackView;
-        TrackView* m_playingView;
+        PlayingView* m_playingView;
 
         QHBoxLayout* m_horLayout;
         QVBoxLayout* m_layout;
