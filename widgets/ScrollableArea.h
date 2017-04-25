@@ -1,11 +1,12 @@
 #ifndef SCROLLABLEAREA_H
 #define SCROLLABLEAREA_H
 
+#include <QCommonStyle>
+#include <QDragEnterEvent>
 #include <QFileInfo>
+#include <QMimeData>
 #include <QScrollArea>
-
-#include "Track.h"
-#include "TrackLoader.h"
+#include <QScrollBar>
 
 class ScrollableArea : public QScrollArea
 {

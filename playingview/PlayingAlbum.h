@@ -8,6 +8,7 @@
 
 #include "Album.h"
 #include "ClickableLabel.h"
+#include "Cover.h"
 
 class PlayingAlbum : public QWidget
 {

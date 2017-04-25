@@ -1,10 +1,5 @@
 #include "AudioControls.h"
 
-#include <QApplication>
-
-#include "ImageUtils.h"
-#include "Utils.h"
-
 AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcut(QKeySequence(Qt::CTRL + Qt::Key_M), true)
 {
     QSizePolicy sizePolicy;

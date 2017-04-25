@@ -1,11 +1,5 @@
 #include "PlayingView.h"
 
-#include <QHeaderView>
-#include <QResizeEvent>
-#include <QScrollBar>
-
-#include "ImageUtils.h"
-
 PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
 {
     m_mode = mode;

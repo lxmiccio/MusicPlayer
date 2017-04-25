@@ -1,13 +1,17 @@
 #include "Album.h"
 
+#include "GuiUtils.h"
+
 Album::Album(QObject* parent) : QObject(parent)
 {
 }
 
 Album::Album(const QString& title, Artist* artist, QObject* parent) : QObject(parent)
 {
-    m_artist = artist;
     m_title = title;
+
+    m_artist = artist;
+    QObject::connect(artist, SIGNAL(artistUpdated(Artist*, quint8)), this, SIGNAL(artistUpdated(Artist*, quint8)));
 }
 
 const QString& Album::title() const
@@ -18,6 +22,7 @@ const QString& Album::title() const
 void Album::setTitle(const QString& title)
 {
     m_title = title;
+    emit albumUpdated(this, Album::TITLE);
 }
 
 const QPixmap& Album::cover() const
@@ -28,6 +33,7 @@ const QPixmap& Album::cover() const
 void Album::setCover(const QPixmap& cover)
 {
     m_cover = cover;
+    emit albumUpdated(this, Album::COVER);
 }
 
 const QVector<Track*>& Album::tracks() const
@@ -37,8 +43,10 @@ const QVector<Track*>& Album::tracks() const
 
 const Track* Album::track(const QString& title) const
 {
-    foreach(Track* i_track, m_tracks) {
-        if(i_track->title() == title) {
+    foreach(Track* i_track, m_tracks)
+    {
+        if(i_track->title() == title)
+        {
             return i_track;
         }
     }
@@ -48,24 +56,37 @@ const Track* Album::track(const QString& title) const
 
 void Album::addTrack(Track* track)
 {
-    if(track) {
+    if(track)
+    {
+        QObject::connect(track, SIGNAL(trackInfoUpdated(Track*, quint8)), this, SIGNAL(trackUpdated(Track*, quint8)));
         m_tracks.push_back(track);
-        std::sort(m_tracks.begin(), m_tracks.end(), [] (const Track* track1, const Track* track2) -> bool {
-            return track1->track() < track2->track();
-        });
+
+        sort();
+        emit trackAdded(track);
     }
 }
 
 bool Album::removeTrack(Track* track)
 {
-    return m_tracks.removeOne(track);
+    if(m_tracks.removeOne(track))
+    {
+        emit trackRemoved(track);
+        delete track;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool Album::removeTrack(const QString& title)
 {
-    foreach(Track* i_track, m_tracks) {
-        if(i_track->title() == title) {
-            return m_tracks.removeOne(i_track);
+    foreach(Track* i_track, m_tracks)
+    {
+        if(i_track->title() == title)
+        {
+            return removeTrack(i_track);
         }
     }
 
@@ -79,9 +100,19 @@ Artist* Album::artist() const
 
 void Album::setArtist(Artist* artist)
 {
-    if(artist) {
+    if(artist)
+    {
         m_artist = artist;
+        emit artistChanged(artist);
     }
+}
+
+void Album::sort()
+{
+    std::sort(m_tracks.begin(), m_tracks.end(), [] (const Track* track1, const Track* track2) -> bool
+    {
+        return track1->track() < track2->track();
+    });
 }
 
 bool operator==(const Album& album1, const Album& album2)

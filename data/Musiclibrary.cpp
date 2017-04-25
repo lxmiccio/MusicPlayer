@@ -1,8 +1,6 @@
 #include "MusicLibrary.h"
 
-#include "TagUtils.h"
-
-QPointer<MusicLibrary> MusicLibrary::m_instance = 0;
+MusicLibrary* MusicLibrary::m_instance = 0;
 
 MusicLibrary::MusicLibrary()
 {
@@ -12,11 +10,21 @@ MusicLibrary::MusicLibrary()
 
 MusicLibrary* MusicLibrary::instance()
 {
-    if(m_instance.isNull()) {
+    if(!m_instance)
+    {
         m_instance = new MusicLibrary();
     }
 
     return m_instance;
+}
+
+void MusicLibrary::deleteInstance()
+{
+    if(m_instance)
+    {
+        delete m_instance;
+        m_instance = NULL;
+    }
 }
 
 const QVector<Artist*>& MusicLibrary::artists() const
@@ -26,8 +34,10 @@ const QVector<Artist*>& MusicLibrary::artists() const
 
 Artist* MusicLibrary::artist(const QString& name) const
 {
-    foreach(Artist* i_artist, m_artists) {
-        if(i_artist->name() == name) {
+    foreach(Artist* i_artist, m_artists)
+    {
+        if(i_artist && i_artist->name() == name)
+        {
             return i_artist;
         }
     }
@@ -51,8 +61,10 @@ const QVector<Album*> MusicLibrary::albums() const
 {
     QVector<Album*> albums;
 
-    foreach(Artist* i_artist, m_artists) {
-        foreach(Album* i_album, i_artist->albums()) {
+    foreach(Artist* i_artist, m_artists)
+    {
+        foreach(Album* i_album, i_artist->albums())
+        {
             albums.push_back(i_album);
         }
     }
@@ -62,9 +74,12 @@ const QVector<Album*> MusicLibrary::albums() const
 
 Album* MusicLibrary::album(const QString& title) const
 {
-    foreach(Artist* i_artist, m_artists) {
-        foreach(Album* i_album, i_artist->albums()) {
-            if(i_album->title() == title) {
+    foreach(Artist* i_artist, m_artists)
+    {
+        foreach(Album* i_album, i_artist->albums())
+        {
+            if(i_album->title() == title)
+            {
                 return i_album;
             }
         }
@@ -75,10 +90,14 @@ Album* MusicLibrary::album(const QString& title) const
 
 Album* MusicLibrary::album(const QString& title, const QString& artistName) const
 {
-    foreach(Artist* i_artist, m_artists) {
-        if(i_artist->name() == artistName) {
-            foreach(Album* i_album, i_artist->albums()) {
-                if(i_album->title() == title) {
+    foreach(Artist* i_artist, m_artists)
+    {
+        if(i_artist->name() == artistName)
+        {
+            foreach(Album* i_album, i_artist->albums())
+            {
+                if(i_album->title() == title)
+                {
                     return i_album;
                 }
             }
@@ -92,22 +111,26 @@ bool MusicLibrary::removeAlbum(Album* album)
 {
     QMutexLocker locker(&m_mutex);
 
-    foreach(Artist* i_artist, m_artists) {
-        if(i_artist->removeAlbum(album)) {
-            return true;
-        }
+    if(album && album->artist())
+    {
+        return album->artist()->removeAlbum(album);
     }
-
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 bool MusicLibrary::removeAlbum(const QString& albumName, const QString& artistName)
 {
     QMutexLocker locker(&m_mutex);
 
-    if(artist(artistName)) {
+    if(artist(artistName))
+    {
         return artist(artistName)->removeAlbum(albumName);
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
@@ -116,9 +139,12 @@ const QVector<Track*> MusicLibrary::tracks() const
 {
     QVector<Track*> tracks;
 
-    foreach(Artist* i_artist, m_artists) {
-        foreach(Album* i_album, i_artist->albums()) {
-            foreach(Track *i_track, i_album->tracks()) {
+    foreach(Artist* i_artist, m_artists)
+    {
+        foreach(Album* i_album, i_artist->albums())
+        {
+            foreach(Track *i_track, i_album->tracks())
+            {
                 tracks.push_back(i_track);
             }
         }
@@ -131,26 +157,28 @@ bool MusicLibrary::removeTrack(Track* track)
 {
     QMutexLocker locker(&m_mutex);
 
-    foreach(Artist* i_artist, m_artists) {
-        foreach(Album* i_album, i_artist->albums()) {
-            if(i_album->removeTrack(track)) {
-                return true;
-            }
-        }
+    if(track && track->album())
+    {
+        return track->album()->removeTrack(track);
     }
-
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTitle)
 {
     QMutexLocker locker(&m_mutex);
 
-    if(album(albumTitle) != NULL) {
+    if(album(albumTitle))
+    {
         return album(albumTitle)->removeTrack(trackTitle);
     }
-
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 void MusicLibrary::addTrack(QVariantMap* tags)
@@ -183,7 +211,6 @@ void MusicLibrary::addTrack(QVariantMap* tags)
             {
                 l_album = new Album(l_albumTitle, l_artist);
 
-                //TODO: Cover should be loaded on a different thread
                 if(l_path.endsWith(".flac"))
                 {
                     l_album->setCover(TagUtils::readFlacCover(QFileInfo(l_path)));
@@ -207,8 +234,6 @@ void MusicLibrary::addTrack(QVariantMap* tags)
             l_track = const_cast<Track*>(l_album->track(l_trackTitle));
             if(!l_track)
             {
-                //TODO: Load lyrics
-
                 l_track = new Track(*tags, l_album);
                 l_album->addTrack(l_track);
                 emit trackAdded(l_track);
@@ -227,17 +252,23 @@ void MusicLibrary::onTracksToLoad(const QVector<QFileInfo>& filesInfo)
 void MusicLibrary::onArtistRemoved(const Artist* artist)
 {
     if(removeArtist(const_cast<Artist*>(artist)))
+    {
         emit artistRemoved(artist);
+    }
 }
 
 void MusicLibrary::onAlbumRemoved(const Album* album)
 {
     if(removeAlbum(const_cast<Album*>(album)))
+    {
         emit albumRemoved(album);
+    }
 }
 
 void MusicLibrary::onTrackRemoved(const Track* track)
 {
     if(removeTrack(const_cast<Track*>(track)))
+    {
         emit trackRemoved(track);
+    }
 }

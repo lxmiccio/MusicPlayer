@@ -5,11 +5,8 @@
 #include <QScrollBar>
 #include <QWidget>
 
-#include "AudioEngine.h"
-#include "GuiUtils.h"
 #include "ScrollableArea.h"
 #include "Track.h"
-#include "PlayingAlbum.h"
 
 class PlayingLyrics : public ScrollableArea
 {

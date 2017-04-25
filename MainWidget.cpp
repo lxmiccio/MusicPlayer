@@ -1,5 +1,7 @@
 #include "MainWidget.h"
 
+#include "Playlist.h"
+
 MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
 {
     QImage backgroud(":/images/tove-lo.jpg");
@@ -13,6 +15,7 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     QObject::connect(m_albumView, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
 
     m_trackView = new TrackView(PlayingView::FULL);
+    QObject::connect(m_trackView, SIGNAL(trackDoubleClicked(const Track*)), this, SLOT(onTrackDoubleClicked(const Track*)));
     QObject::connect(MusicLibrary::instance(), SIGNAL(trackAdded(const Track*)), m_trackView, SLOT(appendItem(const Track*)));
 
     m_playingView = new PlayingView(PlayingView::REDUCED);
@@ -132,4 +135,10 @@ void MainWidget::showView(Settings::View view)
         else if(m_currentView == Settings::TRACK_VIEW) m_trackView->show();
         else if(m_currentView == Settings::PLAYING_VIEW) m_playingView->show();
     }
+}
+
+void MainWidget::onTrackDoubleClicked(const Track* track)
+{
+    Playlist* playlist = Playlist::fromTracks(MusicLibrary::instance()->tracks(), track);
+    AudioEngine::instance()->onPlaylistSelected(playlist);
 }

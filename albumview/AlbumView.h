@@ -4,12 +4,12 @@
 #include <QHBoxLayout>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QResizeEvent>
 #include <QSpacerItem>
 #include <QVBoxLayout>
 #include <QWidget>
 
 #include "Album.h"
-#include "BackgroundWidget.h"
 #include "Cover.h"
 #include "ScrollableArea.h"
 

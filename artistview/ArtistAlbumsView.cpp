@@ -15,7 +15,7 @@ ArtistAlbumsView::~ArtistAlbumsView()
 
 const Artist* ArtistAlbumsView::artist() const
 {
-    return c_artist;
+    return m_artist;
 }
 
 void ArtistAlbumsView::clearLayout(QLayout* layout)
@@ -46,10 +46,13 @@ void ArtistAlbumsView::onArtistChanged(const Artist* artist)
 
     if(artist)
     {
-        c_artist = artist;
+        m_artist = artist;
+        QObject::connect(m_artist, SIGNAL(albumAdded(Album*)), this, SLOT(onAlbumAdded(Album*)));
+        QObject::connect(m_artist, SIGNAL(albumUpdated(Album*)), this, SLOT(onAlbumUpdated(Album*)));
+        QObject::connect(m_artist, SIGNAL(albumRemoved(Album*)), this, SLOT(onAlbumRemoved(Album*)));
 
         m_widgets.clear();
-        m_lines.clear();
+        m_lineWidgets.clear();
 
         for(quint8 i = 0; i < artist->albums().size(); i++)
         {
@@ -58,12 +61,56 @@ void ArtistAlbumsView::onArtistChanged(const Artist* artist)
             m_widgets.push_back(widget);
             m_layout->addWidget(widget);
 
-            if(i !=  artist->albums().size() - 1)
+            if(i != artist->albums().size() - 1)
             {
-                Line* line = new Line(Qt::Horizontal);
-                m_lines.push_back(line);
-                m_layout->addWidget(line);
+                LineWidget* lineWidget = new LineWidget(Qt::Horizontal);
+                m_lineWidgets.push_back(lineWidget);
+                m_layout->addWidget(lineWidget);
             }
         }
     }
+}
+
+void ArtistAlbumsView::onAlbumAdded(Album* album)
+{
+    if(album)
+    {
+        /* TODO: Add new album instead of repaint all of them
+         *       Check for alphabetical order before adding it */
+        onArtistChanged(album->artist());
+    }
+}
+
+void ArtistAlbumsView::onAlbumUpdated(Album* album)
+{
+    if(album)
+    {
+        m_widgets.at(widgetIndex(album))->setAlbum(album);
+    }
+}
+
+void ArtistAlbumsView::onAlbumRemoved(Album* album)
+{
+    if(album)
+    {
+        quint16 index = widgetIndex(album);
+        delete m_widgets.takeAt(index);
+        delete m_lineWidgets.takeAt(index);
+    }
+}
+
+qint16 ArtistAlbumsView::widgetIndex(Album* album)
+{
+    if(album)
+    {
+        for(qint16 i = 0; i < m_widgets.size(); ++i)
+        {
+            if(m_widgets.at(i)->album() == album)
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1;
 }

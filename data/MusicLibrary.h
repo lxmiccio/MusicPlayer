@@ -3,11 +3,11 @@
 
 #include <QMutex>
 #include <QMutexLocker>
-#include <QPointer>
 #include <QVector>
 
 #include "Album.h"
 #include "Artist.h"
+#include "TagUtils.h"
 #include "Track.h"
 #include "TrackLoader.h"
 
@@ -19,6 +19,7 @@ class MusicLibrary : public QObject
 
     public:
         static MusicLibrary* instance();
+        static void deleteInstance();
 
         const QVector<Artist*>& artists() const;
         Artist* artist(const QString& name) const;
@@ -56,7 +57,7 @@ class MusicLibrary : public QObject
         void addTrack(QVariantMap* tags);
 
     private:
-        static QPointer<MusicLibrary> m_instance;
+        static MusicLibrary* m_instance;
         QVector<Artist*> m_artists;
         TrackLoader* m_trackLoader;
 

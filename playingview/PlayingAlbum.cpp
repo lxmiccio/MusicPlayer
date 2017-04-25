@@ -1,7 +1,5 @@
 #include "PlayingAlbum.h"
 
-#include "Cover.h"
-
 PlayingAlbum::PlayingAlbum(QWidget* parent) : QWidget(parent)
 {
     m_cover = new ClickableLabel(this);

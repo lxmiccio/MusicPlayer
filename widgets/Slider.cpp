@@ -1,7 +1,5 @@
 #include "Slider.h"
 
-#include <QMouseEvent>
-
 #include "GuiUtils.h"
 
 Slider::Slider(Qt::Orientation orientation, QWidget* parent) : QSlider(parent)

@@ -32,6 +32,7 @@ class TrackItem
         void clear();
 
         const Track* track() const;
+        const Track* track(const QModelIndex& index) const;
 
     private:
         const Track* c_track;

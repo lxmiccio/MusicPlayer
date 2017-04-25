@@ -1,13 +1,8 @@
 #include "ScrollableArea.h"
 
-#include <QCommonStyle>
-#include <QDragEnterEvent>
-#include <QMimeData>
-#include <QScrollBar>
-
 #include "GuiUtils.h"
-#include "TrackLoader.h"
 #include "Track.h"
+#include "TrackLoader.h"
 
 ScrollableArea::ScrollableArea(QWidget* parent) : QScrollArea(parent)
 {

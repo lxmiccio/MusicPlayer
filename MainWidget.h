@@ -34,6 +34,7 @@ class MainWidget : public BackgroundWidget
         void onTrackStarted(const Track& track);
         void onCurrentTrackClicked();
         void coverClicked();
+        void onTrackDoubleClicked(const Track* track);
 
     signals:
         void trackClicked(const Track& track);

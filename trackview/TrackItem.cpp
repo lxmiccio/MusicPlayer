@@ -82,16 +82,46 @@ int TrackItem::indexOf(Track* track)
 void TrackItem::prependChild(TrackItem* item)
 {
     m_childs.prepend(item);
+
+    std::sort(m_childs.begin(), m_childs.end(), [] (const TrackItem* trackItem1, const TrackItem* trackItem2) -> bool {
+        if(trackItem1->track()->artist() != trackItem2->track()->artist()) {
+            return trackItem1->track()->artist() < trackItem2->track()->artist();
+        } else if(trackItem1->track()->album() != trackItem2->track()->album()) {
+            return trackItem1->track()->album() < trackItem2->track()->album();
+        } else if(trackItem1->track()->track() != trackItem2->track()->track()) {
+            return trackItem1->track()->track() < trackItem2->track()->track();
+        }
+    });
 }
 
 void TrackItem::appendChild(TrackItem* item)
 {
     m_childs.append(item);
+
+    std::sort(m_childs.begin(), m_childs.end(), [] (const TrackItem* trackItem1, const TrackItem* trackItem2) -> bool {
+        if(trackItem1->track()->artist()->name() != trackItem2->track()->artist()->name()) {
+            return trackItem1->track()->artist()->name() < trackItem2->track()->artist()->name();
+        } else if(trackItem1->track()->album()->title() != trackItem2->track()->album()->title()) {
+            return trackItem1->track()->album()->title() < trackItem2->track()->album()->title();
+        } else if(trackItem1->track()->track() != trackItem2->track()->track()) {
+            return trackItem1->track()->track() < trackItem2->track()->track();
+        }
+    });
 }
 
 void TrackItem::insertChildAt(TrackItem* item, int row)
 {
     m_childs.insert(row, item);
+
+    std::sort(m_childs.begin(), m_childs.end(), [] (const TrackItem* trackItem1, const TrackItem* trackItem2) -> bool {
+        if(trackItem1->track()->artist() != trackItem2->track()->artist()) {
+            return trackItem1->track()->artist() < trackItem2->track()->artist();
+        } else if(trackItem1->track()->album() != trackItem2->track()->album()) {
+            return trackItem1->track()->album() < trackItem2->track()->album();
+        } else if(trackItem1->track()->track() != trackItem2->track()->track()) {
+            return trackItem1->track()->track() < trackItem2->track()->track();
+        }
+    });
 }
 
 void TrackItem::removeFirstChild()
@@ -127,4 +157,26 @@ void TrackItem::clear()
 const Track* TrackItem::track() const
 {
     return c_track;
+}
+
+const Track* TrackItem::track(const QModelIndex& index) const
+{
+    /*
+    if(!m_childs.isEmpty())
+    {
+        for(QListIterator<TrackItem*> i(m_childs); i.hasNext();)
+        {
+            Track* l_track = i.next()->track();
+            if(l_track)
+            {
+                if(l_track->track() == index.model()->d)
+            }
+            if(l_trackItem->track())
+            if(m_childs.at(i)->track() == track)
+            {
+                index = i;
+                break;
+            }
+        }
+    }*/
 }

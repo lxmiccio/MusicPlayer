@@ -1,7 +1,10 @@
 #ifndef CLICKABLELABEL_H
 #define CLICKABLELABEL_H
 
+#include <QApplication>
 #include <QLabel>
+#include <QMouseEvent>
+#include <QPainter>
 #include <QTime>
 
 class ClickableLabel : public QLabel

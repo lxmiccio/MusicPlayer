@@ -1,8 +1,5 @@
 #include "ArtistAlbumWidget.h"
 
-#include <QApplication>
-#include <QFont>
-
 #include "AudioEngine.h"
 
 ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
@@ -21,7 +18,33 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
 
     m_trackView = new TrackView(PlayingView::REDUCED);
     QObject::connect(m_trackView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
-    QObject::connect(this, SIGNAL(trackClicked(Track*)), AudioEngine::instance(), SLOT(onTrackSelected(Track*)));
+    QObject::connect(this, SIGNAL(playlistSelected(Playlist*)), AudioEngine::instance(), SLOT(onPlaylistSelected(Playlist*)));
+
+    m_leftLayoutUpperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftLayoutLowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+    m_rightLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    m_leftLayout = new QVBoxLayout();
+    m_leftLayout->setContentsMargins(0, 0, 0, 0);
+    m_leftLayout->setSpacing(0);
+    m_leftLayout->addItem(m_leftLayoutUpperSpacer);
+    m_leftLayout->addWidget(m_cover);
+    m_leftLayout->addItem(m_leftLayoutMiddleSpacer);
+    m_leftLayout->addItem(m_leftLayoutLowerSpacer);
+
+    m_rightLayout = new QVBoxLayout();
+    m_rightLayout->setContentsMargins(0, 0, 0, 0);
+    m_rightLayout->setSpacing(0);
+    m_rightLayout->addWidget(m_albumTitle);
+    m_rightLayout->addItem(m_rightLayoutMiddleSpacer);
+    m_rightLayout->addWidget(m_trackView);
+
+    m_layout = new QHBoxLayout();
+    m_layout->setContentsMargins(0, 0, 0, 0);
+    m_layout->setSpacing(0);
+    m_layout->addLayout(m_leftLayout);
+    m_layout->addLayout(m_rightLayout);
 
 #if LOWER_ALIGNMENT
     m_upperLayoutLeftSpacer = new QSpacerItem(32, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -53,31 +76,17 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_layout->addItem(m_lowerSpacer);
 #endif
 
-    m_leftLayoutUpperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_leftLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_leftLayoutLowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
-    m_rightLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    m_leftLayout = new QVBoxLayout();
-    m_leftLayout->setContentsMargins(0, 0, 0, 0);
-    m_leftLayout->setSpacing(0);
-    m_leftLayout->addItem(m_leftLayoutUpperSpacer);
-    m_leftLayout->addWidget(m_cover);
-    m_leftLayout->addItem(m_leftLayoutMiddleSpacer);
-    m_leftLayout->addItem(m_leftLayoutLowerSpacer);
-
-    m_rightLayout = new QVBoxLayout();
-    m_rightLayout->setContentsMargins(0, 0, 0, 0);
-    m_rightLayout->setSpacing(0);
-    m_rightLayout->addWidget(m_albumTitle);
-    m_rightLayout->addItem(m_rightLayoutMiddleSpacer);
-    m_rightLayout->addWidget(m_trackView);
-
-    m_layout = new QHBoxLayout();
-    m_layout->addLayout(m_leftLayout);
-    m_layout->addLayout(m_rightLayout);
-
     setLayout(m_layout);
+}
+
+ArtistAlbumWidget::~ArtistAlbumWidget()
+{
+    //TODO
+}
+
+Album* ArtistAlbumWidget::album() const
+{
+    return m_album;
 }
 
 void ArtistAlbumWidget::setAlbum(Album* album)
@@ -85,43 +94,52 @@ void ArtistAlbumWidget::setAlbum(Album* album)
     if(album)
     {
         m_album = album;
-
-        clear();
-
-        if(m_album->cover().isNull())
-        {
-            m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        }
-        else
-        {
-            m_cover->setPixmap(QPixmap(m_album->cover().scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
-        }
+        QObject::connect(m_album, SIGNAL(albumUpdated(Album*, quint8)), this, SLOT(onAlbumUpdated(Album*, quint8)));
 
         m_albumTitle->setText(m_album->title());
 
-        QVector<Track*> tracks = m_album->tracks();
-
-        foreach(Track* i_track, tracks)
+        if(m_album->cover().isNull())
         {
-            TrackItem* item = new TrackItem(i_track);
-            m_items.push_back(item);
-            m_trackView->appendItem(i_track);
+            m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(ArtistAlbumWidget::IMAGE_WIDTH,
+                                                                                                   ArtistAlbumWidget::IMAGE_HEIGHT,
+                                                                                                   Qt::KeepAspectRatio,
+                                                                                                   Qt::SmoothTransformation));
+        }
+        else
+        {
+            m_cover->setPixmap(QPixmap(m_album->cover().scaled(ArtistAlbumWidget::IMAGE_WIDTH,
+                                                               ArtistAlbumWidget::IMAGE_HEIGHT,
+                                                               Qt::KeepAspectRatio,
+                                                               Qt::SmoothTransformation)));
         }
 
+        foreach(Track* i_track, m_album->tracks())
+        {
+            m_trackView->appendItem(i_track);
+        }
         m_trackView->setMinimumHeight(m_trackView->fittingSize().height());
+    }
+}
+
+void ArtistAlbumWidget::onAlbumUpdated(Album* album, quint8 fields)
+{
+    if(album && album == m_album)
+    {
+        setAlbum(album);
     }
 }
 
 void ArtistAlbumWidget::onDoubleClicked(const QModelIndex& index)
 {
-    Track* track = const_cast<Track*>(m_items.at(index.row())->track());
-    emit trackClicked(track);
+    const Track* track = m_trackView->trackModel()->rootItem()->child(index.row())->track();
+
+    if(track)
+    {
+        emit playlistSelected(Playlist::fromTracks(track->album()->tracks(), track));
+    }
 }
 
 void ArtistAlbumWidget::clear()
 {
-    qDeleteAll(m_items);
-    m_items.clear();
-
     m_trackView->clear();
 }

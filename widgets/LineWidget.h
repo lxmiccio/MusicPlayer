@@ -1,15 +1,16 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef LINEWIDGET_H
+#define LINEWIDGET_H
 
 #include <QHBoxLayout>
+#include <QPainter>
 #include <QPaintEvent>
 #include <QPen>
 #include <QWidget>
 
-class Line : public QWidget
+class LineWidget : public QWidget
 {
     public:
-        Line(Qt::Orientation orientation, QWidget* parent = 0);
+        LineWidget(Qt::Orientation orientation, QWidget* parent = 0);
         void setPen(QPen pen);
 
     protected:
@@ -21,4 +22,4 @@ class Line : public QWidget
         QHBoxLayout* m_layout;
 };
 
-#endif // LINE_H
+#endif // LINEWIDGET_H

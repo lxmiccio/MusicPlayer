@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QObject>
 #include <QString>
 #include <QStringList>
 #include <QVector>
@@ -12,13 +13,15 @@
 #include "Album.h"
 #include "Track.h"
 
-class Playlist
+class Playlist : public QObject
 {
+        Q_OBJECT
+
     public:
-        explicit Playlist();
+        explicit Playlist(const QString& name, QObject* parent = 0);
 
         static Playlist* fromAlbum(const Album* album, const Track* startingTrack = NULL);
-        static Playlist* fromTracks(const QVector<const Track*> tracks, const Track* startingTrack = NULL);
+        static Playlist* fromTracks(const QVector<Track*> tracks, const Track* startingTrack = NULL);
 
         static const Playlist* pathsFromPlaylist(QFileInfo& file);
         void saveToFile() const;
@@ -29,8 +32,8 @@ class Playlist
         const QStringList& tracksPath() const;
 
         const QVector<const Track*>& tracks() const;
-        void addTrack(const Track& track);
-        void removeTrack(const Track &track);
+        void addTrack(const Track* track);
+        void removeTrack(const Track* track);
 
         quint16 startingIndex();
         void setStartingIndex(quint16 startingIndex);
@@ -39,11 +42,11 @@ class Playlist
     private:
         QString m_name;
         QStringList m_tracksPath;
-        QVector<const Track*> c_tracks;
+        QVector<const Track*> m_tracks;
         quint16 m_startingIndex;
 };
 
-QDataStream &operator<<(QDataStream &out, const Playlist &playlist);
-QDataStream &operator>>(QDataStream &in, Playlist &playlist);
+QDataStream &operator<<(QDataStream& out, const Playlist& playlist);
+QDataStream &operator>>(QDataStream& in, Playlist& playlist);
 
 #endif // PLAYLIST_H

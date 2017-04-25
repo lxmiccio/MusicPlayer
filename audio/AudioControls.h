@@ -1,6 +1,7 @@
 #ifndef AUDIOCONTROLS_H
 #define AUDIOCONTROLS_H
 
+#include <QApplication>
 #include <QHBoxLayout>
 #include <QHotkey>
 #include <QLabel>
@@ -13,10 +14,12 @@
 #include "BackgroundWidget.h"
 #include "ClickableLabel.h"
 #include "ImageButton.h"
+#include "ImageUtils.h"
 #include "TrackSlider.h"
 #include "Settings.h"
 #include "Slider.h"
 #include "Track.h"
+#include "Utils.h"
 
 class AudioControls : public QWidget
 {

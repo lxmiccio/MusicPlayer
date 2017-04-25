@@ -1,7 +1,5 @@
 #include "AlbumView.h"
 
-#include <QResizeEvent>
-
 #include "MusicLibrary.h"
 
 AlbumView::AlbumView(QWidget* parent) : ScrollableArea(parent)
@@ -38,6 +36,7 @@ AlbumView::~AlbumView()
 {
     clearLayout(m_layout);
     delete m_layout;
+
 #if 0
     qDeleteAll(m_covers);
     qDeleteAll(m_layouts);
@@ -121,19 +120,19 @@ void AlbumView::onAlbumAdded(const Album* album)
     {
         QMutexLocker locker(&m_mutex);
 
-        Cover* cover = new Cover(album);
+        Cover* cover = new Cover(const_cast<Album*>(album));
         QObject::connect(cover, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
         m_covers.push_back(cover);
 
         qSort(m_covers.begin(), m_covers.end(), [] (const Cover* cover1, const Cover* cover2) -> bool
         {
-            if(cover1->album().artist()->name() != cover2->album().artist()->name())
+            if(cover1->album()->artist()->name() != cover2->album()->artist()->name())
             {
-                return cover1->album().artist()->name() < cover2->album().artist()->name();
+                return cover1->album()->artist()->name() < cover2->album()->artist()->name();
             }
             else
             {
-                return cover1->album().title() < cover2->album().title();
+                return cover1->album()->title() < cover2->album()->title();
             }
         });
 

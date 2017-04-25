@@ -1,8 +1,5 @@
 #include "Utils.h"
 
-#include <QtMath>
-#include <QStringList>
-
 quint32 Utils::randomInteger(quint32 min, quint32 max)
 {
     if(min < max)

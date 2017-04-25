@@ -19,7 +19,6 @@ SOURCES += albumview/AlbumView.cpp \
     artistview/ArtistWidget.cpp \
     audio/AudioControls.cpp \
     audio/AudioEngine.cpp \
-    audio/TrackSlider.cpp \
     data/Album.cpp \
     data/Artist.cpp \
     data/MusicLibrary.cpp \
@@ -27,10 +26,14 @@ SOURCES += albumview/AlbumView.cpp \
     data/Track.cpp \
     data/TrackLoader.cpp \
     data/TrackLoaderThread.cpp \
+    playingview/PlayingView.cpp \
+    playingview/PlayingAlbum.cpp \
+    playingview/PlayingLyrics.cpp \
     trackview/TrackDelegate.cpp \
     trackview/TrackFilterProxy.cpp \
     trackview/TrackItem.cpp \
     trackview/TrackModel.cpp \
+    trackview/TrackView.cpp \
     utils/ImageUtils.cpp \
     utils/Settings.cpp \
     utils/TagUtils.cpp \
@@ -40,16 +43,13 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/ClickableWidget.cpp \
     widgets/ElidedLabel.cpp \
     widgets/ImageButton.cpp \
-    widgets/Line.cpp \
+    widgets/LineWidget.cpp \
     widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
+    widgets/TrackSlider.cpp \
     MainWidget.cpp \
     MainWindow.cpp \
-    main.cpp \
-    playingview/PlayingView.cpp \
-    playingview/PlayingAlbum.cpp \
-    playingview/PlayingLyrics.cpp \
-    trackview/TrackView.cpp
+    main.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -59,7 +59,6 @@ HEADERS  += albumview/AlbumView.h \
     artistview/ArtistWidget.h \
     audio/AudioControls.h \
     audio/AudioEngine.h \
-    audio/TrackSlider.h \
     data/Album.h \
     data/Artist.h \
     data/MusicLibrary.h \
@@ -67,10 +66,14 @@ HEADERS  += albumview/AlbumView.h \
     data/Track.h \
     data/TrackLoader.h \
     data/TrackLoaderThread.h \
+    playingview/PlayingAlbum.h \
+    playingview/PlayingLyrics.h \
+    playingview/PlayingView.h \
     trackview/TrackDelegate.h \
     trackview/TrackFilterProxy.h \
     trackview/TrackItem.h \
     trackview/TrackModel.h \
+    trackview/TrackView.h \
     utils/GuiUtils.h \
     utils/ImageUtils.h \
     utils/Settings.h \
@@ -81,15 +84,12 @@ HEADERS  += albumview/AlbumView.h \
     widgets/ClickableWidget.h \
     widgets/ElidedLabel.h \
     widgets/ImageButton.h \
-    widgets/Line.h \
+    widgets/LineWidget.h \
     widgets/Slider.h \
     widgets/ScrollableArea.h \
+    widgets/TrackSlider.h \
     MainWidget.h \
-    MainWindow.h \
-    playingview/PlayingAlbum.h \
-    playingview/PlayingLyrics.h \
-    playingview/PlayingView.h \
-    trackview/TrackView.h
+    MainWindow.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/artistview

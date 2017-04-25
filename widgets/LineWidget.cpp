@@ -1,8 +1,6 @@
-#include "Line.h"
+#include "LineWidget.h"
 
-#include <QPainter>
-
-Line::Line(Qt::Orientation orientation, QWidget* parent) : QWidget(parent)
+LineWidget::LineWidget(Qt::Orientation orientation, QWidget* parent) : QWidget(parent)
 {
     m_orientation = orientation;
 
@@ -12,12 +10,12 @@ Line::Line(Qt::Orientation orientation, QWidget* parent) : QWidget(parent)
     setLayout(m_layout);
 }
 
-void Line::setPen(QPen pen)
+void LineWidget::setPen(QPen pen)
 {
     m_pen = pen;
 }
 
-void Line::paintEvent(QPaintEvent* event)
+void LineWidget::paintEvent(QPaintEvent* event)
 {
     QPointF point1 = QPointF(event->rect().topLeft().x(), event->rect().topLeft().y());
     QPointF point2;

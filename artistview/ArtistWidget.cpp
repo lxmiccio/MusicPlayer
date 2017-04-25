@@ -1,32 +1,33 @@
 #include "ArtistWidget.h"
 
-#include <QAction>
-#include <QMenu>
-#include <QPaintEvent>
-#include <QPainter>
-
-ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : ClickableWidget(parent), m_focussed(false)
+ArtistWidget::ArtistWidget(Artist* artist, QWidget* parent) : ClickableWidget(parent), m_focussed(false)
 {
-    c_artist = artist;
+    m_artist = artist;
 
     m_cover = new QLabel();
     m_cover->setFixedWidth(ArtistWidget::IMAGE_WIDTH);
 
-    if(c_artist->albums().size() > 0)
+    if(m_artist->albums().size() > 0)
     {
-        Album* album = c_artist->albums().at(0);
+        Album* album = m_artist->albums().at(0);
 
         if(!album || album->cover().isNull())
         {
-            m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(ArtistWidget::IMAGE_WIDTH, ArtistWidget::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(ArtistWidget::IMAGE_WIDTH,
+                                                                                                   ArtistWidget::IMAGE_HEIGHT,
+                                                                                                   Qt::KeepAspectRatio,
+                                                                                                   Qt::SmoothTransformation));
         }
         else
         {
-            m_cover->setPixmap(QPixmap(album->cover().scaled(ArtistWidget::IMAGE_WIDTH, ArtistWidget::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+            m_cover->setPixmap(QPixmap(album->cover().scaled(ArtistWidget::IMAGE_WIDTH,
+                                                             ArtistWidget::IMAGE_HEIGHT,
+                                                             Qt::KeepAspectRatio,
+                                                             Qt::SmoothTransformation)));
         }
     }
 
-    m_artistName = new ElidedLabel(c_artist->name());
+    m_artistName = new ElidedLabel(m_artist->name());
     m_artistName->setAlignment(Qt::AlignVCenter);
     m_artistName->setFixedHeight(ArtistWidget::WIDGET_HEIGHT);
     m_artistName->setStyleSheet(QString("color: white;"));
@@ -38,8 +39,8 @@ ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : ClickableWid
     m_layout->addWidget(m_artistName);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
-    setMaximumSize(ArtistWidget::WIDGET_WIDTH, ArtistWidget::WIDGET_HEIGHT);
     setLayout(m_layout);
+    setMaximumSize(ArtistWidget::WIDGET_WIDTH, ArtistWidget::WIDGET_HEIGHT);
 
     QObject::connect(this, SIGNAL(leftButtonClicked()), this, SLOT(onLeftButtonClicked()));
     QObject::connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onContextMenuRequested(QPoint)));
@@ -48,6 +49,11 @@ ArtistWidget::ArtistWidget(const Artist* artist, QWidget* parent) : ClickableWid
 ArtistWidget::~ArtistWidget()
 {
     //TODO
+}
+
+const Artist* ArtistWidget::artist() const
+{
+    return m_artist;
 }
 
 void ArtistWidget::focusIn()
@@ -62,12 +68,7 @@ void ArtistWidget::focusOut()
     repaint();
 }
 
-const Artist* ArtistWidget::artist() const
-{
-    return c_artist;
-}
-
-void ArtistWidget::paintEvent(QPaintEvent *event)
+void ArtistWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
 
@@ -86,12 +87,7 @@ void ArtistWidget::paintEvent(QPaintEvent *event)
     }
 }
 
-void ArtistWidget::onLeftButtonClicked()
-{
-    emit widgetClicked(this);
-}
-
-void ArtistWidget::onContextMenuRequested(QPoint pos)
+void ArtistWidget::onContextMenuRequested(QPoint position)
 {
     QMenu* menu = new QMenu();
 
@@ -99,5 +95,10 @@ void ArtistWidget::onContextMenuRequested(QPoint pos)
     QObject::connect(&removeAction, &QAction::triggered, [=] () { emit removeArtistWidgetClicked(this); });
     menu->addAction(&removeAction);
 
-    menu->exec(mapToGlobal(pos));
+    menu->exec(mapToGlobal(position));
+}
+
+void ArtistWidget::onLeftButtonClicked()
+{
+    emit widgetClicked(this);
 }

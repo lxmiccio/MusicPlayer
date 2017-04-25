@@ -6,8 +6,6 @@
 #include <QPixmap>
 #include <QWidget>
 
-#include "ImageUtils.h"
-
 class BackgroundWidget : public QWidget
 {
         Q_OBJECT

@@ -1,7 +1,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QtMath>
 #include <QString>
+#include <QStringList>
+#include <QStringListIterator>
 
 class Utils
 {

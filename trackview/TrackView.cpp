@@ -1,8 +1,6 @@
 #include "TrackView.h"
 
-#include <QCommonStyle>
-#include <QResizeEvent>
-#include <QScrollBar>
+#include "GuiUtils.h"
 
 const quint8 TrackView::TRACK_INDEX;
 const quint8 TrackView::TITLE_INDEX;
@@ -17,19 +15,19 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
     m_trackModel = new TrackModel();
 
     m_filterProxy = new TrackFilterProxy();
-    m_filterProxy->setDynamicSortFilter(true);
-    m_filterProxy->setSourceModel(m_trackModel);
-    m_filterProxy->sort(0, Qt::AscendingOrder);
-    QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex,int,int)), m_filterProxy, SLOT(invalidate()));
-    setModel(m_filterProxy);
+    //m_filterProxy->setDynamicSortFilter(true);
+    //m_filterProxy->setSourceModel(m_trackModel);
+    //m_filterProxy->sort(0, Qt::AscendingOrder);
+   //QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex, int, int)), m_filterProxy, SLOT(invalidate()));
+    setModel(m_trackModel);
 
     m_trackDelegate = new TrackDelegate(this);
     setItemDelegate(m_trackDelegate);
 
-    setSelectionBehavior(QAbstractItemView::SelectRows);
-    setShowGrid(false);
     horizontalHeader()->hide();
     verticalHeader()->hide();
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setShowGrid(false);
 
     setStyleSheet(QString("QTableView {"
                           "background: transparent;"
@@ -42,24 +40,9 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
                           "}"));
 
     verticalScrollBar()->setStyle(new QCommonStyle());
-    verticalScrollBar()->setStyleSheet(QString("QScrollBar:vertical {"
-                                               "background: transparent;"
-                                               "border: 0px;"
-                                               "margin: 0px 0px 0px 0px;"
-                                               "width: 10px;"
-                                               "}"
+    verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
 
-                                               "QScrollBar::handle:vertical {"
-                                               "border-image: url(:/images/scroll-bar.jpg);"
-                                               "border-radius: 2px;"
-                                               "margin: 2px 0px 2px 4px;"
-                                               "}"
-
-                                               "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,"
-                                               "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {"
-                                               "border: 0px;"
-                                               "height: 0px;"
-                                               "}"));
+    QObject::connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
 }
 
 TrackView::~TrackView()
@@ -75,6 +58,11 @@ QSize TrackView::fittingSize()
 quint8 TrackView::mode() const
 {
     return m_mode;
+}
+
+TrackModel* TrackView::trackModel() const
+{
+    return m_trackModel;
 }
 
 int TrackView::rowCount() const
@@ -175,4 +163,9 @@ QSize TrackView::sizeHint()
     }
 
     return hint;
+}
+
+void TrackView::onItemDoubleClicked(const QModelIndex& index)
+{
+     emit trackDoubleClicked(m_trackModel->rootItem()->child(index.row())->track());
 }

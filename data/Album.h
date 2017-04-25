@@ -17,6 +17,9 @@ class Album : public QObject
         Q_OBJECT
 
     public:
+        static const quint8 TITLE = 1;
+        static const quint8 COVER = 2;
+
         explicit Album(QObject* parent = 0);
         explicit Album(const QString& title, Artist* artist, QObject* parent = 0);
 
@@ -35,9 +38,15 @@ class Album : public QObject
         Artist* artist() const;
         void setArtist(Artist* artist);
 
+        void sort();
+
     signals:
-        void trackAdded(Track& track);
-        void trackRemoved(Track& track);
+        void albumUpdated(Album* album, quint8 fields);
+        void artistChanged(Artist* artist);
+        void artistUpdated(Artist* artist, quint8 fields);
+        void trackAdded(Track* track);
+        void trackUpdated(Track* track, quint8);
+        void trackRemoved(Track* track);
 
     private:
         QString m_title;

@@ -1,12 +1,16 @@
 #ifndef PLAYINGVIEW_H
 #define PLAYINGVIEW_H
 
+#include <QHeaderView>
 #include <QHBoxLayout>
+#include <QResizeEvent>
+#include <QScrollBar>
 #include <QSpacerItem>
 #include <QStandardItemModel>
 #include <QVBoxLayout>
 
 #include "BackgroundWidget.h"
+#include "ImageUtils.h"
 #include "Playlist.h"
 #include "Track.h"
 #include "PlayingAlbum.h"

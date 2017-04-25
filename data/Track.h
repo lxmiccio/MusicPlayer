@@ -3,17 +3,25 @@
 
 #include <QObject>
 #include <QString>
+#include <QVariant>
 #include <QVariantMap>
 
 #include "Artist.h"
 #include "Album.h"
+#include "TagUtils.h"
 
 class Album;
 class Artist;
 
 class Track : public QObject
 {
+        Q_OBJECT
+
     public:
+        static const quint8 TRACK = 1;
+        static const quint8 TITLE = 2;
+        static const quint8 LYRICS = 4;
+
         explicit Track(QObject* parent = 0);
         Track(const QVariantMap& tags, Album* album, QObject* parent = 0);
         Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 m_duration, const QString& m_path, Album* album, QObject* parent = 0);
@@ -24,14 +32,15 @@ class Track : public QObject
         const QString& title() const;
         void setTitle(const QString& title);
 
+        const QString& lyrics() const;
+        void setLyrics(const QString& lyrics);
+        const QString& readLyrics(bool force = false);
+
         quint32 duration() const;
         void setDuration(quint32 duration);
 
         quint16 year() const;
         void setYear(quint8 year);
-
-        const QString& lyrics() const;
-        void setLyrics(const QString& lyrics);
 
         const QString& path() const;
         void setPath(const QString& path);
@@ -41,10 +50,16 @@ class Track : public QObject
 
         Artist* artist() const;
 
+    signals:
+        void trackUpdated(Track* track, quint8 fields);
+        void albumChanged(Album* album);
+        void albumUpdated(Album* album, quint8);
+        void artistUpdated(Artist* artist, quint8);
+
     private:
         quint16 m_track;
         QString m_title;
-        QString m_lyrics;
+        mutable QString m_lyrics;
         quint16 m_year;
         quint32 m_duration;
         QString m_path;

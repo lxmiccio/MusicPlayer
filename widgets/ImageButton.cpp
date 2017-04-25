@@ -1,8 +1,4 @@
-
 #include "ImageButton.h"
-
-#include <QPainter>
-#include <QPaintEvent>
 
 ImageButton::ImageButton(QWidget* parent) : QAbstractButton(parent)
 {

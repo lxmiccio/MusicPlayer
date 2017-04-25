@@ -8,7 +8,7 @@
 
 #include "Artist.h"
 #include "ArtistAlbumWidget.h"
-#include "Line.h"
+#include "LineWidget.h"
 
 class ArtistAlbumsView : public QWidget
 {
@@ -24,11 +24,19 @@ class ArtistAlbumsView : public QWidget
     public slots:
         void onArtistChanged(const Artist* artist);
 
+    private slots:
+        void onAlbumAdded(Album* album);
+        void onAlbumUpdated(Album* album);
+        void onAlbumRemoved(Album* album);
+
     private:
-        const Artist* c_artist;
+        qint16 widgetIndex(Album* album);
+
+        const Artist* m_artist;
         QMutex m_mutex;
+
         QVector<ArtistAlbumWidget*> m_widgets;
-        QVector<Line*> m_lines;
+        QVector<LineWidget*> m_lineWidgets;
         QVBoxLayout* m_layout;
 };
 

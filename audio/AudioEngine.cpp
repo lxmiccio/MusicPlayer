@@ -4,8 +4,6 @@ QPointer<AudioEngine> AudioEngine::m_instance = 0;
 
 AudioEngine::AudioEngine()
 {
-    m_playlist = new Playlist();
-
     m_mediaPlaylist = new QMediaPlaylist();
 
     m_mediaPlayer = new QMediaPlayer();
@@ -73,14 +71,14 @@ void AudioEngine::onTrackSelected(const Track& track)
     {
         foreach(Track* i_track, album->tracks())
         {
-            m_playlist->addTrack(*i_track);
+            m_playlist->addTrack(i_track);
             m_mediaPlaylist->addMedia(QUrl::fromLocalFile(i_track->path()));
             m_mediaPlaylist->setCurrentIndex(album->tracks().indexOf(const_cast<Track*>(&track)));
         }
     }
     else
     {
-        m_playlist->addTrack(track);
+        m_playlist->addTrack(&track);
         m_mediaPlaylist->addMedia(QUrl::fromLocalFile(track.path()));
     }
 

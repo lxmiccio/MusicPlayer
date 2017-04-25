@@ -1,6 +1,7 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
+#include <QMouseEvent>
 #include <QSlider>
 
 class Slider : public QSlider

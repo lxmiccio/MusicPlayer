@@ -1,9 +1,5 @@
 #include "ClickableLabel.h"
 
-#include <QApplication>
-#include <QMouseEvent>
-#include <QPainter>
-
 ClickableLabel::ClickableLabel(QWidget* parent) : QLabel(parent), m_opacity(0.5), m_moved(false), m_pressed(false)
 {
     QLabel::setCursor(Qt::PointingHandCursor);

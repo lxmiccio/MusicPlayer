@@ -33,9 +33,12 @@ class TrackModel : public QAbstractItemModel
         void removeLastItem();
         void removeItem(const Track* track);
         void removeItemAt(int row);
+        void sort();
         void clear();
 
-    public:
+        TrackItem* rootItem();
+
+    private:
         TrackItem* m_rootItem;
 };
 

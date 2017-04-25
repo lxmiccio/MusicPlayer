@@ -14,12 +14,6 @@ bool TrackFilterProxy::lessThan(const QModelIndex& left, const QModelIndex& righ
         indexesToCompare.append(TrackView::ALBUM_INDEX);
         indexesToCompare.append(TrackView::TRACK_INDEX);
         indexesToCompare.append(TrackView::TITLE_INDEX);
-        /*
-        indexesToCompare.append(TrackView::ARTIST_INDEX);
-        indexesToCompare.append(TrackView::ALBUM_INDEX);
-        indexesToCompare.append(TrackView::TRACK_INDEX);
-        indexesToCompare.append(TrackView::TITLE_INDEX);
-        */
     }
 
     int leftRow = left.row();
@@ -30,7 +24,7 @@ bool TrackFilterProxy::lessThan(const QModelIndex& left, const QModelIndex& righ
         QModelIndex leftIndex = sourceModel()->index(leftRow, indexesToCompare.at(i), QModelIndex());
         QModelIndex rightIndex = sourceModel()->index(rightRow, indexesToCompare.at(i), QModelIndex());
 
-        if(indexesToCompare.at(i) == 0)
+        if(indexesToCompare.at(i) == TrackView::TRACK_INDEX)
         {
             int leftData = sourceModel()->data(leftIndex).toInt();
             int rightData = sourceModel()->data(rightIndex).toInt();

@@ -20,7 +20,6 @@ class ArtistAlbumWidget : public QWidget
 
     public:
         ArtistAlbumWidget(QWidget* parent = 0);
-        ~ArtistAlbumWidget();
 
         Album* album() const;
         void setAlbum(Album* album);
@@ -32,7 +31,7 @@ class ArtistAlbumWidget : public QWidget
         void playlistSelected(Playlist* playlist);
 
     private slots:
-        void onAlbumUpdated(Album* album, quint8 fields);
+        void onAlbumChanged();
         void onDoubleClicked(const QModelIndex& index);
 
     private:

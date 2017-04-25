@@ -1,7 +1,11 @@
 #ifndef ELIDEDLABEL_H
 #define ELIDEDLABEL_H
 
+#include <QApplication>
 #include <QFrame>
+#include <QPainter>
+#include <QTextLayout>
+#include <QTextLine>
 #include <QTime>
 
 class ElidedLabel : public QFrame

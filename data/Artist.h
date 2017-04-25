@@ -15,8 +15,10 @@ class Artist : public QObject
         Q_OBJECT
 
     public:
+        static const quint8 NAME = 1;
+
         explicit Artist(QObject* parent = 0);
-        explicit Artist(const QString &title, QObject* parent = 0);
+        explicit Artist(const QString& title, QObject* parent = 0);
 
         const QString& name() const;
         void setName(const QString& name);
@@ -29,9 +31,13 @@ class Artist : public QObject
 
         const QVector<Track*> tracks() const;
 
+        void sort();
+
     signals:
-        void albumAdded(Album& album);
-        void albumRemoved(Album& album);
+        void artistUpdated(Artist* artist, quint8 fields);
+        void albumAdded(Album* album);
+        void albumUpdated(Album* album, quint8);
+        void albumRemoved(Album* album);
 
     private:
         QVector<Album*> m_albums;

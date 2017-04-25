@@ -1,10 +1,5 @@
 #include "ElidedLabel.h"
 
-#include <QApplication>
-#include <QPainter>
-#include <QTextLayout>
-#include <QTextLine>
-
 ElidedLabel::ElidedLabel(QWidget* parent, Qt::WindowFlags flags) : QFrame(parent, flags)
 {
     m_text = QString();

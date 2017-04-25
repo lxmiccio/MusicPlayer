@@ -1,5 +1,7 @@
 #include "BackgroundWidget.h"
 
+#include "ImageUtils.h"
+
 BackgroundWidget::BackgroundWidget(QWidget* parent) : QWidget(parent), m_blurred(false)
 {
     QWidget::setAutoFillBackground(false);
@@ -19,9 +21,13 @@ void BackgroundWidget::setBackgroundImage(const QPixmap& pixmap, bool blurred, b
     m_blurred = blurred;
 
     if(m_blurred)
+    {
         m_background = QPixmap::fromImage(ImageUtils::blur(pixmap.toImage(), pixmap.rect(), 10, false, blackWhite));
+    }
     else
+    {
         m_background = pixmap;
+    }
 
     repaint();
 }

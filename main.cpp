@@ -28,5 +28,6 @@ int main(int argc, char *argv[])
 
     return application.exec();
 
-    /* TODO: Introduce TrackView on the MenuBar. */
+    /* TODO here
+     * Load album cover when loading tracks */
 }

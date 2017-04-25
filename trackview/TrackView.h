@@ -1,7 +1,10 @@
 #ifndef TRACKVIEW_H
 #define TRACKVIEW_H
 
+#include <QCommonStyle>
 #include <QHeaderView>
+#include <QResizeEvent>
+#include <QScrollBar>
 #include <QTableView>
 
 #include "TrackDelegate.h"
@@ -36,6 +39,8 @@ class TrackView : public QTableView
         QSize fittingSize();
         quint8 mode() const;
 
+        TrackModel* trackModel() const;
+
         int rowCount() const;
         int columnCount() const;
         void propendItem(const Track* track);
@@ -49,9 +54,15 @@ class TrackView : public QTableView
         void appendItem(const Track* track);
         void removeItem(const Track* track);
 
+    signals:
+        void trackDoubleClicked(const Track* track);
+
     protected:
         virtual void resizeEvent(QResizeEvent* event);
         virtual QSize sizeHint();
+
+    private slots:
+        void onItemDoubleClicked(const QModelIndex& index);
 
     private:
         TrackModel* m_trackModel;

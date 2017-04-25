@@ -190,3 +190,8 @@ void TrackModel::clear()
         this->endRemoveRows();
     }
 }
+
+TrackItem* TrackModel::rootItem()
+{
+    return m_rootItem;
+}

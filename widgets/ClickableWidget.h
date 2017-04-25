@@ -1,6 +1,10 @@
 #ifndef CLICKABLEWIDGET_H
 #define CLICKABLEWIDGET_H
 
+#include <QApplication>
+#include <QPaintEvent>
+#include <QPainter>
+#include <QPixmap>
 #include <QTime>
 #include <QWidget>
 

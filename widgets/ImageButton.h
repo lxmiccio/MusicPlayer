@@ -2,6 +2,8 @@
 #define IMAGEBUTTON_H
 
 #include <QAbstractButton>
+#include <QPainter>
+#include <QPaintEvent>
 
 class ImageButton : public QAbstractButton
 {
