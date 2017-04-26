@@ -11,6 +11,8 @@ TrackItem::TrackItem(const QList<QVariant>& data, TrackItem* parent)
 TrackItem::TrackItem(const Track* track, TrackItem* parent)
 {
     c_track = track;
+    QObject::connect(c_track, SIGNAL(destroyed(QObject*)), parent, SLOT(onTrackRemoved(QObject*)));
+    QObject::connect(c_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track* ,quint8)));
 
     m_data << QVariant(track->track())
            << QVariant(track->title())
@@ -31,7 +33,7 @@ QVariant TrackItem::data(int column) const
     return m_data.value(column);
 }
 
-TrackItem *TrackItem::parent() const
+TrackItem* TrackItem::parent() const
 {
     return m_parent;
 }
@@ -82,46 +84,19 @@ int TrackItem::indexOf(Track* track)
 void TrackItem::prependChild(TrackItem* item)
 {
     m_childs.prepend(item);
-
-    std::sort(m_childs.begin(), m_childs.end(), [] (const TrackItem* trackItem1, const TrackItem* trackItem2) -> bool {
-        if(trackItem1->track()->artist() != trackItem2->track()->artist()) {
-            return trackItem1->track()->artist() < trackItem2->track()->artist();
-        } else if(trackItem1->track()->album() != trackItem2->track()->album()) {
-            return trackItem1->track()->album() < trackItem2->track()->album();
-        } else if(trackItem1->track()->track() != trackItem2->track()->track()) {
-            return trackItem1->track()->track() < trackItem2->track()->track();
-        }
-    });
+    sort();
 }
 
 void TrackItem::appendChild(TrackItem* item)
 {
     m_childs.append(item);
-
-    std::sort(m_childs.begin(), m_childs.end(), [] (const TrackItem* trackItem1, const TrackItem* trackItem2) -> bool {
-        if(trackItem1->track()->artist()->name() != trackItem2->track()->artist()->name()) {
-            return trackItem1->track()->artist()->name() < trackItem2->track()->artist()->name();
-        } else if(trackItem1->track()->album()->title() != trackItem2->track()->album()->title()) {
-            return trackItem1->track()->album()->title() < trackItem2->track()->album()->title();
-        } else if(trackItem1->track()->track() != trackItem2->track()->track()) {
-            return trackItem1->track()->track() < trackItem2->track()->track();
-        }
-    });
+    sort();
 }
 
 void TrackItem::insertChildAt(TrackItem* item, int row)
 {
     m_childs.insert(row, item);
-
-    std::sort(m_childs.begin(), m_childs.end(), [] (const TrackItem* trackItem1, const TrackItem* trackItem2) -> bool {
-        if(trackItem1->track()->artist() != trackItem2->track()->artist()) {
-            return trackItem1->track()->artist() < trackItem2->track()->artist();
-        } else if(trackItem1->track()->album() != trackItem2->track()->album()) {
-            return trackItem1->track()->album() < trackItem2->track()->album();
-        } else if(trackItem1->track()->track() != trackItem2->track()->track()) {
-            return trackItem1->track()->track() < trackItem2->track()->track();
-        }
-    });
+    sort();
 }
 
 void TrackItem::removeFirstChild()
@@ -159,24 +134,52 @@ const Track* TrackItem::track() const
     return c_track;
 }
 
-const Track* TrackItem::track(const QModelIndex& index) const
+void TrackItem::onTrackRemoved(QObject* object)
 {
-    /*
     if(!m_childs.isEmpty())
     {
-        for(QListIterator<TrackItem*> i(m_childs); i.hasNext();)
+        Track* track = static_cast<Track*>(object);
+
+        foreach(TrackItem* i_child, m_childs)
         {
-            Track* l_track = i.next()->track();
-            if(l_track)
+            if(i_child->track() == track)
             {
-                if(l_track->track() == index.model()->d)
-            }
-            if(l_trackItem->track())
-            if(m_childs.at(i)->track() == track)
-            {
-                index = i;
-                break;
+                m_childs.removeOne(i_child);
             }
         }
-    }*/
+    }
+}
+
+void TrackItem::onTrackUpdated(Track* track, quint8 fields)
+{
+    Q_UNUSED(fields);
+
+    if(track == c_track)
+    {
+        m_data.clear();
+        m_data << QVariant(track->track())
+               << QVariant(track->title())
+               << QVariant(track->album()->title())
+               << QVariant(track->artist()->name())
+               << QVariant(Utils::secondsToMinutes(track->duration()));
+    }
+}
+
+void TrackItem::sort()
+{
+    std::sort(m_childs.begin(), m_childs.end(), [] (const TrackItem* trackItem1, const TrackItem* trackItem2) -> bool
+    {
+        if(trackItem1->track()->artist()->name() != trackItem2->track()->artist()->name())
+        {
+            return trackItem1->track()->artist()->name() < trackItem2->track()->artist()->name();
+        }
+        else if(trackItem1->track()->album()->title() != trackItem2->track()->album()->title())
+        {
+            return trackItem1->track()->album()->title() < trackItem2->track()->album()->title();
+        }
+        else
+        {
+            return trackItem1->track()->track() < trackItem2->track()->track();
+        }
+    });
 }

@@ -1,12 +1,16 @@
 #ifndef TRACKITEM_H
 #define TRACKITEM_H
 
+#include <QObject>
+
 #include "Track.h"
 #include "TrackModel.h"
 #include "Utils.h"
 
-class TrackItem
+class TrackItem : public QObject
 {
+        Q_OBJECT
+
     public:
         explicit TrackItem(const QList<QVariant>& data, TrackItem* parent = 0);
         explicit TrackItem(const Track* track, TrackItem* parent = 0);
@@ -32,9 +36,14 @@ class TrackItem
         void clear();
 
         const Track* track() const;
-        const Track* track(const QModelIndex& index) const;
+
+    private slots:
+        void onTrackRemoved(QObject* object);
+        void onTrackUpdated(Track* track, quint8 fields);
 
     private:
+        void sort();
+
         const Track* c_track;
         QList<QVariant> m_data;
 

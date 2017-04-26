@@ -1,6 +1,7 @@
 #include "TrackView.h"
 
 #include "GuiUtils.h"
+#include "MusicLibrary.h"
 
 const quint8 TrackView::TRACK_INDEX;
 const quint8 TrackView::TITLE_INDEX;
@@ -18,7 +19,7 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
     //m_filterProxy->setDynamicSortFilter(true);
     //m_filterProxy->setSourceModel(m_trackModel);
     //m_filterProxy->sort(0, Qt::AscendingOrder);
-   //QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex, int, int)), m_filterProxy, SLOT(invalidate()));
+    //QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex, int, int)), m_filterProxy, SLOT(invalidate()));
     setModel(m_trackModel);
 
     m_trackDelegate = new TrackDelegate(this);
@@ -28,6 +29,9 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
     verticalHeader()->hide();
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setShowGrid(false);
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    QObject::connect(this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(onContextMenuRequested(QPoint)));
 
     setStyleSheet(QString("QTableView {"
                           "background: transparent;"
@@ -165,7 +169,26 @@ QSize TrackView::sizeHint()
     return hint;
 }
 
+void TrackView::onContextMenuRequested(QPoint position)
+{
+    QMenu menu(this);
+
+    QAction* changeTitle = menu.addAction("Change title");
+    QAction* removeTrack = menu.addAction("Remove track");
+    QAction* selectedAction = menu.exec(viewport()->mapToGlobal(position));
+
+    if(selectedAction == changeTitle)
+    {
+        QString newTitle = QInputDialog::getText(0, "Track editing", "Title:");
+        const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
+    }
+    else if(selectedAction == removeTrack)
+    {
+        MusicLibrary::instance()->removeTrack(const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track()));
+    }
+}
+
 void TrackView::onItemDoubleClicked(const QModelIndex& index)
 {
-     emit trackDoubleClicked(m_trackModel->rootItem()->child(index.row())->track());
+    emit trackDoubleClicked(m_trackModel->rootItem()->child(index.row())->track());
 }

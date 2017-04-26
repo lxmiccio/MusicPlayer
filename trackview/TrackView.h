@@ -1,8 +1,11 @@
 #ifndef TRACKVIEW_H
 #define TRACKVIEW_H
 
+#include <QAction>
 #include <QCommonStyle>
 #include <QHeaderView>
+#include <QInputDialog>
+#include <QMenu>
 #include <QResizeEvent>
 #include <QScrollBar>
 #include <QTableView>
@@ -62,6 +65,7 @@ class TrackView : public QTableView
         virtual QSize sizeHint();
 
     private slots:
+        void onContextMenuRequested(QPoint position);
         void onItemDoubleClicked(const QModelIndex& index);
 
     private:
