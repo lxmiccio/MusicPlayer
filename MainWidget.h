@@ -29,7 +29,7 @@ class MainWidget : public BackgroundWidget
         void onShowArtistViewTriggered();
         void onShowAlbumViewTriggered();
         void onShowTrackViewTriggered();
-        void onCoverClicked(const Album& album);
+        void onCoverClicked(const Album* album);
         void onItemDoubleClicked(const Track& track);
         void onTrackStarted(const Track& track);
         void onCurrentTrackClicked();

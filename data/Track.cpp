@@ -6,9 +6,9 @@ Track::Track(QObject* parent) : QObject(parent)
 
 Track::Track(const QVariantMap& tags, Album* album, QObject* parent) : QObject(parent)
 {
+    m_track = tags["track"].toUInt();
     m_title = tags["title"].toString();
     m_lyrics = tags["lyrics"].toString();
-    m_track = tags["track"].toUInt();
     m_year = tags["year"].toUInt();
     m_duration = tags["duration"].toUInt();
     m_path = tags["path"].toString();
@@ -48,8 +48,11 @@ const QString& Track::title() const
 
 void Track::setTitle(const QString& title)
 {
-    m_title = title;
-    emit trackUpdated(this, Track::TITLE);
+    if(title.length() > 0)
+    {
+        m_title = title;
+        emit trackUpdated(this, Track::TITLE);
+    }
 }
 
 const QString& Track::lyrics() const

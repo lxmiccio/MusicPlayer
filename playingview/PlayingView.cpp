@@ -61,18 +61,21 @@ PlayingView::~PlayingView()
 #endif
 }
 
-void PlayingView::onAlbumSelected(const Album& album)
+void PlayingView::onAlbumSelected(const Album* album)
 {
-    clear();
-
-    foreach(Track* i_track, album.tracks())
+    if(album)
     {
-        TrackItem* item = new TrackItem(i_track);
-        m_items.push_back(item);
-        m_trackView->appendItem(i_track);
-    }
+        clear();
 
-    m_playingAlbum->setAlbum(&album);
+        foreach(Track* i_track, album->tracks())
+        {
+            TrackItem* item = new TrackItem(i_track);
+            m_items.push_back(item);
+            m_trackView->appendItem(i_track);
+        }
+
+        m_playingAlbum->setAlbum(album);
+    }
 }
 
 void PlayingView::onPlaylistSelected(const Playlist* playlist)

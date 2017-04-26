@@ -48,7 +48,7 @@ void ArtistAlbumsView::onArtistChanged(const Artist* artist)
     {
         m_artist = artist;
         QObject::connect(m_artist, SIGNAL(albumAdded(Album*)), this, SLOT(onAlbumAdded(Album*)));
-        QObject::connect(m_artist, SIGNAL(albumUpdated(Album*)), this, SLOT(onAlbumUpdated(Album*)));
+        QObject::connect(m_artist, SIGNAL(albumUpdated(Album*, quint8)), this, SLOT(onAlbumUpdated(Album*, quint8)));
         QObject::connect(m_artist, SIGNAL(albumRemoved(Album*)), this, SLOT(onAlbumRemoved(Album*)));
 
         m_widgets.clear();
@@ -81,11 +81,11 @@ void ArtistAlbumsView::onAlbumAdded(Album* album)
     }
 }
 
-void ArtistAlbumsView::onAlbumUpdated(Album* album)
+void ArtistAlbumsView::onAlbumUpdated(Album* album, quint8 fields)
 {
     if(album)
     {
-        m_widgets.at(widgetIndex(album))->setAlbum(album);
+        m_widgets.at(widgetIndex(album))->setAlbum(album, fields);
     }
 }
 

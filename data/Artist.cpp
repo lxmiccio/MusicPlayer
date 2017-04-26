@@ -42,7 +42,7 @@ void Artist::addAlbum(Album* album)
 {
     if(album)
     {
-        QObject::connect(album, SIGNAL(albumUpdated(Album*, quint8)), this, SIGNAL(albumUpdate(Album*, quint8)));
+        QObject::connect(album, SIGNAL(albumUpdated(Album*, quint8)), this, SIGNAL(albumUpdated(Album*, quint8)));
         m_albums.push_back(album);
 
         sort();

@@ -27,6 +27,8 @@ Cover::Cover(const Album* album, QWidget* parent) : QWidget(parent)
     QObject::connect(m_cover, SIGNAL(clicked()), this, SLOT(onCoverClicked()));
     QObject::connect(m_albumTitle, SIGNAL(leftButtonClicked()), this, SLOT(onCoverClicked()));
     QObject::connect(m_artistName, SIGNAL(leftButtonClicked()), this, SLOT(onCoverClicked()));
+
+    setAlbum(m_album);
 }
 
 Cover::~Cover()

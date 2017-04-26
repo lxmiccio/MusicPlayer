@@ -26,7 +26,7 @@ class ArtistAlbumsView : public QWidget
 
     private slots:
         void onAlbumAdded(Album* album);
-        void onAlbumUpdated(Album* album);
+        void onAlbumUpdated(Album* album, quint8 fields);
         void onAlbumRemoved(Album* album);
 
     private:

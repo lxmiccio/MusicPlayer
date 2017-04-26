@@ -89,7 +89,7 @@ Album* ArtistAlbumWidget::album() const
     return m_album;
 }
 
-void ArtistAlbumWidget::setAlbum(Album* album)
+void ArtistAlbumWidget::setAlbum(Album* album, quint8 fields)
 {
     if(album)
     {

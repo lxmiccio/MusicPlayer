@@ -36,7 +36,7 @@ class Artist : public QObject
     signals:
         void artistUpdated(Artist* artist, quint8 fields);
         void albumAdded(Album* album);
-        void albumUpdated(Album* album, quint8);
+        void albumUpdated(Album* album, quint8 fields);
         void albumRemoved(Album* album);
 
     private:

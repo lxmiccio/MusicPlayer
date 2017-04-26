@@ -4,6 +4,8 @@ QPointer<AudioEngine> AudioEngine::m_instance = 0;
 
 AudioEngine::AudioEngine()
 {
+    m_playlist = NULL;
+
     m_mediaPlaylist = new QMediaPlaylist();
 
     m_mediaPlayer = new QMediaPlayer();
@@ -59,6 +61,10 @@ void AudioEngine::onPlaylistSelected(Playlist* playlist)
 
 void AudioEngine::onTrackSelected(const Track& track)
 {
+    if(!m_playlist)
+    {
+        m_playlist = new Playlist("Playing");
+    }
     QMediaPlaylist::PlaybackMode playbackMode = m_mediaPlaylist->playbackMode();
     m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
 

@@ -22,7 +22,7 @@ class AlbumView : public ScrollableArea
         ~AlbumView();
 
     signals:
-        void coverClicked(const Album& album);
+        void coverClicked(const Album* album);
 
     protected:
         void clearLayout(QLayout* layout);
@@ -35,7 +35,7 @@ class AlbumView : public ScrollableArea
 
     private slots:
         void onAlbumAdded(const Album* album);
-        void onCoverClicked(const Album& album);
+        void onCoverClicked(const Album* album);
 
     private:
         QMutex m_mutex;

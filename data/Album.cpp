@@ -58,7 +58,7 @@ void Album::addTrack(Track* track)
 {
     if(track)
     {
-        QObject::connect(track, SIGNAL(trackInfoUpdated(Track*, quint8)), this, SIGNAL(trackUpdated(Track*, quint8)));
+        QObject::connect(track, SIGNAL(trackUpdated(Track*, quint8)), this, SIGNAL(trackUpdated(Track*, quint8)));
         m_tracks.push_back(track);
 
         sort();

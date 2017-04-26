@@ -23,7 +23,7 @@ class ArtistAlbumWidget : public QWidget
         ~ArtistAlbumWidget();
 
         Album* album() const;
-        void setAlbum(Album* album);
+        void setAlbum(Album* album, quint8 fields = UINT8_MAX);
 
         static const quint16 IMAGE_HEIGHT = 100;
         static const quint16 IMAGE_WIDTH = 100;

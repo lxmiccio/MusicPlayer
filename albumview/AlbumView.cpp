@@ -121,7 +121,7 @@ void AlbumView::onAlbumAdded(const Album* album)
         QMutexLocker locker(&m_mutex);
 
         Cover* cover = new Cover(const_cast<Album*>(album));
-        QObject::connect(cover, SIGNAL(coverClicked(const Album&)), this, SLOT(onCoverClicked(const Album&)));
+        QObject::connect(cover, SIGNAL(coverClicked(const Album*)), this, SLOT(onCoverClicked(const Album*)));
         m_covers.push_back(cover);
 
         qSort(m_covers.begin(), m_covers.end(), [] (const Cover* cover1, const Cover* cover2) -> bool
@@ -140,9 +140,12 @@ void AlbumView::onAlbumAdded(const Album* album)
     }
 }
 
-void AlbumView::onCoverClicked(const Album& album)
+void AlbumView::onCoverClicked(const Album* album)
 {
-    emit coverClicked(album);
+    if(album)
+    {
+        emit coverClicked(album);
+    }
 }
 
 void AlbumView::clearLayout(QLayout* layout)
