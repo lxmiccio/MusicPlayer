@@ -50,7 +50,7 @@ class PlayingView : public QWidget
         void onTrackStarted(const Track& track);
 
     signals:
-        void doubleClicked(const Track&);
+        void doubleClicked(const Track*);
         void coverClicked();
         void trackStarted(const Track&);
 

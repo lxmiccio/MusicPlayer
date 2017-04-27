@@ -11,7 +11,7 @@ TrackItem::TrackItem(const QList<QVariant>& data, TrackItem* parent)
 TrackItem::TrackItem(const Track* track, TrackItem* parent)
 {
     c_track = track;
-    QObject::connect(c_track, SIGNAL(destroyed(QObject*)), parent, SLOT(onTrackRemoved(QObject*)));
+   // QObject::connect(c_track, SIGNAL(destroyed(QObject*)), parent, SLOT(onTrackRemoved(QObject*)));
     QObject::connect(c_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track* ,quint8)));
 
     m_data << QVariant(track->track())

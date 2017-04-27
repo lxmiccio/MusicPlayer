@@ -14,7 +14,7 @@ AudioEngine::AudioEngine()
 
     QObject::connect(m_mediaPlaylist, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
     QObject::connect(m_mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
-    QObject::connect(this, SIGNAL(trackStarted(const Track&)), this, SLOT(onTrackStarted()));
+    QObject::connect(this, SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted()));
 }
 
 AudioEngine::~AudioEngine()
@@ -51,53 +51,11 @@ void AudioEngine::onPlaylistSelected(Playlist* playlist)
         foreach(const Track* i_track, m_playlist->tracks())
         {
             m_mediaPlaylist->addMedia(QUrl::fromLocalFile(i_track->path()));
-            m_mediaPlaylist->setCurrentIndex(0);
         }
 
-        emit trackStarted(*m_playlist->tracks().at(0));
-        emit trackStarted(m_playlist->tracks().at(0));
-    }
-}
+        m_mediaPlaylist->setCurrentIndex(playlist->startingIndex());
 
-void AudioEngine::onTrackSelected(const Track& track)
-{
-    if(!m_playlist)
-    {
-        m_playlist = new Playlist("Playing");
-    }
-    QMediaPlaylist::PlaybackMode playbackMode = m_mediaPlaylist->playbackMode();
-    m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
-
-    m_playlist->clear();
-    m_mediaPlaylist->clear();
-
-    Album* album = track.album();
-
-    if(album)
-    {
-        foreach(Track* i_track, album->tracks())
-        {
-            m_playlist->addTrack(i_track);
-            m_mediaPlaylist->addMedia(QUrl::fromLocalFile(i_track->path()));
-            m_mediaPlaylist->setCurrentIndex(album->tracks().indexOf(const_cast<Track*>(&track)));
-        }
-    }
-    else
-    {
-        m_playlist->addTrack(&track);
-        m_mediaPlaylist->addMedia(QUrl::fromLocalFile(track.path()));
-    }
-
-    m_mediaPlaylist->setPlaybackMode(playbackMode);
-    emit trackStarted(track);
-    emit trackStarted(&track);
-}
-
-void AudioEngine::onTrackSelected(Track* track)
-{
-    if(track)
-    {
-        onTrackSelected(*track);
+        emit trackStarted(m_playlist->tracks().at(playlist->startingIndex()));
     }
 }
 
@@ -227,7 +185,7 @@ void AudioEngine::onCurrentIndexChanged(int index)
 
     if(index >= 0 && index < m_playlist->tracks().size())
     {
-        emit trackStarted(*m_playlist->tracks().at(index));
+        emit trackStarted(m_playlist->tracks().at(index));
     }
 }
 
@@ -240,7 +198,7 @@ void AudioEngine::onPositionChanged(qint64 position)
         if(position >= m_mediaPlayer->duration())
         {
             emit trackFinished();
-            emit trackStarted(*m_playlist->tracks().at(m_mediaPlaylist->currentIndex()));
+            emit trackStarted(m_playlist->tracks().at(m_mediaPlaylist->currentIndex()));
         }
     }
 }

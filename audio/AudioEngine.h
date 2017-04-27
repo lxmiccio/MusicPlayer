@@ -27,8 +27,6 @@ class AudioEngine : public QObject
 
     public slots:
         void onPlaylistSelected(Playlist* playlist);
-        void onTrackSelected(const Track& track);
-        void onTrackSelected(Track* track);
 
         void onBackwardClicked();
         void onPlayClicked();
@@ -47,7 +45,6 @@ class AudioEngine : public QObject
 
     signals:
         void positionChanged(qint64 position);
-        void trackStarted(const Track& track);
         void trackStarted(const Track* track);
         void trackFinished();
 

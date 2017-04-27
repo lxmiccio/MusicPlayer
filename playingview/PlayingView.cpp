@@ -1,5 +1,7 @@
 #include "PlayingView.h"
 
+#include "AudioEngine.h"
+
 PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
 {
     m_mode = mode;
@@ -104,7 +106,12 @@ void PlayingView::onTrackStarted(const Track& track)
 void PlayingView::onDoubleClicked(const QModelIndex& index)
 {
     const Track* track = m_items.at(index.row())->track();
-    emit doubleClicked(*track);
+
+    if(track && track->album())
+    {
+        Playlist* playlist = Playlist::fromTracks(track->album()->tracks(), track);
+        AudioEngine::instance()->onPlaylistSelected(playlist);
+    }
 }
 
 void PlayingView::onCoverClicked()

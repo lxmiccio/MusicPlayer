@@ -1,5 +1,7 @@
 #include "AudioControls.h"
 
+#include "AudioEngine.h"
+
 AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcut(QKeySequence(Qt::CTRL + Qt::Key_M), true)
 {
     QSizePolicy sizePolicy;
@@ -156,6 +158,12 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     QObject::connect(m_artist, SIGNAL(clicked()), SIGNAL(currentTrackClicked()));
     QObject::connect(m_track, SIGNAL(clicked()), SIGNAL(currentTrackClicked()));
 
+    QObject::connect(this, SIGNAL(pauseClicked()), m_trackSlider, SLOT(onTrackPaused()));
+    QObject::connect(this, SIGNAL(playClicked()), m_trackSlider, SLOT(onTrackResumed()));
+    QObject::connect(this, SIGNAL(positionChanged(qint64)), m_trackSlider, SLOT(onPositionChanged(qint64)));
+    QObject::connect(this, SIGNAL(trackStarted(int)), m_trackSlider, SLOT(onTrackStarted(int)));
+    QObject::connect(this, SIGNAL(trackFinished()), m_trackSlider, SLOT(onTrackFinished()));
+
     QObject::connect(m_backward, SIGNAL(clicked()), this, SLOT(onBackwardClicked()));
     QObject::connect(m_play, SIGNAL(clicked()), this, SLOT(onPlayClicked()));
     QObject::connect(m_pause, SIGNAL(clicked()), this, SLOT(onPauseClicked()));
@@ -166,11 +174,18 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     QObject::connect(m_volume, SIGNAL(clicked()), this, SLOT(onVolumeClicked()));
     QObject::connect(m_volumeSlider, SIGNAL(valueChanged(int)), this, SLOT(onVolumeValueChanged(int)));
 
-    QObject::connect(this, SIGNAL(pauseClicked()), m_trackSlider, SLOT(onTrackPaused()));
-    QObject::connect(this, SIGNAL(playClicked()), m_trackSlider, SLOT(onTrackResumed()));
-    QObject::connect(this, SIGNAL(positionChanged(qint64)), m_trackSlider, SLOT(onPositionChanged(qint64)));
-    QObject::connect(this, SIGNAL(trackStarted(int)), m_trackSlider, SLOT(onTrackStarted(int)));
-    QObject::connect(this, SIGNAL(trackFinished()), m_trackSlider, SLOT(onTrackFinished()));
+    QObject::connect(m_backward, SIGNAL(clicked()), AudioEngine::instance(), SLOT(onBackwardClicked()));
+    QObject::connect(m_play, SIGNAL(clicked()), AudioEngine::instance(), SLOT(onPlayClicked()));
+    QObject::connect(m_pause, SIGNAL(clicked()), AudioEngine::instance(), SLOT(onPauseClicked()));
+    QObject::connect(m_forward, SIGNAL(clicked()), AudioEngine::instance(), SLOT(onForwardClicked()));
+    QObject::connect(m_trackSlider, SIGNAL(valueChanged(int)), AudioEngine::instance(), SLOT(onTrackValueChanged(int)));
+    QObject::connect(this, SIGNAL(volumeClicked(AudioControls::VolumeMode_t)), AudioEngine::instance(), SLOT(onVolumeClicked(AudioControls::VolumeMode_t)));
+    QObject::connect(this, SIGNAL(repeatClicked(AudioControls::RepeatMode_t)), AudioEngine::instance(), SLOT(onRepeatClicked(AudioControls::RepeatMode_t)));
+    QObject::connect(m_volumeSlider, SIGNAL(valueChanged(int)), AudioEngine::instance(), SLOT(onVolumeValueChanged(int)));
+
+    QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted(const Track*)));
+    QObject::connect(AudioEngine::instance(), SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
+    QObject::connect(AudioEngine::instance(), SIGNAL(trackFinished()), this, SLOT(onTrackFinished()));
 
     QObject::connect(&m_volumeShortcut, SIGNAL(activated()), this, SLOT(onVolumeClicked()));
 }
@@ -193,15 +208,15 @@ void AudioControls::onPositionChanged(qint64 position)
     emit positionChanged(position);
 }
 
-void AudioControls::onTrackStarted(const Track& track)
+void AudioControls::onTrackStarted(const Track* track)
 {
-    c_currentTrack = &track;
+    c_currentTrack = track;
 
     m_artist->show();
-    m_artist->setText(track.artist()->name());
+    m_artist->setText(c_currentTrack->artist()->name());
     m_dash->show();
     m_track->show();
-    m_track->setText(track.title());
+    m_track->setText(c_currentTrack->title());
 
     m_pause->show();
     m_play->hide();
@@ -212,7 +227,7 @@ void AudioControls::onTrackStarted(const Track& track)
     m_remainingTime->setText(Utils::secondsToMinutes(c_currentTrack->duration()));
     m_remainingTime->show();
 
-    emit trackStarted(track.duration());
+    emit trackStarted(c_currentTrack->duration());
 }
 
 void AudioControls::onTrackFinished()

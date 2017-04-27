@@ -53,7 +53,7 @@ class AudioControls : public QWidget
 
     public slots:
         void onPositionChanged(qint64 position);
-        void onTrackStarted(const Track& Track);
+        void onTrackStarted(const Track* Track);
         void onTrackFinished();
 
     private slots:

@@ -29,5 +29,7 @@ int main(int argc, char *argv[])
     return application.exec();
 
     /* TODO here
-     * Load album cover when loading tracks */
+     * Load album cover when loading tracks
+     * Fix awful TrackSlider behaviour when a track starts, which is probably due to the slot TrackSlider::onTrackStarted(...) invoked twice
+     */
 }

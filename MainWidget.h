@@ -30,16 +30,13 @@ class MainWidget : public BackgroundWidget
         void onShowAlbumViewTriggered();
         void onShowTrackViewTriggered();
         void onCoverClicked(const Album* album);
-        void onItemDoubleClicked(const Track& track);
-        void onTrackStarted(const Track& track);
+        void onTrackStarted(const Track* track);
         void onCurrentTrackClicked();
         void coverClicked();
         void onTrackDoubleClicked(const Track* track);
 
     signals:
-        void trackClicked(const Track& track);
-        void trackAdded(const Track& track);
-        void trackStarted(const Track& track);
+        void trackStarted(const Track* track);
 
     private:
         void showView(Settings::View view);

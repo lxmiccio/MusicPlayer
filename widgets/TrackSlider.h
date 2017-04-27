@@ -15,7 +15,7 @@ class TrackSlider : public Slider
 
     public slots:
         void onPositionChanged(qint64 position);
-        void onTrackStarted(int duration);
+        void onTrackStarted(int seconds);
         void onTrackFinished();
         void onTrackPaused();
         void onTrackResumed();

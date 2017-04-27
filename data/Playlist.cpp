@@ -26,6 +26,7 @@ Playlist* Playlist::fromAlbum(const Album* album, const Track* startingTrack)
     return playlist;
 }
 
+#include <QDebug>
 Playlist* Playlist::fromTracks(const QVector<Track*> tracks, const Track* startingTrack)
 {
     Playlist* playlist = new Playlist("Playing");
@@ -42,7 +43,13 @@ Playlist* Playlist::fromTracks(const QVector<Track*> tracks, const Track* starti
     {
         playlist->setStartingIndex(tracks.indexOf(const_cast<Track*>(startingTrack)));
     }
+qDebug() << "playlist:";
+    foreach(const Track* i_track, playlist->tracks())
+    {
+        qDebug() << i_track->title();
+    }
 
+    qDebug() << "starting index"<<playlist->startingIndex();
     return playlist;
 }
 
