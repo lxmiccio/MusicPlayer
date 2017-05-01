@@ -54,8 +54,6 @@ void AudioEngine::onPlaylistSelected(Playlist* playlist)
         }
 
         m_mediaPlaylist->setCurrentIndex(playlist->startingIndex());
-
-        emit trackStarted(m_playlist->tracks().at(playlist->startingIndex()));
     }
 }
 

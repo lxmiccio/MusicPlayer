@@ -49,7 +49,8 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/TrackSlider.cpp \
     MainWidget.cpp \
     MainWindow.cpp \
-    main.cpp
+    main.cpp \
+    albumview/AlbumGrid.cpp
 
 HEADERS  += albumview/AlbumView.h \
     albumview/Cover.h \
@@ -89,7 +90,8 @@ HEADERS  += albumview/AlbumView.h \
     widgets/ScrollableArea.h \
     widgets/TrackSlider.h \
     MainWidget.h \
-    MainWindow.h
+    MainWindow.h \
+    albumview/AlbumGrid.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/artistview

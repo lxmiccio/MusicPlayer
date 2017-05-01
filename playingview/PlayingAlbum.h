@@ -7,10 +7,10 @@
 #include <QWidget>
 
 #include "Album.h"
-#include "ClickableLabel.h"
 #include "Cover.h"
+#include "ClickableWidget.h"
 
-class PlayingAlbum : public QWidget
+class PlayingAlbum : public ClickableWidget
 {
         Q_OBJECT
 
@@ -25,13 +25,10 @@ class PlayingAlbum : public QWidget
         static const quint16 IMAGE_HEIGHT = 175;
         static const quint16 IMAGE_WIDTH = 175;
 
-    signals:
-        void coverClicked();
-
     private:
         const Album* c_album;
 
-        ClickableLabel* m_cover;
+        QLabel* m_cover;
         QSpacerItem* m_spacer1;
         QLabel* m_artistName;
         QSpacerItem* m_spacer2;

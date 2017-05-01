@@ -12,6 +12,7 @@
 #include "Album.h"
 #include "Cover.h"
 #include "ScrollableArea.h"
+#include "TrackView.h"
 
 class AlbumView : public ScrollableArea
 {
@@ -44,6 +45,8 @@ class AlbumView : public ScrollableArea
         QVector<QHBoxLayout*> m_layouts;
         QVBoxLayout* m_layout;
         QWidget* m_widget;
+
+        TrackView* m_trackView;
 
         QSpacerItem* m_leftSpacer;
         QSpacerItem* m_lowerSpacer;

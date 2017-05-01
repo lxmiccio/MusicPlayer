@@ -18,7 +18,7 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
     else
     {
         m_playingAlbum = new PlayingAlbum();
-        QObject::connect(m_playingAlbum, SIGNAL(coverClicked()), this, SLOT(onCoverClicked()));
+        QObject::connect(m_playingAlbum, SIGNAL(leftButtonClicked()), this, SLOT(onCoverClicked()));
 
         m_playingLyrics = new PlayingLyrics();
 
@@ -95,12 +95,6 @@ void PlayingView::onPlaylistSelected(const Playlist* playlist)
 
         m_playingAlbum->setAlbum(playlist->tracks().at(0)->album());
     }
-}
-
-void PlayingView::onTrackStarted(const Track& track)
-{
-    m_playingAlbum->setAlbum(track.album());
-    emit trackStarted(track);
 }
 
 void PlayingView::onDoubleClicked(const QModelIndex& index)

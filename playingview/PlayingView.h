@@ -46,13 +46,11 @@ class PlayingView : public QWidget
 
     public slots:
         void onAlbumSelected(const Album* album);
-        void onPlaylistSelected(const Playlist* playlt);
-        void onTrackStarted(const Track& track);
+        void onPlaylistSelected(const Playlist* playlist);
 
     signals:
         void doubleClicked(const Track*);
         void coverClicked();
-        void trackStarted(const Track&);
 
     private slots:
         void onDoubleClicked(const QModelIndex& index);

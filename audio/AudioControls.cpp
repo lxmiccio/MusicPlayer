@@ -193,7 +193,6 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
 AudioControls::~AudioControls()
 {
 }
-
 void AudioControls::onPositionChanged(qint64 position)
 {
     if(c_currentTrack)

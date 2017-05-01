@@ -148,9 +148,9 @@ void TrackModel::removeFirstItem()
 {
     if(m_rootItem->rowCount() > 0)
     {
-        this->beginRemoveRows(QModelIndex(), 0, 0);
+        beginRemoveRows(QModelIndex(), 0, 0);
         m_rootItem->removeFirstChild();
-        this->endRemoveRows();
+        endRemoveRows();
     }
 }
 
@@ -158,26 +158,26 @@ void TrackModel::removeLastItem()
 {
     if(m_rootItem->rowCount() > 0)
     {
-        this->beginRemoveRows(QModelIndex(), m_rootItem->rowCount() - 1, m_rootItem->rowCount() - 1);
+        beginRemoveRows(QModelIndex(), m_rootItem->rowCount() - 1, m_rootItem->rowCount() - 1);
         m_rootItem->removeLastChild();
-        this->endRemoveRows();
+        endRemoveRows();
     }
 }
 
 void TrackModel::removeItem(const Track* track)
 {
-    this->beginRemoveRows(QModelIndex(), m_rootItem->rowCount() - 1, m_rootItem->rowCount() - 1);
+    beginRemoveRows(QModelIndex(), m_rootItem->rowCount() - 1, m_rootItem->rowCount() - 1);
     m_rootItem->removeChildAt(m_rootItem->indexOf(const_cast<Track*>(track)));
-    this->endRemoveRows();
+    endRemoveRows();
 }
 
 void TrackModel::removeItemAt(int row)
 {
     if(row < m_rootItem->rowCount())
     {
-        this->beginRemoveRows(QModelIndex(), row, row);
+        beginRemoveRows(QModelIndex(), row, row);
         m_rootItem->removeChildAt(row);
-        this->endRemoveRows();
+        endRemoveRows();
     }
 }
 
@@ -185,9 +185,9 @@ void TrackModel::clear()
 {
     if(m_rootItem->rowCount() > 0)
     {
-        this->beginRemoveRows(QModelIndex(), 0, m_rootItem->rowCount() - 1);
+        beginRemoveRows(QModelIndex(), 0, m_rootItem->rowCount() - 1);
         m_rootItem->clear();
-        this->endRemoveRows();
+        endRemoveRows();
     }
 }
 

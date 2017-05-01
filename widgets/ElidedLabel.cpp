@@ -102,7 +102,7 @@ void ElidedLabel::setWordWrap(bool wordWrap)
 
 QSize ElidedLabel::sizeHint() const
 {
-    const QFontMetrics& metrics = this->fontMetrics();
+    const QFontMetrics& metrics = fontMetrics();
     return QSize(metrics.width(m_text) + m_margin * 2, metrics.height() + m_margin * 2);
 }
 
@@ -115,7 +115,7 @@ QSize ElidedLabel::minimumSizeHint() const
         }
 
         default: {
-            const QFontMetrics& metrics = this->fontMetrics();
+            const QFontMetrics& metrics = fontMetrics();
             return QSize(metrics.width("..."), metrics.height());
         }
     }
@@ -142,7 +142,7 @@ void ElidedLabel::changeEvent(QEvent* event)
 void ElidedLabel::mousePressEvent(QMouseEvent* event)
 {
     QFrame::mousePressEvent(event);
-    this->m_time.start();
+    m_time.start();
 }
 
 void ElidedLabel::mouseReleaseEvent(QMouseEvent* event)
@@ -193,17 +193,17 @@ void ElidedLabel::paintEvent(QPaintEvent* event)
 
             line.setLineWidth(rect.width());
             widthUsed += line.naturalTextWidth();
-            this->setMinimumHeight(300);
+            setMinimumHeight(300);
         }
 
 
         textLayout.endLayout();
         widthUsed += rect.width();
 
-        const QString elidedText = this->fontMetrics().elidedText(m_text, Qt::ElideRight, widthUsed);
+        const QString elidedText = fontMetrics().elidedText(m_text, Qt::ElideRight, widthUsed);
         painter.drawText(rect, m_alignment | Qt::TextWordWrap, elidedText);
     } else {
-        const QString elidedText = this->fontMetrics().elidedText(m_text, m_elideMode, rect.width());
+        const QString elidedText = fontMetrics().elidedText(m_text, m_elideMode, rect.width());
         painter.drawText(rect, m_alignment, elidedText);
     }
 }

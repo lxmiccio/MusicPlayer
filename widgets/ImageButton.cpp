@@ -34,10 +34,10 @@ void ImageButton::setPixmap(const QString& path, const QIcon::State state, QIcon
 
 void ImageButton::setPixmap(const QPixmap& pixmap, const QIcon::State state, QIcon::Mode mode)
 {
-    QIcon icon = this->icon();
-    icon.addPixmap(pixmap, mode, state);
+    QIcon l_icon = icon();
+    l_icon.addPixmap(pixmap, mode, state);
 
-    setIcon(icon);
+    setIcon(l_icon);
 }
 
 QSize ImageButton::sizeHint() const

@@ -1,11 +1,12 @@
 #include "PlayingAlbum.h"
 
-PlayingAlbum::PlayingAlbum(QWidget* parent) : QWidget(parent)
+#include "GuiUtils.h"
+
+PlayingAlbum::PlayingAlbum(QWidget* parent) : ClickableWidget(parent)
 {
-    m_cover = new ClickableLabel(this);
+    m_cover = new QLabel();
     m_cover->setFixedWidth(PlayingAlbum::IMAGE_WIDTH);
     m_cover->setFixedHeight(PlayingAlbum::IMAGE_HEIGHT);
-    QObject::connect(m_cover, SIGNAL(clicked()), SIGNAL(coverClicked()));
 
     m_spacer1 = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -37,15 +38,8 @@ PlayingAlbum::PlayingAlbum(QWidget* parent) : QWidget(parent)
 
 PlayingAlbum::~PlayingAlbum()
 {
-#if 0
-    delete m_cover;
-    delete m_spacer1;
-    delete m_albumTitle;
-    delete m_spacer2;
-    delete m_artistName;
-    delete m_spacer3;
+    GuiUtils::deleteLayout(m_layout);
     delete m_layout;
-#endif
 }
 
 void PlayingAlbum::setAlbum(const Album* album)

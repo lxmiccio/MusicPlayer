@@ -21,7 +21,6 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_playingView = new PlayingView(PlayingView::REDUCED);
     QObject::connect(m_playingView, SIGNAL(doubleClicked(const Track*)), this, SLOT(onTrackDoubleClicked(const Track*)));
     QObject::connect(m_playingView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
-    QObject::connect(this, SIGNAL(trackStarted(const Track&)), m_playingView, SLOT(onTrackStarted(const Track&)));
 
     showView(Settings::view());
 
@@ -75,11 +74,14 @@ void MainWidget::coverClicked()
 
 void MainWidget::onCoverClicked(const Album* album)
 {
+    /* TODO: Move to AlbumView */
+    /*
     if(album)
     {
         m_playingView->onAlbumSelected(album);
         showView(Settings::PLAYING_VIEW);
     }
+    */
 }
 
 void MainWidget::onCurrentTrackClicked()

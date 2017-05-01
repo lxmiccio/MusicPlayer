@@ -9,6 +9,8 @@ AlbumView::AlbumView(QWidget* parent) : ScrollableArea(parent)
     m_rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_upperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
+    m_trackView = new TrackView(PlayingView::REDUCED);
+
     m_middleHorizontalSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_middleVerticalSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 

@@ -12,15 +12,8 @@ TrackSlider::TrackSlider(Qt::Orientation orientation, QWidget* parent) : Slider(
     QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(onValueChanged(int)));
 }
 
-#include <QDebug>
-
 void TrackSlider::onTrackStarted(int seconds)
 {
-    /* TODO: Remove next lines as soon as the problem is fixed */
-    static int invkTms = 0;
-    qDebug() << "Track duration:" << seconds << "seconds";
-    qDebug() << "Function has been invoked" << ++invkTms << "times";
-
     setRange(0, seconds * 1000);
 
     m_ignoreTimeout = true;

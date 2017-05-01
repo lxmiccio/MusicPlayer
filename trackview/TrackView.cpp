@@ -15,12 +15,16 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
 
     m_trackModel = new TrackModel();
 
+#if 0
     m_filterProxy = new TrackFilterProxy();
-    //m_filterProxy->setDynamicSortFilter(true);
-    //m_filterProxy->setSourceModel(m_trackModel);
-    //m_filterProxy->sort(0, Qt::AscendingOrder);
-    //QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex, int, int)), m_filterProxy, SLOT(invalidate()));
+    m_filterProxy->setDynamicSortFilter(true);
+    m_filterProxy->setSourceModel(m_trackModel);
+    m_filterProxy->sort(0, Qt::AscendingOrder);
+    QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex, int, int)), m_filterProxy, SLOT(invalidate()));
+    setModel(m_filterProxy);
+#else
     setModel(m_trackModel);
+#endif
 
     m_trackDelegate = new TrackDelegate(this);
     setItemDelegate(m_trackDelegate);
@@ -37,7 +41,6 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
                           "background: transparent;"
                           "border: 0px;"
                           "}"
-
                           "QTableView > QWidget > QWidget {"
                           "background: transparent;"
                           "border: 0px;"

@@ -1,7 +1,9 @@
 #ifndef GUIUTILS_H
 #define GUIUTILS_H
 
+#include <QLayout>
 #include <QString>
+#include <QWidget>
 
 namespace GuiUtils
 {
@@ -33,19 +35,39 @@ namespace GuiUtils
 
     const QString SLIDER_STYLE = QString("QSlider::groove:horizontal {"
                                          "background: rgba(200, 200, 200, 50);"
-                                         "border-radius: 3px 3px 3px 3px;"
-                                         "margin-bottom: 0px;"
-                                         "margin-left: 0px;"
-                                         "margin-right: 0px;"
-                                         "margin-top: 0px;"
+                                         "border-radius: 3px;"
+                                         "}"
+                                         "QSlider::handle:horizontal {"
+                                         "background: #FFF;"
+                                         "border-radius: 3px;"
+                                         "width: 10px;"
                                          "}"
                                          "QSlider::sub-page:horizontal {"
-                                         "background: white;"
-                                         "margin-bottom: 1px;"
-                                         "margin-left: 1px;"
-                                         "margin-right: 1px;"
-                                         "margin-top: 1px;"
-                                         "}");
+                                         "background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #777, stop: 1 #EEE);"
+                                         "border-radius: 3px;"
+                                         "}"
+                                         );
+
+    static void deleteLayout(QLayout* layout)
+    {
+        QLayoutItem* i_item;
+
+        while((i_item = layout->takeAt(0)) != NULL)
+        {
+            if(i_item->layout())
+            {
+                deleteLayout(i_item->layout());
+                delete i_item->layout();
+            }
+
+            if(i_item->widget())
+            {
+                delete i_item->widget();
+            }
+
+            delete i_item;
+        }
+    }
 }
 
 #endif // GUIUTILS_H

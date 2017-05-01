@@ -2,7 +2,6 @@
 #define PLAYINGLYRICS_H
 
 #include <QLabel>
-#include <QScrollBar>
 #include <QWidget>
 
 #include "ScrollableArea.h"
@@ -14,9 +13,11 @@ class PlayingLyrics : public ScrollableArea
 
     public:
         PlayingLyrics(QWidget* parent = 0);
+        ~PlayingLyrics();
 
-    public slots:
+    private slots:
         void onTrackStarted(const Track* track);
+        void onTrackUpdated(Track* track, quint8 fields);
 
     private:
         const Track* c_track;
