@@ -7,7 +7,7 @@
 #include <QWidget>
 
 #include "Album.h"
-#include "Cover.h"
+#include "AlbumCover.h"
 #include "ClickableWidget.h"
 
 class PlayingAlbum : public ClickableWidget

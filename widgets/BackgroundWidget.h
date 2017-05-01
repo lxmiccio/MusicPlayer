@@ -1,6 +1,7 @@
 #ifndef BACKGROUNDWIDGET_H
 #define BACKGROUNDWIDGET_H
 
+#include <QLayout>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPixmap>
@@ -20,6 +21,9 @@ class BackgroundWidget : public QWidget
     protected:
         virtual void paintEvent(QPaintEvent* event);
         virtual void resizeEvent(QResizeEvent* event);
+
+        void clearLayout(QLayout* layout);
+        void deleteLayout(QLayout* layout);
 
     private:
         bool m_blurred;

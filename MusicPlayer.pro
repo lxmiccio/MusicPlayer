@@ -12,7 +12,6 @@ TARGET = 010-MusicPlayer
 TEMPLATE = app
 
 SOURCES += albumview/AlbumView.cpp \
-    albumview/Cover.cpp \
     artistview/ArtistAlbumsView.cpp \
     artistview/ArtistAlbumWidget.cpp \
     artistview/ArtistView.cpp \
@@ -50,10 +49,11 @@ SOURCES += albumview/AlbumView.cpp \
     MainWidget.cpp \
     MainWindow.cpp \
     main.cpp \
-    albumview/AlbumGrid.cpp
+    albumview/AlbumGrid.cpp \
+    albumview/AlbumTracks.cpp \
+    albumview/AlbumCover.cpp
 
 HEADERS  += albumview/AlbumView.h \
-    albumview/Cover.h \
     artistview/ArtistAlbumsView.h \
     artistview/ArtistAlbumWidget.h \
     artistview/ArtistView.h \
@@ -91,7 +91,9 @@ HEADERS  += albumview/AlbumView.h \
     widgets/TrackSlider.h \
     MainWidget.h \
     MainWindow.h \
-    albumview/AlbumGrid.h
+    albumview/AlbumGrid.h \
+    albumview/AlbumTracks.h \
+    albumview/AlbumCover.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/artistview

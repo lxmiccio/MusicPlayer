@@ -4,7 +4,6 @@ ArtistAlbumsView::ArtistAlbumsView(QWidget* parent) : QWidget(parent)
 {
     m_layout = new QVBoxLayout();
     m_layout->setContentsMargins(20, 0, 40, 0);
-    m_layout->setSpacing(0);
     setLayout(m_layout);
 }
 

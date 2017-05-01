@@ -41,7 +41,7 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_horLayout->addWidget(m_playingView);
 
     m_layout = new QVBoxLayout();
-    m_layout->setMargin(0);
+    m_layout->setContentsMargins(32, 16, 32, 16);
     m_layout->setSpacing(0);
     m_layout->addLayout(m_horLayout);
     m_layout->addWidget(m_audioControls);

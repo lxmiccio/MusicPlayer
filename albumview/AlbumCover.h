@@ -5,18 +5,20 @@
 
 #include "Album.h"
 #include "ClickableLabel.h"
+#include "ClickableWidget.h"
 #include "ElidedLabel.h"
 
-class Cover : public QWidget
+class AlbumCover : public ClickableWidget
 {
         Q_OBJECT
 
     public:
-        explicit Cover(const Album* album, QWidget* parent = 0);
-        ~Cover();
+        explicit AlbumCover(Album* album, QWidget* parent = 0);
+        explicit AlbumCover(QWidget* parent = 0);
+        ~AlbumCover();
 
         const Album* album() const;
-        void setAlbum(const Album* album);
+        void setAlbum(Album* album);
 
         static const quint16 COVER_HEIGHT = 215;
         static const quint16 COVER_WIDTH = 175;
@@ -24,16 +26,16 @@ class Cover : public QWidget
         static const quint16 IMAGE_WIDTH = 175;
 
     signals:
-        void coverClicked(const Album* album);
+        void coverClicked(Album* album);
 
     private slots:
         void onAlbumChanged();
-        void onCoverClicked();
+        void onClicked();
 
     private:
-        const Album* m_album;
+        Album* m_album;
 
-        ClickableLabel* m_cover;
+        QLabel* m_cover;
         ElidedLabel* m_albumTitle;
         ElidedLabel* m_artistName;
 

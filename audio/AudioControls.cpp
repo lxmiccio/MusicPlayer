@@ -148,7 +148,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     m_lowerHorizontalLayout->addWidget(m_volumeSlider);
 
     m_verticalLayout = new QVBoxLayout();
-    m_verticalLayout->setContentsMargins(40, 12, 40, 16);
+    m_verticalLayout->setMargin(0);
     m_verticalLayout->setSpacing(8);
     m_verticalLayout->addLayout(m_upperHorizontalLayout);
     m_verticalLayout->addLayout(m_lowerHorizontalLayout);

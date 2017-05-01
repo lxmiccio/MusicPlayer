@@ -23,6 +23,9 @@ class ScrollableArea : public QScrollArea
         virtual void dragEnterEvent(QDragEnterEvent* event);
         virtual void dropEvent(QDropEvent* event);
         virtual void resizeEvent(QResizeEvent* event);
+
+        void clearLayout(QLayout* layout);
+        void deleteLayout(QLayout* layout);
 };
 
 #endif // SCROLLABLEAREA_H

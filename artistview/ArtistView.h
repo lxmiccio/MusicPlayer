@@ -31,7 +31,7 @@ class ArtistView : public QWidget
         void repaintCoversAfterWidgetRemoved();
 
     private slots:
-        void onAlbumAdded(const Album* album);
+        void onAlbumAdded(Album* album);
         void onArtistWidgetClicked(ArtistWidget* widget);
         void onRemoveArtistWidgetClicked(ArtistWidget* widget);
 

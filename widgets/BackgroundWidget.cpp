@@ -74,3 +74,38 @@ void BackgroundWidget::resizeEvent(QResizeEvent* event)
 
     m_backgroundSlice = QPixmap();
 }
+
+void BackgroundWidget::clearLayout(QLayout* layout)
+{
+    QLayoutItem* i_item;
+
+    while((i_item = layout->takeAt(0)) != NULL)
+    {
+        if(i_item->layout())
+        {
+            deleteLayout(i_item->layout());
+            delete i_item->layout();
+        }
+    }
+}
+
+void BackgroundWidget::deleteLayout(QLayout* layout)
+{
+    QLayoutItem* i_item;
+
+    while((i_item = layout->takeAt(0)) != NULL)
+    {
+        if(i_item->layout())
+        {
+            deleteLayout(i_item->layout());
+            delete i_item->layout();
+        }
+
+        if(i_item->widget())
+        {
+            delete i_item->widget();
+        }
+
+        delete i_item;
+    }
+}

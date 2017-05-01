@@ -9,6 +9,7 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_middleVerticalSpacer = new QSpacerItem(16, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_leftLayout = new QVBoxLayout();
+    m_leftLayout->setMargin(0);
     m_leftLayout->addItem(m_upperSpacer);
     m_leftLayout->addItem(m_lowerSpacer);
     ScrollableArea* m_leftLayoutScrollable = new ScrollableArea();
@@ -30,10 +31,11 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_splitter->addWidget(m_albumViewScrollable);
 
     m_layout = new QVBoxLayout();
+    m_layout->setMargin(0);
     m_layout->addWidget(m_splitter);
     setLayout(m_layout);
 
-    QObject::connect(MusicLibrary::instance(), SIGNAL(albumAdded(const Album*)), this, SLOT(onAlbumAdded(const Album*)));
+    QObject::connect(MusicLibrary::instance(), SIGNAL(albumAdded(Album*)), this, SLOT(onAlbumAdded(Album*)));
 }
 
 ArtistView::~ArtistView()
@@ -94,7 +96,7 @@ void ArtistView::repaintCoversAfterWidgetRemoved()
     }
 }
 
-void ArtistView::onAlbumAdded(const Album* album)
+void ArtistView::onAlbumAdded(Album* album)
 {
     if(album && album->artist())
     {

@@ -10,6 +10,8 @@ TrackSlider::TrackSlider(Qt::Orientation orientation, QWidget* parent) : Slider(
 
     QObject::connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
     QObject::connect(this, SIGNAL(valueChanged(int)), this, SLOT(onValueChanged(int)));
+
+    setValue(0);
 }
 
 void TrackSlider::onTrackStarted(int seconds)

@@ -23,6 +23,7 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
         m_playingLyrics = new PlayingLyrics();
 
         m_leftLayout = new QVBoxLayout();
+        m_leftLayout->setMargin(0);
         m_leftLayout->addWidget(m_playingAlbum);
         m_leftLayout->addWidget(m_playingLyrics);
 
@@ -35,8 +36,7 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
     QObject::connect(m_trackView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
 
     m_layout = new QHBoxLayout();
-    m_layout->setContentsMargins(40, 16, 40, 12);
-    m_layout->setSpacing(0);
+    m_layout->setMargin(0);
 
     if(m_mode == PlayingView::FULL)
     {

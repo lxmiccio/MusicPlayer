@@ -24,7 +24,6 @@ PlayingAlbum::PlayingAlbum(QWidget* parent) : ClickableWidget(parent)
 
     m_layout = new QVBoxLayout();
     m_layout->setMargin(0);
-    m_layout->setSpacing(0);
     m_layout->addWidget(m_cover);
     m_layout->addItem(m_spacer1);
     m_layout->addWidget(m_artistName);
@@ -38,8 +37,8 @@ PlayingAlbum::PlayingAlbum(QWidget* parent) : ClickableWidget(parent)
 
 PlayingAlbum::~PlayingAlbum()
 {
-    GuiUtils::deleteLayout(m_layout);
-    delete m_layout;
+    //GuiUtils::deleteLayout(m_layout);
+    //delete m_layout;
 }
 
 void PlayingAlbum::setAlbum(const Album* album)

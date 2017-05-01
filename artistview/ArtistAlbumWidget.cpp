@@ -26,23 +26,20 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_rightLayoutMiddleSpacer = new QSpacerItem(0, 18, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_leftLayout = new QVBoxLayout();
-    m_leftLayout->setContentsMargins(0, 0, 0, 0);
-    m_leftLayout->setSpacing(0);
+    m_leftLayout->setMargin(0);
     m_leftLayout->addItem(m_leftLayoutUpperSpacer);
     m_leftLayout->addWidget(m_cover);
     m_leftLayout->addItem(m_leftLayoutMiddleSpacer);
     m_leftLayout->addItem(m_leftLayoutLowerSpacer);
 
     m_rightLayout = new QVBoxLayout();
-    m_rightLayout->setContentsMargins(0, 0, 0, 0);
-    m_rightLayout->setSpacing(0);
+    m_rightLayout->setMargin(0);
     m_rightLayout->addWidget(m_albumTitle);
     m_rightLayout->addItem(m_rightLayoutMiddleSpacer);
     m_rightLayout->addWidget(m_trackView);
 
     m_layout = new QHBoxLayout();
-    m_layout->setContentsMargins(0, 0, 0, 0);
-    m_layout->setSpacing(0);
+    m_layout->setMargin(0);
     m_layout->addLayout(m_leftLayout);
     m_layout->addLayout(m_rightLayout);
 
@@ -54,22 +51,19 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     m_upperLayout = new QHBoxLayout();
-    m_upperLayout->setContentsMargins(0, 0, 0, 0);
-    m_upperLayout->setSpacing(0);
+    m_upperLayout->setMargin(0);
     m_upperLayout->addWidget(m_cover);
     m_upperLayout->addItem(m_upperLayoutLeftSpacer);
     m_upperLayout->addWidget(m_albumTitle);
     m_upperLayout->addItem(m_upperLayoutRightSpacer);
 
     m_lowerLayout = new QHBoxLayout();
-    m_lowerLayout->setContentsMargins(0, 0, 0, 0);
-    m_lowerLayout->setSpacing(0);
+    m_lowerLayout->setMargin(0);
     m_lowerLayout->addItem(m_lowerLayoutLeftSpacer);
     m_lowerLayout->addWidget(m_trackView);
 
     m_layout = new QVBoxLayout();
-    m_layout->setContentsMargins(0, 0, 0, 0);
-    m_layout->setSpacing(0);
+    m_layout->setMargin(0);
     m_layout->addLayout(m_upperLayout);
     m_layout->addItem(m_middleSpacer);
     m_layout->addLayout(m_lowerLayout);

@@ -45,7 +45,7 @@ class MusicLibrary : public QObject
     signals:
         void artistAdded(const Artist* artist);
         void artistRemoved(const Artist* artist);
-        void albumAdded(const Album* album);
+        void albumAdded(Album* album);
         void albumRemoved(const Album* album);
         void trackAdded(const Track* track);
         void trackRemoved(const Track* track);
