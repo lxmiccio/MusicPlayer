@@ -55,7 +55,15 @@ bool Artist::removeAlbum(Album* album)
     if(m_albums.removeOne(album))
     {
         emit albumRemoved(album);
+
         delete album;
+        album = NULL;
+
+        if(m_albums.isEmpty())
+        {
+            emit artistRemoved(this);
+        }
+
         return true;
     }
     else

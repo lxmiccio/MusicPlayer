@@ -202,6 +202,7 @@ void MusicLibrary::addTrack(QVariantMap* tags)
             if(!l_artist)
             {
                 l_artist = new Artist(l_artistName);
+                QObject::connect(l_artist, SIGNAL(artistRemoved(Artist*)), this, SLOT(onArtistRemoved(Artist*)));
                 m_artists.push_back(l_artist);
                 emit artistAdded(l_artist);
             }
@@ -231,7 +232,7 @@ void MusicLibrary::addTrack(QVariantMap* tags)
                 tags->insert("title", l_trackTitle);
             }
 
-            l_track = const_cast<Track*>(l_album->track(l_trackTitle));
+            l_track = l_album->track(l_trackTitle);
             if(!l_track)
             {
                 l_track = new Track(*tags, l_album);
@@ -244,30 +245,47 @@ void MusicLibrary::addTrack(QVariantMap* tags)
     }
 }
 
+void MusicLibrary::changeAlbumOnTrack(Track* track, QString newAlbum)
+{
+    Album* l_album = album(newAlbum);
+
+    if(!l_album)
+    {
+        Artist* l_artist = track->album()->artist();
+        l_album = new Album(newAlbum, l_artist);
+        l_artist->addAlbum(l_album);
+    }
+
+    track->album()->removeTrack(track);
+
+    track->setAlbum(l_album);
+    l_album->addTrack(track);
+}
+
 void MusicLibrary::onTracksToLoad(const QVector<QFileInfo>& filesInfo)
 {
     m_trackLoader->readTags(filesInfo);
 }
 
-void MusicLibrary::onArtistRemoved(const Artist* artist)
+void MusicLibrary::onArtistRemoved(Artist* artist)
 {
-    if(removeArtist(const_cast<Artist*>(artist)))
+    if(removeArtist(artist))
     {
         emit artistRemoved(artist);
     }
 }
 
-void MusicLibrary::onAlbumRemoved(const Album* album)
+void MusicLibrary::onAlbumRemoved(Album* album)
 {
-    if(removeAlbum(const_cast<Album*>(album)))
+    if(removeAlbum(album))
     {
         emit albumRemoved(album);
     }
 }
 
-void MusicLibrary::onTrackRemoved(const Track* track)
+void MusicLibrary::onTrackRemoved(Track* track)
 {
-    if(removeTrack(const_cast<Track*>(track)))
+    if(removeTrack(track))
     {
         emit trackRemoved(track);
     }

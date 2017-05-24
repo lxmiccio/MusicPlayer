@@ -9,6 +9,8 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     QFont font = QApplication::font();
     font.setPointSize(13);
 
+    m_currentTrack = NULL;
+
     m_repeatMode = AudioControls::REPEAT_NONE;
     m_shuffleMode = AudioControls::SHUFFLE_OFF;
     m_volumeMode = AudioControls::VOLUME_NOT_MUTED;
@@ -18,12 +20,12 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     m_artist = new ClickableLabel();
     m_artist->hide();
     m_artist->setFont(font);
-    m_artist->setStyleSheet(QString("color: white;"));
+    m_artist->setStyleSheet("color: white;");
 
     m_dash = new QLabel("-");
     m_dash->hide();
     m_dash->setFont(font);
-    m_dash->setStyleSheet(QString("color: white;"));
+    m_dash->setStyleSheet("color: white;");
     sizePolicy = m_dash->sizePolicy();
     sizePolicy.setRetainSizeWhenHidden(true);
     m_dash->setSizePolicy(sizePolicy);
@@ -31,7 +33,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     m_track = new ClickableLabel();
     m_track->hide();
     m_track->setFont(font);
-    m_track->setStyleSheet(QString("color: white;"));
+    m_track->setStyleSheet("color: white;");
 
     m_upperSpacer2 = new QSpacerItem(0, 0, QSizePolicy::Expanding);
 
@@ -183,7 +185,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     QObject::connect(this, SIGNAL(repeatClicked(AudioControls::RepeatMode_t)), AudioEngine::instance(), SLOT(onRepeatClicked(AudioControls::RepeatMode_t)));
     QObject::connect(m_volumeSlider, SIGNAL(valueChanged(int)), AudioEngine::instance(), SLOT(onVolumeValueChanged(int)));
 
-    QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted(const Track*)));
+    QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(Track*)), this, SLOT(onTrackStarted(Track*)));
     QObject::connect(AudioEngine::instance(), SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
     QObject::connect(AudioEngine::instance(), SIGNAL(trackFinished()), this, SLOT(onTrackFinished()));
 
@@ -193,45 +195,49 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
 AudioControls::~AudioControls()
 {
 }
+
 void AudioControls::onPositionChanged(qint64 position)
 {
-    if(c_currentTrack)
+    if(m_currentTrack)
     {
         quint16 elapsedTime = position / 1000;
         m_elapsedTime->setText(QString("%1").arg(Utils::secondsToMinutes(elapsedTime)));
 
-        quint16 remainingTime = c_currentTrack->duration() - elapsedTime;
+        quint16 remainingTime = m_currentTrack->duration() - elapsedTime;
         m_remainingTime->setText(QString("%1").arg(Utils::secondsToMinutes(remainingTime)));
     }
 
     emit positionChanged(position);
 }
 
-void AudioControls::onTrackStarted(const Track* track)
+void AudioControls::onTrackStarted(Track* track)
 {
-    c_currentTrack = track;
+    if(track)
+    {
+        m_currentTrack = track;
 
-    m_artist->show();
-    m_artist->setText(c_currentTrack->artist()->name());
-    m_dash->show();
-    m_track->show();
-    m_track->setText(c_currentTrack->title());
+        m_artist->show();
+        m_artist->setText(m_currentTrack->artist()->name());
+        m_dash->show();
+        m_track->show();
+        m_track->setText(m_currentTrack->title());
 
-    m_pause->show();
-    m_play->hide();
+        m_pause->show();
+        m_play->hide();
 
-    m_elapsedTime->setText("00:00");
-    m_elapsedTime->show();
-    m_trackSlider->show();
-    m_remainingTime->setText(Utils::secondsToMinutes(c_currentTrack->duration()));
-    m_remainingTime->show();
+        m_elapsedTime->setText("00:00");
+        m_elapsedTime->show();
+        m_trackSlider->show();
+        m_remainingTime->setText(Utils::secondsToMinutes(m_currentTrack->duration()));
+        m_remainingTime->show();
 
-    emit trackStarted(c_currentTrack->duration());
+        emit trackStarted(m_currentTrack->duration());
+    }
 }
 
 void AudioControls::onTrackFinished()
 {
-    c_currentTrack = NULL;
+    m_currentTrack = NULL;
 
     m_artist->hide();
     m_dash->hide();

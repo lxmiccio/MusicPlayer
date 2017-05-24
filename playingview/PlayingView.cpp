@@ -63,7 +63,7 @@ PlayingView::~PlayingView()
 #endif
 }
 
-void PlayingView::onAlbumSelected(const Album* album)
+void PlayingView::onAlbumSelected(Album* album)
 {
     if(album)
     {
@@ -80,13 +80,13 @@ void PlayingView::onAlbumSelected(const Album* album)
     }
 }
 
-void PlayingView::onPlaylistSelected(const Playlist* playlist)
+void PlayingView::onPlaylistSelected(Playlist* playlist)
 {
     if(playlist && !playlist->tracks().isEmpty())
     {
         clear();
 
-        foreach(const Track* i_track, playlist->tracks())
+        foreach(Track* i_track, playlist->tracks())
         {
             TrackItem* item = new TrackItem(i_track);
             m_items.push_back(item);
@@ -99,7 +99,7 @@ void PlayingView::onPlaylistSelected(const Playlist* playlist)
 
 void PlayingView::onDoubleClicked(const QModelIndex& index)
 {
-    const Track* track = m_items.at(index.row())->track();
+    Track* track = m_items.at(index.row())->track();
 
     if(track && track->album())
     {

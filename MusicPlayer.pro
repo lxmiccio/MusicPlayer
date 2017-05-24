@@ -11,7 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = 010-MusicPlayer
 TEMPLATE = app
 
-SOURCES += albumview/AlbumView.cpp \
+SOURCES += main.cpp \
+    albumview/AlbumView.cpp \
     artistview/ArtistAlbumsView.cpp \
     artistview/ArtistAlbumWidget.cpp \
     artistview/ArtistView.cpp \
@@ -25,6 +26,8 @@ SOURCES += albumview/AlbumView.cpp \
     data/Track.cpp \
     data/TrackLoader.cpp \
     data/TrackLoaderThread.cpp \
+    mp3lame/LameWrapper.cpp \
+    soundtouch/SoundTouchWrapper.cpp \
     playingview/PlayingView.cpp \
     playingview/PlayingAlbum.cpp \
     playingview/PlayingLyrics.cpp \
@@ -48,7 +51,6 @@ SOURCES += albumview/AlbumView.cpp \
     widgets/TrackSlider.cpp \
     MainWidget.cpp \
     MainWindow.cpp \
-    main.cpp \
     albumview/AlbumGrid.cpp \
     albumview/AlbumTracks.cpp \
     albumview/AlbumCover.cpp
@@ -67,6 +69,8 @@ HEADERS  += albumview/AlbumView.h \
     data/Track.h \
     data/TrackLoader.h \
     data/TrackLoaderThread.h \
+    mp3lame/LameWrapper.h \
+    soundtouch/SoundTouchWrapper.h \
     playingview/PlayingAlbum.h \
     playingview/PlayingLyrics.h \
     playingview/PlayingView.h \
@@ -101,17 +105,32 @@ INCLUDEPATH += $$PWD/audio
 INCLUDEPATH += $$PWD/data
 INCLUDEPATH += $$PWD/engine
 INCLUDEPATH += $$PWD/gui
+INCLUDEPATH += $$PWD/mp3lame
+INCLUDEPATH += $$PWD/soundtouch
 INCLUDEPATH += $$PWD/playingview
 INCLUDEPATH += $$PWD/tag
 INCLUDEPATH += $$PWD/trackview
 INCLUDEPATH += $$PWD/utils
 INCLUDEPATH += $$PWD/widgets
 
+INCLUDEPATH += $$PWD/../mp3lame/libmp3lame
+INCLUDEPATH += $$PWD/../mp3lame/utils
+
+INCLUDEPATH += $$PWD/../SoundTouch/include
+INCLUDEPATH += $$PWD/../SoundTouch/source/SoundStretch
+INCLUDEPATH += $$PWD/../SoundTouch/source/SoundTouch
+
 RESOURCES += resources.qrc
 
 LIBS += -L$$PWD/taglib/lib/ -lTagLib
+LIBS += -L$$PWD/../mp3lame/release -L$$PWD/../mp3lame/release/release -lmp3lame
+LIBS += -L$$PWD/../SoundTouch/release/ -L$$PWD/../SoundTouch/release/release -lSoundTouch
+#LIBS += -L$$PWD/../mp3lame/release/mp3lame.dll
+#LIBS += -L$$PWD/../SoundTouch/release/SoundTouch.dll
 
-INCLUDEPATH += $$PWD/taglib/include
-DEPENDPATH += $$PWD/taglib/include
+INCLUDEPATH += $$PWD/taglib/include \
+               $$PWD/soundtouch/include
+DEPENDPATH += $$PWD/taglib/include \
+               $$PWD/soundtouch/include
 
 include($$PWD/../QHotkey/qhotkey.pri)

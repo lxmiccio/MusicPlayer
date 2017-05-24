@@ -53,6 +53,14 @@ QPixmap TagUtils::readMp3Cover(const QFileInfo &fileInfo)
     TagLib::MPEG::File file(fileInfo.canonicalFilePath().toStdString().data());
     QPixmap cover;
 
+#if 0
+    file.audioProperties()->channels();
+    file.audioProperties()->sampleRate();
+
+
+    TagLib::MPEG::Header h(fileInfo.canonicalFilePath().toStdString().data());
+    h.parse();
+#endif
     if(file.ID3v2Tag())
     {
         TagLib::ID3v2::FrameList frameList = file.ID3v2Tag()->frameListMap()["APIC"];

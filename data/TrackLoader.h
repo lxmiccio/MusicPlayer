@@ -20,11 +20,11 @@ class TrackLoader : public QObject
     public slots:
         void readTags(const QVector<QFileInfo>& files);
 
-    private slots:
-        void onThreadFinished();
-
     signals:
         void tagsRead(QVariantMap* tags);
+
+    private slots:
+        void onThreadFinished();
 
     private:
         QVector<TrackLoaderThread*> m_trackLoaderThreads;

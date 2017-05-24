@@ -18,11 +18,11 @@ class ArtistAlbumsView : public QWidget
         ArtistAlbumsView(QWidget* parent = 0);
         ~ArtistAlbumsView();
 
-        const Artist* artist() const;
+        Artist* artist() const;
         void clearLayout(QLayout* layout);
 
     public slots:
-        void onArtistChanged(const Artist* artist);
+        void onArtistChanged(Artist* artist);
 
     private slots:
         void onAlbumAdded(Album* album);
@@ -32,7 +32,7 @@ class ArtistAlbumsView : public QWidget
     private:
         qint16 widgetIndex(Album* album);
 
-        const Artist* m_artist;
+        Artist* m_artist;
         QMutex m_mutex;
 
         QVector<ArtistAlbumWidget*> m_widgets;

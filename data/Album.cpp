@@ -11,7 +11,7 @@ Album::Album(const QString& title, Artist* artist, QObject* parent) : QObject(pa
     m_title = title;
 
     m_artist = artist;
-    QObject::connect(artist, SIGNAL(artistUpdated(Artist*, quint8)), this, SIGNAL(artistUpdated(Artist*, quint8)));
+    QObject::connect(artist, SIGNAL(artistUpdated(Artist*, quint8)), this, SLOT(onArtistUpdated(Artist*,quint8)));
 }
 
 const QString& Album::title() const
@@ -41,7 +41,7 @@ const QVector<Track*>& Album::tracks() const
     return m_tracks;
 }
 
-const Track* Album::track(const QString& title) const
+Track* Album::track(const QString& title) const
 {
     foreach(Track* i_track, m_tracks)
     {
@@ -71,7 +71,15 @@ bool Album::removeTrack(Track* track)
     if(m_tracks.removeOne(track))
     {
         emit trackRemoved(track);
+
         delete track;
+        track = NULL;
+
+        if(m_tracks.isEmpty())
+        {
+            m_artist->removeAlbum(this);
+        }
+
         return true;
     }
     else
@@ -113,6 +121,16 @@ void Album::sort()
     {
         return track1->track() < track2->track();
     });
+}
+
+void Album::onArtistUpdated(Artist* artist, quint8 fields)
+{
+    Q_UNUSED(fields);
+
+    if(artist && artist == this->artist())
+    {
+        emit albumUpdated(this, Album::ARTIST);
+    }
 }
 
 bool operator==(const Album& album1, const Album& album2)

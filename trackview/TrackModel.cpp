@@ -120,21 +120,21 @@ Qt::ItemFlags TrackModel::flags(const QModelIndex &index) const
     }
 }
 
-void TrackModel::propendItem(const Track* track)
+void TrackModel::propendItem(Track* track)
 {
     beginInsertRows(QModelIndex(), 0, 0);
     m_rootItem->prependChild(new TrackItem(track, m_rootItem));
     endInsertRows();
 }
 
-void TrackModel::appendItem(const Track* track)
+void TrackModel::appendItem(Track* track)
 {
     beginInsertRows(QModelIndex(), m_rootItem->row(), m_rootItem->row());
     m_rootItem->appendChild(new TrackItem(track, m_rootItem));
     endInsertRows();
 }
 
-void TrackModel::insertItemAt(const Track* track, int row)
+void TrackModel::insertItemAt(Track* track, int row)
 {
     if(row < m_rootItem->rowCount())
     {
@@ -164,10 +164,10 @@ void TrackModel::removeLastItem()
     }
 }
 
-void TrackModel::removeItem(const Track* track)
+void TrackModel::removeItem(Track* track)
 {
     beginRemoveRows(QModelIndex(), m_rootItem->rowCount() - 1, m_rootItem->rowCount() - 1);
-    m_rootItem->removeChildAt(m_rootItem->indexOf(const_cast<Track*>(track)));
+    m_rootItem->removeChildAt(m_rootItem->indexOf(track));
     endRemoveRows();
 }
 

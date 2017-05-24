@@ -6,13 +6,13 @@
 PlayingLyrics::PlayingLyrics(QWidget* parent) : ScrollableArea(parent)
 {
     m_lyrics = new QLabel();
-    m_lyrics->setStyleSheet(QString("color: white;"));
+    m_lyrics->setStyleSheet("color: white;");
     m_lyrics->setWordWrap(true);
 
     setMinimumWidth(PlayingAlbum::WIDGET_WIDTH);
     setWidget(m_lyrics);
 
-    QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted(const Track*)));
+    QObject::connect(AudioEngine::instance(), SIGNAL(trackStarted(Track*)), this, SLOT(onTrackStarted(Track*)));
 }
 
 PlayingLyrics::~PlayingLyrics()
@@ -20,7 +20,7 @@ PlayingLyrics::~PlayingLyrics()
     delete m_lyrics;
 }
 
-void PlayingLyrics::onTrackStarted(const Track* track)
+void PlayingLyrics::onTrackStarted(Track* track)
 {
     if(track)
     {
@@ -29,7 +29,7 @@ void PlayingLyrics::onTrackStarted(const Track* track)
             c_track = track;
             QObject::connect(c_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track*, quint8)));
 
-            m_lyrics->setText(const_cast<Track*>(c_track)->lyrics());
+            m_lyrics->setText(c_track->lyrics());
         }
 
         verticalScrollBar()->setSliderPosition(0);

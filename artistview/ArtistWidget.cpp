@@ -30,7 +30,7 @@ ArtistWidget::ArtistWidget(Artist* artist, QWidget* parent) : ClickableWidget(pa
     m_artistName = new ElidedLabel(m_artist->name());
     m_artistName->setAlignment(Qt::AlignVCenter);
     m_artistName->setFixedHeight(ArtistWidget::WIDGET_HEIGHT);
-    m_artistName->setStyleSheet(QString("color: white;"));
+    m_artistName->setStyleSheet("color: white;");
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
@@ -51,7 +51,7 @@ ArtistWidget::~ArtistWidget()
     //TODO
 }
 
-const Artist* ArtistWidget::artist() const
+Artist* ArtistWidget::artist() const
 {
     return m_artist;
 }

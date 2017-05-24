@@ -12,7 +12,7 @@ ArtistAlbumsView::~ArtistAlbumsView()
     clearLayout(m_layout);
 }
 
-const Artist* ArtistAlbumsView::artist() const
+Artist* ArtistAlbumsView::artist() const
 {
     return m_artist;
 }
@@ -38,7 +38,7 @@ void ArtistAlbumsView::clearLayout(QLayout* layout)
     }
 }
 
-void ArtistAlbumsView::onArtistChanged(const Artist* artist)
+void ArtistAlbumsView::onArtistChanged(Artist* artist)
 {
     QMutexLocker locker(&m_mutex);
     clearLayout(m_layout);

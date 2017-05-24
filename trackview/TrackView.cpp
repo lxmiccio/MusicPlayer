@@ -1,7 +1,12 @@
 #include "TrackView.h"
 
+#include <QDebug>
+
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
+
+#include "LameWrapper.h"
+#include "SoundTouchWrapper.h"
 
 const quint8 TrackView::TRACK_INDEX;
 const quint8 TrackView::TITLE_INDEX;
@@ -82,22 +87,22 @@ int TrackView::columnCount() const
     return m_trackModel->columnCount();
 }
 
-void TrackView::propendItem(const Track* track)
+void TrackView::propendItem(Track* track)
 {
     m_trackModel->propendItem(track);
 }
 
-void TrackView::appendItem(const Track* track)
+void TrackView::appendItem(Track* track)
 {
     m_trackModel->appendItem(track);
 }
 
-void TrackView::removeItem(const Track* track)
+void TrackView::removeItem(Track* track)
 {
     m_trackModel->removeItem(track);
 }
 
-void TrackView::insertItemAt(const Track* track, int row)
+void TrackView::insertItemAt(Track* track, int row)
 {
     m_trackModel->insertItemAt(track, row);
 }
@@ -176,18 +181,93 @@ void TrackView::onContextMenuRequested(QPoint position)
 {
     QMenu menu(this);
 
+    QAction* changeArtist = menu.addAction("Change artist");
+    QAction* changeAlbum = menu.addAction("Change album");
     QAction* changeTitle = menu.addAction("Change title");
     QAction* removeTrack = menu.addAction("Remove track");
+
+    QMenu tempoMenu("Change tempo");
+
+    QAction* x125 = tempoMenu.addAction("125%");
+    QAction* x150 = tempoMenu.addAction("150%");
+    QAction* x175 = tempoMenu.addAction("175%");
+    QAction* x200 = tempoMenu.addAction("200%");
+
+    menu.addMenu(&tempoMenu);
+
+
+
     QAction* selectedAction = menu.exec(viewport()->mapToGlobal(position));
 
-    if(selectedAction == changeTitle)
+    if(selectedAction == changeArtist)
+    {
+#if 0
+        QString newArtist = QInputDialog::getText(0, "Track editing", "Artist:");
+        Artist* artist = MusicLibrary::instance()->album(newArtist);
+        const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
+#endif
+    }
+    else if(selectedAction == changeAlbum)
+    {
+#if 0
+        QString newAlbum = QInputDialog::getText(0, "Track editing", "Album:");
+        Album* album = MusicLibrary::instance()->album(newAlbum);
+        if(!album)
+        {
+            //changedAlbum(oldTrack(track*), newAlbum(qstring));
+        }
+        const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
+#endif
+    }
+    else if(selectedAction == changeTitle)
     {
         QString newTitle = QInputDialog::getText(0, "Track editing", "Title:");
-        const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
+        m_trackModel->rootItem()->child(indexAt(position).row())->track()->setTitle(newTitle);
     }
     else if(selectedAction == removeTrack)
     {
-        MusicLibrary::instance()->removeTrack(const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track()));
+    }
+    else if(selectedAction == x125 || selectedAction == x150 || selectedAction == x175 || selectedAction == x200)
+    {
+        QString lameInput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->path();
+        QString lameOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + ".wav";
+
+        LameWrapper lame;
+        lame.init(lameInput, lameOutput);
+        lame.decode(false);
+
+        if(selectedAction == x125)
+        {
+            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_125.wav";
+
+            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
+            soundTouch.setTempo(25);
+            soundTouch.process();
+        }
+        else if(selectedAction == x150)
+        {
+            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_150.wav";
+
+            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
+            soundTouch.setTempo(50);
+            soundTouch.process();
+        }
+        else if(selectedAction == x175)
+        {
+            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_175.wav";
+
+            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
+            soundTouch.setTempo(75);
+            soundTouch.process();
+        }
+        else if(selectedAction == x200)
+        {
+            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_200.wav";
+
+            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
+            soundTouch.setTempo(200);
+            soundTouch.process();
+        }
     }
 }
 

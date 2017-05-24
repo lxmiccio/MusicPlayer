@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QDebug>
 #include <QFileInfo>
 #include <QFontDatabase>
 #include <QTime>
@@ -31,5 +32,6 @@ int main(int argc, char *argv[])
     /* TODO here
      * Load album cover when loading tracks
      * Fix awful TrackSlider behaviour when a track starts, which is probably due to the slot TrackSlider::onTrackStarted(...) invoked twice
+     * Bug: if there is one song and user skips it, TrackSliders starts moving even if track is not playing
      */
 }

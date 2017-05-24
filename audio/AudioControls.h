@@ -53,7 +53,7 @@ class AudioControls : public QWidget
 
     public slots:
         void onPositionChanged(qint64 position);
-        void onTrackStarted(const Track* Track);
+        void onTrackStarted(Track* Track);
         void onTrackFinished();
 
     private slots:
@@ -83,7 +83,7 @@ class AudioControls : public QWidget
         void volumeValueChanged(int value);
 
     private:
-        const Track* c_currentTrack;
+        Track* m_currentTrack;
 
         RepeatMode_t m_repeatMode;
         ShuffleMode_t m_shuffleMode;

@@ -26,12 +26,12 @@ class TrackModel : public QAbstractItemModel
         int columnCount(const QModelIndex& parent = QModelIndex()) const;
         Qt::ItemFlags flags(const QModelIndex& index) const;
 
-        void propendItem(const Track* track);
-        void appendItem(const Track* track);
-        void insertItemAt(const Track* track, int row);
+        void propendItem(Track* track);
+        void appendItem(Track* track);
+        void insertItemAt(Track* track, int row);
         void removeFirstItem();
         void removeLastItem();
-        void removeItem(const Track* track);
+        void removeItem(Track* track);
         void removeItemAt(int row);
         void sort();
         void clear();

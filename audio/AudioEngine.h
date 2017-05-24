@@ -11,6 +11,8 @@
 #include "Settings.h"
 #include "Track.h"
 
+#include "LameWrapper.h"
+
 class AudioEngine : public QObject
 {
         Q_OBJECT
@@ -45,7 +47,7 @@ class AudioEngine : public QObject
 
     signals:
         void positionChanged(qint64 position);
-        void trackStarted(const Track* track);
+        void trackStarted(Track* track);
         void trackFinished();
 
     private:

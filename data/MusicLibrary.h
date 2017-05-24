@@ -36,19 +36,22 @@ class MusicLibrary : public QObject
         bool removeTrack(Track* track);
         bool removeTrack(const QString& trackTitle, const QString& albumTitle);
 
+        void changeArtistOnTrack(Track* track, QString newArtist);
+        void changeAlbumOnTrack(Track* track, QString newAlbum);
+
     public slots:
         void onTracksToLoad(const QVector<QFileInfo>& filesInfo);
-        void onArtistRemoved(const Artist* artist);
-        void onAlbumRemoved(const Album* album);
-        void onTrackRemoved(const Track* track);
+        void onArtistRemoved(Artist* artist);
+        void onAlbumRemoved(Album* album);
+        void onTrackRemoved(Track* track);
 
     signals:
-        void artistAdded(const Artist* artist);
-        void artistRemoved(const Artist* artist);
+        void artistAdded(Artist* artist);
+        void artistRemoved(Artist* artist);
         void albumAdded(Album* album);
-        void albumRemoved(const Album* album);
-        void trackAdded(const Track* track);
-        void trackRemoved(const Track* track);
+        void albumRemoved(Album* album);
+        void trackAdded(Track* track);
+        void trackRemoved(Track* track);
 
     protected:
         MusicLibrary();

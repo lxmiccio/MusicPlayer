@@ -11,7 +11,8 @@ class TrackSlider : public Slider
         Q_OBJECT
 
     public:
-        TrackSlider(Qt::Orientation orientation, QWidget* parent = 0);
+        explicit TrackSlider(Qt::Orientation orientation, QWidget* parent = 0);
+        ~TrackSlider();
 
     public slots:
         void onPositionChanged(qint64 position);
@@ -27,8 +28,9 @@ class TrackSlider : public Slider
     private:
         quint64 m_elapsedTime;
         bool m_ignoreTimeout;
-        QTime* m_time;
-        QTimer* m_timer;
+
+        QTime m_time;
+        QTimer m_timer;
 };
 
 #endif // TRACKSLIDER_H

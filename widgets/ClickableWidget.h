@@ -2,11 +2,12 @@
 #define CLICKABLEWIDGET_H
 
 #include <QApplication>
+#include <QLayout>
+#include <QMouseEvent>
 #include <QTime>
+#include <QWidget>
 
-#include "BackgroundWidget.h"
-
-class ClickableWidget : public BackgroundWidget
+class ClickableWidget : public QWidget
 {
         Q_OBJECT
 
@@ -20,6 +21,9 @@ class ClickableWidget : public BackgroundWidget
     protected:
         virtual void mousePressEvent(QMouseEvent* event);
         virtual void mouseReleaseEvent(QMouseEvent* event);
+
+        void clearLayout(QLayout* layout);
+        void deleteLayout(QLayout* layout);
 
     private:
         bool m_moved;

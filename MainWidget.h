@@ -29,14 +29,14 @@ class MainWidget : public BackgroundWidget
         void onShowArtistViewTriggered();
         void onShowAlbumViewTriggered();
         void onShowTrackViewTriggered();
-        void onCoverClicked(const Album* album);
-        void onTrackStarted(const Track* track);
+        void onCoverClicked(Album* album);
+        void onTrackStarted(Track* track);
         void onCurrentTrackClicked();
         void coverClicked();
-        void onTrackDoubleClicked(const Track* track);
+        void onTrackDoubleClicked(Track* track);
 
     signals:
-        void trackStarted(const Track* track);
+        void trackStarted(Track* track);
 
     private:
         void showView(Settings::View view);

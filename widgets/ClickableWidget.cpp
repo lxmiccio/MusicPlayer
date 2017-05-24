@@ -2,7 +2,7 @@
 
 #include "ImageUtils.h"
 
-ClickableWidget::ClickableWidget(QWidget* parent) : BackgroundWidget(parent)
+ClickableWidget::ClickableWidget(QWidget* parent) : QWidget(parent)
 {
 }
 
@@ -37,4 +37,39 @@ void ClickableWidget::mouseReleaseEvent(QMouseEvent* event)
 
     m_moved = false;
     m_pressed = false;
+}
+
+void ClickableWidget::clearLayout(QLayout* layout)
+{
+    QLayoutItem* i_item;
+
+    while((i_item = layout->takeAt(0)) != NULL)
+    {
+        if(i_item->layout())
+        {
+            deleteLayout(i_item->layout());
+            delete i_item->layout();
+        }
+    }
+}
+
+void ClickableWidget::deleteLayout(QLayout* layout)
+{
+    QLayoutItem* i_item;
+
+    while((i_item = layout->takeAt(0)) != NULL)
+    {
+        if(i_item->layout())
+        {
+            deleteLayout(i_item->layout());
+            delete i_item->layout();
+        }
+
+        if(i_item->widget())
+        {
+            delete i_item->widget();
+        }
+
+        delete i_item;
+    }
 }

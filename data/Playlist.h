@@ -20,8 +20,8 @@ class Playlist : public QObject
     public:
         explicit Playlist(const QString& name = QString("Playing"), QObject* parent = 0);
 
-        static Playlist* fromAlbum(const Album* album, const Track* startingTrack = NULL);
-        static Playlist* fromTracks(const QVector<Track*> tracks, const Track* startingTrack = NULL);
+        static Playlist* fromAlbum(Album* album, Track* startingTrack = NULL);
+        static Playlist* fromTracks(QVector<Track*> tracks, Track* startingTrack = NULL);
 
         static const Playlist* pathsFromPlaylist(QFileInfo& file);
         void saveToFile() const;
@@ -31,9 +31,9 @@ class Playlist : public QObject
 
         const QStringList& tracksPath() const;
 
-        const QVector<const Track*>& tracks() const;
-        void addTrack(const Track* track);
-        void removeTrack(const Track* track);
+        const QVector<Track*>& tracks() const;
+        void addTrack(Track* track);
+        void removeTrack(Track* track);
 
         quint16 startingIndex();
         void setStartingIndex(quint16 startingIndex);
@@ -42,7 +42,7 @@ class Playlist : public QObject
     private:
         QString m_name;
         QStringList m_tracksPath;
-        QVector<const Track*> m_tracks;
+        QVector<Track*> m_tracks;
         quint16 m_startingIndex;
 };
 

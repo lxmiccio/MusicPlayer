@@ -8,11 +8,11 @@ AlbumCover::AlbumCover(Album* album, QWidget* parent) : ClickableWidget(parent)
 
     m_albumTitle = new ElidedLabel();
     m_albumTitle->setAlignment(Qt::AlignCenter);
-    m_albumTitle->setStyleSheet(QString("color: white;"));
+    m_albumTitle->setStyleSheet("color: white;");
 
     m_artistName = new ElidedLabel();
     m_artistName->setAlignment(Qt::AlignCenter);
-    m_artistName->setStyleSheet(QString("color: white;"));
+    m_artistName->setStyleSheet("color: white;");
 
     m_layout = new QVBoxLayout();
     m_layout->setMargin(0);
@@ -34,11 +34,11 @@ AlbumCover::AlbumCover(QWidget* parent) : ClickableWidget(parent)
 
     m_albumTitle = new ElidedLabel();
     m_albumTitle->setAlignment(Qt::AlignCenter);
-    m_albumTitle->setStyleSheet(QString("color: white;"));
+    m_albumTitle->setStyleSheet("color: white;");
 
     m_artistName = new ElidedLabel();
     m_artistName->setAlignment(Qt::AlignCenter);
-    m_artistName->setStyleSheet(QString("color: white;"));
+    m_artistName->setStyleSheet("color: white;");
 
     m_layout = new QVBoxLayout();
     m_layout->setMargin(0);
@@ -54,10 +54,10 @@ AlbumCover::AlbumCover(QWidget* parent) : ClickableWidget(parent)
 
 AlbumCover::~AlbumCover()
 {
-    delete m_layout;
+    deleteLayout(m_layout);
 }
 
-const Album* AlbumCover::album() const
+Album* AlbumCover::album() const
 {
     return m_album;
 }
@@ -67,6 +67,7 @@ void AlbumCover::setAlbum(Album* album)
     if(album)
     {
         m_album = album;
+        QObject::connect(m_album, SIGNAL(albumUpdated(Album*, quint8)), this, SLOT(onAlbumChanged(Album*, quint8)));
 
         if(m_album->cover().isNull())
         {
@@ -84,17 +85,29 @@ void AlbumCover::setAlbum(Album* album)
         }
 
         m_albumTitle->setText(album->title());
-        m_artistName->setText(album->artist()->name());
+        m_artistName->setText(album->artist() ? album->artist()->name() : "Unknown");
     }
 }
 
-void AlbumCover::onAlbumChanged()
+void AlbumCover::onAlbumChanged(Album* album, quint8 fields)
 {
-    Album* album = static_cast<Album*>(QObject::sender());
-
     if(album && album == m_album)
     {
-        setAlbum(album);
+        if(fields & Album::TITLE)
+        {
+            m_albumTitle->setText(album->title());
+        }
+        else if(fields & Album::COVER)
+        {
+            m_cover->setPixmap(QPixmap(m_album->cover().scaled(AlbumCover::COVER_WIDTH,
+                                                               AlbumCover::COVER_HEIGHT,
+                                                               Qt::KeepAspectRatio,
+                                                               Qt::SmoothTransformation)));
+        }
+        else if(fields & Album::ARTIST && album->artist())
+        {
+            m_artistName->setText(album->artist()->name());
+        }
     }
 }
 

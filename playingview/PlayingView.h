@@ -45,11 +45,11 @@ class PlayingView : public QWidget
         static const quint16 WIDGET_HEIGHT = 415;
 
     public slots:
-        void onAlbumSelected(const Album* album);
-        void onPlaylistSelected(const Playlist* playlist);
+        void onAlbumSelected(Album* album);
+        void onPlaylistSelected(Playlist* playlist);
 
     signals:
-        void doubleClicked(const Track*);
+        void doubleClicked(Track* track);
         void coverClicked();
 
     private slots:

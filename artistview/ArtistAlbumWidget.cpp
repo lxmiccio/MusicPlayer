@@ -14,7 +14,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_albumTitle->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     m_albumTitle->setContentsMargins(36, 0, 0, 0);
     m_albumTitle->setFont(font);
-    m_albumTitle->setStyleSheet(QString("color: white;"));
+    m_albumTitle->setStyleSheet("color: white;");
 
     m_trackView = new TrackView(PlayingView::REDUCED);
     QObject::connect(m_trackView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
@@ -125,7 +125,7 @@ void ArtistAlbumWidget::onAlbumUpdated(Album* album, quint8 fields)
 
 void ArtistAlbumWidget::onDoubleClicked(const QModelIndex& index)
 {
-    const Track* track = m_trackView->trackModel()->rootItem()->child(index.row())->track();
+    Track* track = m_trackView->trackModel()->rootItem()->child(index.row())->track();
 
     if(track)
     {

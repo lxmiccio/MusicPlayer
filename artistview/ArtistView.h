@@ -21,7 +21,7 @@ class ArtistView : public QWidget
         ~ArtistView();
 
     signals:
-        void coverClicked(const Artist* artist);
+        void coverClicked(Artist* artist);
 
     protected:
         void clearLayout(QLayout* layout);

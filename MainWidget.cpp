@@ -12,14 +12,13 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
 
     m_albumView = new AlbumView();
     m_albumView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    QObject::connect(m_albumView, SIGNAL(coverClicked(const Album*)), this, SLOT(onCoverClicked(const Album*)));
 
     m_trackView = new TrackView(PlayingView::FULL);
-    QObject::connect(m_trackView, SIGNAL(trackDoubleClicked(const Track*)), this, SLOT(onTrackDoubleClicked(const Track*)));
-    QObject::connect(MusicLibrary::instance(), SIGNAL(trackAdded(const Track*)), m_trackView, SLOT(appendItem(const Track*)));
+    QObject::connect(m_trackView, SIGNAL(trackDoubleClicked(Track*)), this, SLOT(onTrackDoubleClicked(Track*)));
+    QObject::connect(MusicLibrary::instance(), SIGNAL(trackAdded(Track*)), m_trackView, SLOT(appendItem(Track*)));
 
     m_playingView = new PlayingView(PlayingView::REDUCED);
-    QObject::connect(m_playingView, SIGNAL(doubleClicked(const Track*)), this, SLOT(onTrackDoubleClicked(const Track*)));
+    QObject::connect(m_playingView, SIGNAL(doubleClicked(Track*)), this, SLOT(onTrackDoubleClicked(Track*)));
     QObject::connect(m_playingView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
 
     showView(Settings::view());
@@ -30,7 +29,7 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_audioEngine = AudioEngine::instance();
 
 
-    QObject::connect(m_audioEngine, SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted(const Track*)));
+    QObject::connect(m_audioEngine, SIGNAL(trackStarted(Track*)), this, SLOT(onTrackStarted(Track*)));
 
     m_horLayout = new QHBoxLayout();
     m_horLayout->setMargin(0);
@@ -72,7 +71,7 @@ void MainWidget::coverClicked()
     showView(Settings::view());
 }
 
-void MainWidget::onCoverClicked(const Album* album)
+void MainWidget::onCoverClicked(Album* album)
 {
     /* TODO: Move to AlbumView */
     /*
@@ -90,7 +89,7 @@ void MainWidget::onCurrentTrackClicked()
     showView(Settings::PLAYING_VIEW);
 }
 
-void MainWidget::onTrackStarted(const Track* track)
+void MainWidget::onTrackStarted(Track* track)
 {
     if(track)
     {
@@ -126,7 +125,7 @@ void MainWidget::showView(Settings::View view)
     }
 }
 
-void MainWidget::onTrackDoubleClicked(const Track* track)
+void MainWidget::onTrackDoubleClicked(Track* track)
 {
     Playlist* playlist = Playlist::fromTracks(MusicLibrary::instance()->tracks(), track);
     AudioEngine::instance()->onPlaylistSelected(playlist);

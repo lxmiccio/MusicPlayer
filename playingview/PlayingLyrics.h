@@ -16,11 +16,11 @@ class PlayingLyrics : public ScrollableArea
         ~PlayingLyrics();
 
     private slots:
-        void onTrackStarted(const Track* track);
+        void onTrackStarted(Track* track);
         void onTrackUpdated(Track* track, quint8 fields);
 
     private:
-        const Track* c_track;
+        Track* c_track;
         QLabel* m_lyrics;
 };
 

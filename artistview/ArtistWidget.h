@@ -22,7 +22,7 @@ class ArtistWidget : public ClickableWidget
         explicit ArtistWidget(Artist* artist, QWidget* parent = 0);
         ~ArtistWidget();
 
-        const Artist* artist() const;
+        Artist* artist() const;
 
         void focusIn();
         void focusOut();

@@ -14,7 +14,7 @@ AudioEngine::AudioEngine()
 
     QObject::connect(m_mediaPlaylist, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
     QObject::connect(m_mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
-    QObject::connect(this, SIGNAL(trackStarted(const Track*)), this, SLOT(onTrackStarted()));
+    QObject::connect(this, SIGNAL(trackStarted(Track*)), this, SLOT(onTrackStarted()));
 }
 
 AudioEngine::~AudioEngine()
@@ -45,15 +45,19 @@ void AudioEngine::onPlaylistSelected(Playlist* playlist)
 {
     if(playlist && !playlist->tracks().isEmpty())
     {
+        QMediaPlaylist::PlaybackMode playbackMode = m_mediaPlaylist->playbackMode();
+        m_mediaPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+
         m_playlist = playlist;
         m_mediaPlaylist->clear();
 
-        foreach(const Track* i_track, m_playlist->tracks())
+        foreach(Track* i_track, m_playlist->tracks())
         {
             m_mediaPlaylist->addMedia(QUrl::fromLocalFile(i_track->path()));
         }
 
         m_mediaPlaylist->setCurrentIndex(playlist->startingIndex());
+        m_mediaPlaylist->setPlaybackMode(playbackMode);
     }
 }
 

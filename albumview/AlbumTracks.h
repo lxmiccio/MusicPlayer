@@ -4,7 +4,9 @@
 #include <QHBoxLayout>
 #include <QWidget>
 
-#include "AlbumCover.h"
+#include "Album.h"
+#include "Playlist.h"
+#include "Track.h"
 #include "TrackView.h"
 
 class AlbumTracks : public QWidget
@@ -19,6 +21,10 @@ class AlbumTracks : public QWidget
 
     signals:
         void coverClicked(Album* album);
+        void playlistSelected(Playlist* playlist);
+
+    private slots:
+        void onTrackSelected(Track* track);
 
     private:
         Album* m_album;

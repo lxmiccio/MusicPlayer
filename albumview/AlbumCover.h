@@ -17,7 +17,7 @@ class AlbumCover : public ClickableWidget
         explicit AlbumCover(QWidget* parent = 0);
         ~AlbumCover();
 
-        const Album* album() const;
+        Album* album() const;
         void setAlbum(Album* album);
 
         static const quint16 COVER_HEIGHT = 215;
@@ -29,7 +29,7 @@ class AlbumCover : public ClickableWidget
         void coverClicked(Album* album);
 
     private slots:
-        void onAlbumChanged();
+        void onAlbumChanged(Album* album, quint8 fields);
         void onClicked();
 
     private:
@@ -38,7 +38,6 @@ class AlbumCover : public ClickableWidget
         QLabel* m_cover;
         ElidedLabel* m_albumTitle;
         ElidedLabel* m_artistName;
-
         QVBoxLayout* m_layout;
 };
 

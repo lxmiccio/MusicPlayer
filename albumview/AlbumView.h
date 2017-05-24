@@ -6,9 +6,9 @@
 #include <QWidget>
 
 #include "Album.h"
+#include "AlbumCover.h"
 #include "AlbumGrid.h"
 #include "AlbumTracks.h"
-#include "AlbumCover.h"
 #include "ScrollableArea.h"
 
 class AlbumView : public ScrollableArea

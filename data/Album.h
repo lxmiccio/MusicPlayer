@@ -19,6 +19,7 @@ class Album : public QObject
     public:
         static const quint8 TITLE = 1;
         static const quint8 COVER = 2;
+        static const quint8 ARTIST = 4;
 
         explicit Album(QObject* parent = 0);
         explicit Album(const QString& title, Artist* artist, QObject* parent = 0);
@@ -30,7 +31,7 @@ class Album : public QObject
         void setCover(const QPixmap& cover);
 
         const QVector<Track*>& tracks() const;
-        const Track* track(const QString& title) const;
+        Track* track(const QString& title) const;
         void addTrack(Track* track);
         bool removeTrack(Track* track);
         bool removeTrack(const QString& title);
@@ -47,6 +48,9 @@ class Album : public QObject
         void trackAdded(Track* track);
         void trackUpdated(Track* track, quint8);
         void trackRemoved(Track* track);
+
+    private slots:
+        void onArtistUpdated(Artist* artist, quint8 fields);
 
     private:
         QString m_title;

@@ -1,7 +1,5 @@
 #include "PlayingAlbum.h"
 
-#include "GuiUtils.h"
-
 PlayingAlbum::PlayingAlbum(QWidget* parent) : ClickableWidget(parent)
 {
     m_cover = new QLabel();
@@ -11,13 +9,13 @@ PlayingAlbum::PlayingAlbum(QWidget* parent) : ClickableWidget(parent)
     m_spacer1 = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_artistName = new QLabel();
-    m_artistName->setStyleSheet(QString("color: white;"));
+    m_artistName->setStyleSheet("color: white;");
     m_artistName->setWordWrap(true);
 
     m_spacer2 = new QSpacerItem(0, 4, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_albumTitle = new QLabel();
-    m_albumTitle->setStyleSheet(QString("color: white;"));
+    m_albumTitle->setStyleSheet("color: white;");
     m_albumTitle->setWordWrap(true);
 
     m_spacer3 = new QSpacerItem(0, 48, QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -41,7 +39,7 @@ PlayingAlbum::~PlayingAlbum()
     //delete m_layout;
 }
 
-void PlayingAlbum::setAlbum(const Album* album)
+void PlayingAlbum::setAlbum(Album* album)
 {
     if(album)
     {

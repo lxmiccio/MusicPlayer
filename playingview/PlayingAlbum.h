@@ -18,7 +18,7 @@ class PlayingAlbum : public ClickableWidget
         explicit PlayingAlbum(QWidget* parent = 0);
         ~PlayingAlbum();
 
-        void setAlbum(const Album* album);
+        void setAlbum(Album* album);
 
         static const quint16 WIDGET_HEIGHT = 200;
         static const quint16 WIDGET_WIDTH = 300;
@@ -26,7 +26,7 @@ class PlayingAlbum : public ClickableWidget
         static const quint16 IMAGE_WIDTH = 175;
 
     private:
-        const Album* c_album;
+        Album* c_album;
 
         QLabel* m_cover;
         QSpacerItem* m_spacer1;

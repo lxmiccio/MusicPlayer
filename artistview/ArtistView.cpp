@@ -22,7 +22,7 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_albumViewScrollable = new ScrollableArea();
     m_albumViewScrollable->setWidget(m_albumView);
     m_albumViewScrollable->hide();
-    QObject::connect(this, SIGNAL(coverClicked(const Artist*)), m_albumView, SLOT(onArtistChanged(const Artist*)));
+    QObject::connect(this, SIGNAL(coverClicked(Artist*)), m_albumView, SLOT(onArtistChanged(Artist*)));
 
     m_splitter = new QSplitter();
     m_splitter->setHandleWidth(3);
@@ -142,7 +142,7 @@ void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
         qint16 index = m_artistWidgets.indexOf(widget);
         bool updateAlbumView = widget->artist() == m_albumView->artist();
 
-        m_artists.removeOne(const_cast<Artist*>(widget->artist()));
+        m_artists.removeOne(widget->artist());
         m_artistWidgets.removeOne(widget);
         widget->deleteLater();
 

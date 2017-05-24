@@ -8,7 +8,7 @@ TrackItem::TrackItem(const QList<QVariant>& data, TrackItem* parent)
     m_parent = parent;
 }
 
-TrackItem::TrackItem(const Track* track, TrackItem* parent)
+TrackItem::TrackItem(Track* track, TrackItem* parent)
 {
     c_track = track;
     QObject::connect(c_track, SIGNAL(destroyed(QObject*)), parent, SLOT(onTrackRemoved(QObject*)));
@@ -129,7 +129,7 @@ void TrackItem::clear()
     m_childs.clear();
 }
 
-const Track* TrackItem::track() const
+Track* TrackItem::track() const
 {
     return c_track;
 }

@@ -13,7 +13,7 @@ class TrackItem : public QObject
 
     public:
         explicit TrackItem(const QList<QVariant>& data, TrackItem* parent = 0);
-        explicit TrackItem(const Track* track, TrackItem* parent = 0);
+        explicit TrackItem(Track* track, TrackItem* parent = 0);
         ~TrackItem();
 
         QVariant data(int column) const;
@@ -35,7 +35,7 @@ class TrackItem : public QObject
         void removeLastChild();
         void clear();
 
-        const Track* track() const;
+        Track* track() const;
 
     private slots:
         void onTrackRemoved(QObject* object);
@@ -44,7 +44,7 @@ class TrackItem : public QObject
     private:
         void sort();
 
-        const Track* c_track;
+        Track* c_track;
         QList<QVariant> m_data;
 
         TrackItem* m_parent;
