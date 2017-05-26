@@ -14,13 +14,18 @@ class LameWrapper : public QObject
         LameWrapper(QObject* parent = 0);
         ~LameWrapper();
 
-        bool init(const QString& input, const QString& outputPath = QString());
+        bool init(bool encode, const QString& input, const QString& outputPath = QString());
         void decode(bool asynchronous = true);
+        void encode(bool asynchronous = true);
 
     signals:
         void decoded(QByteArray data);
 
     private:
+        bool writeId3v1Tags();
+        size_t writeId3v2Tags();
+        bool writeXingFrame(size_t id3v2TagSize);
+
         void process();
 
         lame_t m_lame;

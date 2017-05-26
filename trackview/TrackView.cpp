@@ -177,6 +177,7 @@ QSize TrackView::sizeHint()
     return hint;
 }
 
+#include <QDebug>
 void TrackView::onContextMenuRequested(QPoint position)
 {
     QMenu menu(this);
@@ -229,45 +230,49 @@ void TrackView::onContextMenuRequested(QPoint position)
     }
     else if(selectedAction == x125 || selectedAction == x150 || selectedAction == x175 || selectedAction == x200)
     {
-        QString lameInput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->path();
-        QString lameOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + ".wav";
+        QString lameDecodeInput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->path();
+        QString lameDecodeOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + ".wav";
 
-        LameWrapper lame;
-        lame.init(lameInput, lameOutput);
-        lame.decode(false);
+        quint16 tempo = 0;
+
+        {
+            LameWrapper lame;
+            lame.init(false, lameDecodeInput, lameDecodeOutput);
+            lame.decode(false);
+        }
 
         if(selectedAction == x125)
         {
-            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_125.wav";
-
-            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
-            soundTouch.setTempo(25);
-            soundTouch.process();
+            tempo = 25;
         }
         else if(selectedAction == x150)
         {
-            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_150.wav";
-
-            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
-            soundTouch.setTempo(50);
-            soundTouch.process();
+            tempo = 50;
         }
         else if(selectedAction == x175)
         {
-            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_175.wav";
-
-            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
-            soundTouch.setTempo(75);
-            soundTouch.process();
+            tempo = 75;
         }
         else if(selectedAction == x200)
         {
-            QString soundTouchOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + "_200.wav";
+            tempo = 100;
+        }
 
-            SoundTouchWrapper soundTouch(lameOutput, soundTouchOutput);
-            soundTouch.setTempo(200);
+        QString soundTouchOutput = lameDecodeOutput;
+        soundTouchOutput.replace(".wav", QString(QString::number(tempo) + ".wav"));
+
+        {
+            SoundTouchWrapper soundTouch(lameDecodeOutput, soundTouchOutput);
+            soundTouch.setTempo(tempo);
             soundTouch.process();
         }
+
+        QString lameEncodeOutput = soundTouchOutput;
+        lameEncodeOutput.replace(".wav", ".mp3");
+
+        LameWrapper lame1;
+        lame1.init(true, soundTouchOutput, lameEncodeOutput);
+        lame1.encode(false);
     }
 }
 
