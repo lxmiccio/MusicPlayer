@@ -12,6 +12,11 @@ TARGET = 010-MusicPlayer
 TEMPLATE = app
 
 SOURCES += main.cpp \
+    MainWidget.cpp \
+    MainWindow.cpp \
+    albumview/AlbumCover.cpp \
+    albumview/AlbumGrid.cpp \
+    albumview/AlbumTracks.cpp \
     albumview/AlbumView.cpp \
     artistview/ArtistAlbumsView.cpp \
     artistview/ArtistAlbumWidget.cpp \
@@ -27,10 +32,11 @@ SOURCES += main.cpp \
     data/TrackLoader.cpp \
     data/TrackLoaderThread.cpp \
     mp3lame/LameWrapper.cpp \
-    soundtouch/SoundTouchWrapper.cpp \
-    playingview/PlayingView.cpp \
     playingview/PlayingAlbum.cpp \
     playingview/PlayingLyrics.cpp \
+    playingview/PlayingView.cpp \
+    soundtouch/SoundTouchManager.cpp \
+    soundtouch/SoundTouchWrapper.cpp \
     trackview/TrackDelegate.cpp \
     trackview/TrackFilterProxy.cpp \
     trackview/TrackItem.cpp \
@@ -38,7 +44,6 @@ SOURCES += main.cpp \
     trackview/TrackView.cpp \
     utils/ImageUtils.cpp \
     utils/Settings.cpp \
-    utils/TagUtils.cpp \
     utils/Utils.cpp \
     widgets/BackgroundWidget.cpp \
     widgets/ClickableLabel.cpp \
@@ -49,13 +54,13 @@ SOURCES += main.cpp \
     widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
     widgets/TrackSlider.cpp \
-    MainWidget.cpp \
-    MainWindow.cpp \
-    albumview/AlbumGrid.cpp \
-    albumview/AlbumTracks.cpp \
-    albumview/AlbumCover.cpp
+    taglib/TagLibWrapper.cpp \
+    albumview/AlbumDelegate.cpp
 
-HEADERS  += albumview/AlbumView.h \
+HEADERS  += albumview/AlbumCover.h \
+    albumview/AlbumGrid.h \
+    albumview/AlbumTracks.h \
+    albumview/AlbumView.h \
     artistview/ArtistAlbumsView.h \
     artistview/ArtistAlbumWidget.h \
     artistview/ArtistView.h \
@@ -69,11 +74,14 @@ HEADERS  += albumview/AlbumView.h \
     data/Track.h \
     data/TrackLoader.h \
     data/TrackLoaderThread.h \
+    MainWidget.h \
+    MainWindow.h \
     mp3lame/LameWrapper.h \
-    soundtouch/SoundTouchWrapper.h \
     playingview/PlayingAlbum.h \
     playingview/PlayingLyrics.h \
     playingview/PlayingView.h \
+    soundtouch/SoundTouchManager.h \
+    soundtouch/SoundTouchWrapper.h \
     trackview/TrackDelegate.h \
     trackview/TrackFilterProxy.h \
     trackview/TrackItem.h \
@@ -82,7 +90,6 @@ HEADERS  += albumview/AlbumView.h \
     utils/GuiUtils.h \
     utils/ImageUtils.h \
     utils/Settings.h \
-    utils/TagUtils.h \
     utils/Utils.h \
     widgets/BackgroundWidget.h \
     widgets/ClickableLabel.h \
@@ -90,14 +97,11 @@ HEADERS  += albumview/AlbumView.h \
     widgets/ElidedLabel.h \
     widgets/ImageButton.h \
     widgets/LineWidget.h \
-    widgets/Slider.h \
     widgets/ScrollableArea.h \
+    widgets/Slider.h \
     widgets/TrackSlider.h \
-    MainWidget.h \
-    MainWindow.h \
-    albumview/AlbumGrid.h \
-    albumview/AlbumTracks.h \
-    albumview/AlbumCover.h
+    taglib/TagLibWrapper.h \
+    albumview/AlbumDelegate.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/artistview
@@ -106,31 +110,48 @@ INCLUDEPATH += $$PWD/data
 INCLUDEPATH += $$PWD/engine
 INCLUDEPATH += $$PWD/gui
 INCLUDEPATH += $$PWD/mp3lame
-INCLUDEPATH += $$PWD/soundtouch
 INCLUDEPATH += $$PWD/playingview
-INCLUDEPATH += $$PWD/tag
+INCLUDEPATH += $$PWD/soundtouch
+INCLUDEPATH += $$PWD/taglib
 INCLUDEPATH += $$PWD/trackview
 INCLUDEPATH += $$PWD/utils
 INCLUDEPATH += $$PWD/widgets
 
-INCLUDEPATH += $$PWD/../mp3lame/libmp3lame
-INCLUDEPATH += $$PWD/../mp3lame/utils
-
-INCLUDEPATH += $$PWD/../SoundTouch/include
-INCLUDEPATH += $$PWD/../SoundTouch/source/SoundStretch
-INCLUDEPATH += $$PWD/../SoundTouch/source/SoundTouch
-
 RESOURCES += resources.qrc
 
-LIBS += -L$$PWD/taglib/lib/ -lTagLib
+include($$PWD/../QHotkey/qhotkey.pri)
+
+INCLUDEPATH += $$PWD/../mp3lame/libmp3lame \
+               $$PWD/../mp3lame/utils \
+               $$PWD/../SoundTouch/include \
+               $$PWD/../SoundTouch/source/SoundStretch \
+               $$PWD/../SoundTouch/source/SoundTouch \
+               $$PWD/../TagLib/taglib \
+               $$PWD/../TagLib/taglib/ape \
+               $$PWD/../TagLib/taglib/asf \
+               $$PWD/../TagLib/taglib/flac \
+               $$PWD/../TagLib/taglib/it \
+               $$PWD/../TagLib/taglib/mod \
+               $$PWD/../TagLib/taglib/mp4 \
+               $$PWD/../TagLib/taglib/mpc \
+               $$PWD/../TagLib/taglib/mpeg \
+               $$PWD/../TagLib/taglib/mpeg/id3v1 \
+               $$PWD/../TagLib/taglib/mpeg/id3v2 \
+               $$PWD/../TagLib/taglib/mpeg/id3v2/frames \
+               $$PWD/../TagLib/taglib/ogg \
+               $$PWD/../TagLib/taglib/ogg/flac \
+               $$PWD/../TagLib/taglib/ogg/opus \
+               $$PWD/../TagLib/taglib/ogg/speex \
+               $$PWD/../TagLib/taglib/ogg/vorbis \
+               $$PWD/../TagLib/taglib/riff \
+               $$PWD/../TagLib/taglib/riff/aiff \
+               $$PWD/../TagLib/taglib/riff/wav \
+               $$PWD/../TagLib/taglib/s3m \
+               $$PWD/../TagLib/taglib/toolkit \
+               $$PWD/../TagLib/taglib/trueaudio \
+               $$PWD/../TagLib/taglib/wavpack \
+               $$PWD/../TagLib/taglib/xm
+
 LIBS += -L$$PWD/../mp3lame/release -L$$PWD/../mp3lame/release/release -lmp3lame
 LIBS += -L$$PWD/../SoundTouch/release/ -L$$PWD/../SoundTouch/release/release -lSoundTouch
-#LIBS += -L$$PWD/../mp3lame/release/mp3lame.dll
-#LIBS += -L$$PWD/../SoundTouch/release/SoundTouch.dll
-
-INCLUDEPATH += $$PWD/taglib/include \
-               $$PWD/soundtouch/include
-DEPENDPATH += $$PWD/taglib/include \
-               $$PWD/soundtouch/include
-
-include($$PWD/../QHotkey/qhotkey.pri)
+LIBS += -L$$PWD/../TagLib/release -L$$PWD/../TagLib/release/release -lTagLib

@@ -21,7 +21,7 @@ class TrackLoader : public QObject
         void readTags(const QVector<QFileInfo>& files);
 
     signals:
-        void tagsRead(QVariantMap* tags);
+        void tagsRead(Mp3Tags* tags);
 
     private slots:
         void onThreadFinished();

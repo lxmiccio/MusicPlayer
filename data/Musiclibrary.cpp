@@ -5,7 +5,7 @@ MusicLibrary* MusicLibrary::m_instance = 0;
 MusicLibrary::MusicLibrary()
 {
     m_trackLoader = new TrackLoader();
-    QObject::connect(m_trackLoader, SIGNAL(tagsRead(QVariantMap*)), this, SLOT(addTrack(QVariantMap*)));
+    QObject::connect(m_trackLoader, SIGNAL(tagsRead(Mp3Tags*)), this, SLOT(addTrack(Mp3Tags*)));
 }
 
 MusicLibrary* MusicLibrary::instance()
@@ -181,7 +181,7 @@ bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTi
     }
 }
 
-void MusicLibrary::addTrack(QVariantMap* tags)
+void MusicLibrary::addTrack(Mp3Tags* tags)
 {
     if(tags)
     {
@@ -191,12 +191,12 @@ void MusicLibrary::addTrack(QVariantMap* tags)
         Album* l_album = NULL;
         Track* l_track = NULL;
 
-        if(tags->value("duration", 0).toInt() > 0)
+        if(tags->duration > 0)
         {
-            QString l_artistName = tags->value("artist", "Unknown").toString();
-            QString l_albumTitle = tags->value("album", "Unknown").toString();
-            QString l_path = tags->value("path", "Unknown").toString();
-            QString l_trackTitle = tags->value("title", "").toString();
+            QString l_artistName = tags->artist;
+            QString l_albumTitle = tags->album;
+            QString l_path = tags->path;
+            QString l_trackTitle = tags->title;
 
             l_artist = artist(l_artistName);
             if(!l_artist)
@@ -214,11 +214,11 @@ void MusicLibrary::addTrack(QVariantMap* tags)
 
                 if(l_path.endsWith(".flac"))
                 {
-                    l_album->setCover(TagUtils::readFlacCover(QFileInfo(l_path)));
+                    l_album->setCover(TagLibWrapper::readFlacCover(QFileInfo(l_path)));
                 }
                 else if(l_path.endsWith(".mp3"))
                 {
-                    l_album->setCover(TagUtils::readMp3Cover(QFileInfo(l_path)));
+                    l_album->setCover(TagLibWrapper::readMp3Cover(QFileInfo(l_path)));
                 }
 
                 l_artist->addAlbum(l_album);
@@ -229,13 +229,13 @@ void MusicLibrary::addTrack(QVariantMap* tags)
             {
                 l_trackTitle = l_path.mid(l_path.lastIndexOf("/") + 1);
                 l_trackTitle = l_trackTitle.left(l_trackTitle.lastIndexOf("."));
-                tags->insert("title", l_trackTitle);
+                tags->title = l_trackTitle;
             }
 
             l_track = l_album->track(l_trackTitle);
             if(!l_track)
             {
-                l_track = new Track(*tags, l_album);
+                l_track = new Track(tags, l_album);
                 l_album->addTrack(l_track);
                 emit trackAdded(l_track);
             }

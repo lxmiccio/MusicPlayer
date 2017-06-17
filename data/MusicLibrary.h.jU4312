@@ -57,7 +57,7 @@ class MusicLibrary : public QObject
         MusicLibrary();
 
     private slots:
-        void addTrack(Mp3Tags* tags);
+        void addTrack(QVariantMap* tags);
 
     private:
         static MusicLibrary* m_instance;

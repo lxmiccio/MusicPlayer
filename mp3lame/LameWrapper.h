@@ -1,22 +1,34 @@
 #ifndef LAMEWRAPPER_H
 #define LAMEWRAPPER_H
 
-#include <QBuffer>
+#ifdef DEBUG
+#include <QDebug>
+#endif
+
+#include <QMutex>
+#include <QMutexLocker>
 #include <QObject>
 
-#include "lame.h"
+#include "get_audio.h"
 
 class LameWrapper : public QObject
 {
         Q_OBJECT
 
     public:
-        LameWrapper(QObject* parent = 0);
+        LameWrapper(const QString& inputPath, const QString& outputPath, QObject* parent = 0);
         ~LameWrapper();
 
-        bool init(bool encode, const QString& input, const QString& outputPath = QString());
-        void decode(bool asynchronous = true);
-        void encode(bool asynchronous = true);
+        bool decode();
+        bool encode();
+
+#ifdef DEBUG
+        static void debugHookHandler(const char* message, void* const object)
+        {
+            LameWrapper* lameWrapper =  static_cast<LameWrapper*>(object);
+            qDebug() << lameWrapper << message;
+        }
+#endif
 
     signals:
         void decoded(QByteArray data);
@@ -28,12 +40,19 @@ class LameWrapper : public QObject
 
         void process();
 
+        AudioData m_inputAudioData;
+        DecoderConfig m_decoderConfig;
+        RawPCMConfig m_rawPcmConfig;
+        ReaderConfig m_readerConfig;
+        WriterConfig m_writerConfig;
+
         lame_t m_lame;
         QString m_inputPath;
         QString m_outputPath;
 
         FILE* m_output;
-        QByteArray m_outputBuffer;
+
+        static QMutex MUTEX;
 };
 
 #endif // LAMEWRAPPER_H

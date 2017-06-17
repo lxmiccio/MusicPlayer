@@ -68,7 +68,7 @@ void SoundTouchWrapper::process()
             samples = m_soundTouch.receiveSamples(sampleBuffer, maxSamples);
             m_outFile->write(sampleBuffer, samples * m_channels);
         }
-        while (samples != 0);
+        while(samples != 0);
     }
 
     m_soundTouch.flush();
@@ -78,7 +78,7 @@ void SoundTouchWrapper::process()
         samples = m_soundTouch.receiveSamples(sampleBuffer, maxSamples);
         m_outFile->write(sampleBuffer, samples * m_channels);
     }
-    while (samples != 0);
+    while(samples != 0);
 
     emit processed(m_outputPath);
 }

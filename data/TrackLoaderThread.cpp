@@ -1,20 +1,20 @@
 #include "TrackLoaderThread.h"
 
-static QVariantMap* loadTrack(QFileInfo &file)
+static Mp3Tags* loadTrack(QFileInfo &file)
 {
-    QVariantMap* map = new QVariantMap();
+    Mp3Tags* tags = new Mp3Tags();
 
     if(file.suffix() == "flac")
     {
-        TagUtils::readFlacTags(file, map);
+        TagLibWrapper::readFlacTags(file.canonicalFilePath(), tags);
     }
     else if(file.suffix() == "mp3")
     {
-        TagUtils::readMp3Tags(file, map);
-        TagUtils::readMp3Lyrics(file, map);
+        TagLibWrapper::readMp3Tags(file.canonicalFilePath(), tags);
+        TagLibWrapper::readMp3Lyrics(file.canonicalFilePath(), tags);
     }
 
-    return map;
+    return tags;
 }
 
 TrackLoaderThread::~TrackLoaderThread()

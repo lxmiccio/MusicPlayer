@@ -4,18 +4,27 @@ Track::Track(QObject* parent) : QObject(parent)
 {
 }
 
-Track::Track(const QVariantMap& tags, Album* album, QObject* parent) : QObject(parent)
+Track::Track(const Mp3Tags* tags, Album* album, QObject* parent) : QObject(parent)
 {
-    m_track = tags["track"].toUInt();
-    m_title = tags["title"].toString();
-    m_lyrics = tags["lyrics"].toString();
-    m_year = tags["year"].toUInt();
-    m_duration = tags["duration"].toUInt();
-    m_path = tags["path"].toString();
+    if(tags)
+    {
+        m_title = tags->title;
+        m_track = tags->track;
+        m_year = tags->year;
 
-    m_album = album;
-    QObject::connect(album, SIGNAL(albumUpdated(Album*, quint8)), this, SIGNAL(albumUpdated(Album*, quint8)));
-    QObject::connect(album, SIGNAL(artistUpdated(Artist*, quint8)), this, SIGNAL(artistUpdated(Artist*, quint8)));
+        m_bitrate = tags->bitrate;
+        m_channels = tags->channels;
+        m_duration = tags->duration;
+        m_samplerate = tags->samplerate;
+
+        m_lyrics = tags->lyrics;
+
+        m_path = tags->path;
+
+        m_album = album;
+        QObject::connect(album, SIGNAL(albumUpdated(Album*, quint8)), this, SIGNAL(albumUpdated(Album*, quint8)));
+        QObject::connect(album, SIGNAL(artistUpdated(Artist*, quint8)), this, SIGNAL(artistUpdated(Artist*, quint8)));
+    }
 }
 
 Track::Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 duration, const QString& path, Album* album, QObject* parent) : QObject(parent)
@@ -28,6 +37,18 @@ Track::Track(quint16 track, const QString& title, const QString& lyrics, quint16
     m_path = path;
 
     m_album = album;
+}
+
+Mp3Tags Track::mp3Tags() const
+{
+    Mp3Tags mp3Tags;
+    mp3Tags.artist = m_album->artist()->name();
+    mp3Tags.album = m_album->title();
+    mp3Tags.track = m_track;
+    mp3Tags.title = m_title;
+    mp3Tags.lyrics = m_lyrics;
+
+    return mp3Tags;
 }
 
 quint16 Track::track() const
@@ -72,16 +93,16 @@ const QString& Track::readLyrics(bool force)
 
     if(m_lyrics.length() == 0 && (neverTried || force))
     {
-        QVariantMap tag;
+        Mp3Tags tag;
 
         if(m_path.endsWith(".mp3"))
         {
-            TagUtils::readMp3Lyrics(QFileInfo(m_path), &tag);
+            TagLibWrapper::readMp3Lyrics(m_path, &tag);
         }
 
-        if(tag.value("lyrics", "").toString().length() > 0)
+        if(tag.lyrics.length() > 0)
         {
-            m_lyrics = tag.value("lyrics", "").toString();
+            m_lyrics = tag.lyrics;
             emit trackUpdated(this, Track::LYRICS);
         }
 

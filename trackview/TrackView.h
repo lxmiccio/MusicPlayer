@@ -14,6 +14,7 @@
 #include "TrackFilterProxy.h"
 #include "TrackModel.h"
 #include "PlayingView.h"
+#include "SoundTouchManager.h"
 
 class TrackDelegate;
 class TrackFilterProxy;
@@ -72,6 +73,8 @@ class TrackView : public QTableView
         TrackModel* m_trackModel;
         TrackFilterProxy* m_filterProxy;
         TrackDelegate* m_trackDelegate;
+
+        SoundTouchManager* m_soundTouch;
 
         quint8 m_mode;
 };

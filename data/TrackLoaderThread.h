@@ -7,7 +7,7 @@
 #include <QFutureWatcher>
 #include <QObject>
 
-#include "TagUtils.h"
+#include "TagLibWrapper.h"
 #include "Track.h"
 
 class TrackLoaderThread : public QObject
@@ -21,7 +21,7 @@ class TrackLoaderThread : public QObject
         void readTags(const QVector<QFileInfo>& files);
 
     signals:
-        void tagsRead(QVariantMap* tags);
+        void tagsRead(Mp3Tags* tags);
         void finished();
 
     private slots:
@@ -29,8 +29,8 @@ class TrackLoaderThread : public QObject
 
     private:
         QVector<QFileInfo> m_files;
-        QFuture<QVariantMap*> m_future;
-        QFutureWatcher<QVariantMap*> m_futureWatcher;
+        QFuture<Mp3Tags*> m_future;
+        QFutureWatcher<Mp3Tags*> m_futureWatcher;
 };
 
 #endif // LOADERTHREAD_H

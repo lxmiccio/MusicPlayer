@@ -1,7 +1,5 @@
 #include "TrackView.h"
 
-#include <QDebug>
-
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
 
@@ -17,6 +15,8 @@ const quint8 TrackView::DURATION_INDEX;
 TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
 {
     m_mode = mode;
+
+    m_soundTouch = new SoundTouchManager();
 
     m_trackModel = new TrackModel();
 
@@ -177,7 +177,6 @@ QSize TrackView::sizeHint()
     return hint;
 }
 
-#include <QDebug>
 void TrackView::onContextMenuRequested(QPoint position)
 {
     QMenu menu(this);
@@ -227,19 +226,15 @@ void TrackView::onContextMenuRequested(QPoint position)
     }
     else if(selectedAction == removeTrack)
     {
+        QModelIndexList selection = selectionModel()->selectedRows();
+        for(quint16 i = 0; i < selection.size(); ++i)
+        {
+            MusicLibrary::instance()->removeTrack(m_trackModel->rootItem()->child(selection.at(i).row())->track());
+        }
     }
     else if(selectedAction == x125 || selectedAction == x150 || selectedAction == x175 || selectedAction == x200)
     {
-        QString lameDecodeInput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->path();
-        QString lameDecodeOutput = m_trackModel->rootItem()->child(indexAt(position).row())->track()->title() + ".wav";
-
         quint16 tempo = 0;
-
-        {
-            LameWrapper lame;
-            lame.init(false, lameDecodeInput, lameDecodeOutput);
-            lame.decode(false);
-        }
 
         if(selectedAction == x125)
         {
@@ -258,21 +253,15 @@ void TrackView::onContextMenuRequested(QPoint position)
             tempo = 100;
         }
 
-        QString soundTouchOutput = lameDecodeOutput;
-        soundTouchOutput.replace(".wav", QString(QString::number(tempo) + ".wav"));
+        QVector<Track*> tracks;
 
+        QModelIndexList selection = selectionModel()->selectedRows();
+        for(quint16 i = 0; i < selection.size(); ++i)
         {
-            SoundTouchWrapper soundTouch(lameDecodeOutput, soundTouchOutput);
-            soundTouch.setTempo(tempo);
-            soundTouch.process();
+            tracks.push_back(m_trackModel->rootItem()->child(selection.at(i).row())->track());
         }
 
-        QString lameEncodeOutput = soundTouchOutput;
-        lameEncodeOutput.replace(".wav", ".mp3");
-
-        LameWrapper lame1;
-        lame1.init(true, soundTouchOutput, lameEncodeOutput);
-        lame1.encode(false);
+        m_soundTouch->changeTempo(tracks, tempo);
     }
 }
 

@@ -23,7 +23,7 @@ void TrackLoader::readTags(const QVector<QFileInfo>& files)
     m_threads.push_back(thread);
     m_trackLoaderThreads.push_back(trackLoaderThread);
 
-    QObject::connect(trackLoaderThread, SIGNAL(tagsRead(QVariantMap*)), this, SIGNAL(tagsRead(QVariantMap*)));
+    QObject::connect(trackLoaderThread, SIGNAL(tagsRead(Mp3Tags*)), this, SIGNAL(tagsRead(Mp3Tags*)));
     QObject::connect(trackLoaderThread, SIGNAL(finished()), this, SLOT(onThreadFinished()));
     QObject::connect(trackLoaderThread, SIGNAL(finished()), trackLoaderThread, SLOT(deleteLater()));
     QObject::connect(trackLoaderThread, SIGNAL(finished()), thread, SLOT(quit()));

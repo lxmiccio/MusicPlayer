@@ -8,7 +8,7 @@
 
 #include "Artist.h"
 #include "Album.h"
-#include "TagUtils.h"
+#include "TagLibWrapper.h"
 
 class Album;
 class Artist;
@@ -23,8 +23,10 @@ class Track : public QObject
         static const quint8 LYRICS = 4;
 
         explicit Track(QObject* parent = 0);
-        Track(const QVariantMap& tags, Album* album, QObject* parent = 0);
+        Track(const Mp3Tags* tags, Album* album, QObject* parent = 0);
         Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 m_duration, const QString& m_path, Album* album, QObject* parent = 0);
+
+        Mp3Tags mp3Tags() const;
 
         quint16 track() const;
         void setTrack(quint8 track);
@@ -57,12 +59,19 @@ class Track : public QObject
         void artistUpdated(Artist* artist, quint8);
 
     private:
-        quint16 m_track;
         QString m_title;
-        mutable QString m_lyrics;
-        quint16 m_year;
+        quint16 m_track;
+        quint32 m_year;
+
+        quint32 m_bitrate;
+        quint32 m_channels;
         quint32 m_duration;
+        quint32 m_samplerate;
+
+        QString m_lyrics; /* Mutable so that can be changed in const functions */
+
         QString m_path;
+
         Album* m_album;
 };
 
