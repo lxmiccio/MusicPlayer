@@ -10,7 +10,7 @@ quint32 Utils::randomInteger(quint32 min, quint32 max)
     return (qrand() % ((max + 1) - min)) + min;
 }
 
-const QString Utils::randomString(quint32 length)
+QString Utils::randomString(quint32 length)
 {
     static const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 

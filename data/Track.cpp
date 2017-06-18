@@ -45,7 +45,7 @@ Mp3Tags Track::mp3Tags() const
     mp3Tags.artist = m_album->artist()->name();
     mp3Tags.album = m_album->title();
     mp3Tags.track = m_track;
-    mp3Tags.title = m_title;
+    mp3Tags.title = m_title + "25";
     mp3Tags.lyrics = m_lyrics;
 
     return mp3Tags;

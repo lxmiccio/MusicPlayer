@@ -1,4 +1,5 @@
 #include "SoundTouchManager.h"
+#include "MusicLibrary.h"
 
 SoundTouchManager::SoundTouchManager()
 {
@@ -73,8 +74,13 @@ Track* SoundTouchManager::changeTrackTempo(QPair<Track*, qint16> trackPair)
     QFile(lameDecodeOutput).remove();
     QFile(soundTouchOutput).remove();
 
-  //  TagLibWrapper::setMp3Tags(lameEncodeOutput, track->mp3Tags());
+    TagLibWrapper::setMp3Tags(lameEncodeOutput, track->mp3Tags());
     TagLibWrapper::setMp3Cover(lameEncodeOutput, track->album()->cover());
+    TagLibWrapper::readMp3Cover(QFileInfo(lameEncodeOutput));
+
+//    QVector<QFileInfo> files;
+//    files.append(QFileInfo(lameEncodeOutput));
+//    MusicLibrary::instance()->onTracksToLoad(files);
 
     return track;
 }
