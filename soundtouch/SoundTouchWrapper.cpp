@@ -15,14 +15,14 @@ SoundTouchWrapper::SoundTouchWrapper(const QString& inputPath, const QString& ou
 
     m_pitch = 0;
     m_rate = 0;
-    m_tempo = 50;
+    m_tempo = 0;
 
     m_soundTouch.setChannels(m_channels);
     m_soundTouch.setSampleRate(m_sampleRate);
 
-    m_soundTouch.setTempoChange(m_tempo);
     m_soundTouch.setPitchSemiTones(m_pitch);
     m_soundTouch.setRateChange(m_rate);
+    m_soundTouch.setTempoChange(m_tempo);
 
     m_soundTouch.setSetting(SETTING_USE_AA_FILTER, true);
     m_soundTouch.setSetting(SETTING_USE_QUICKSEEK, false);
@@ -37,16 +37,19 @@ SoundTouchWrapper::~SoundTouchWrapper()
 void SoundTouchWrapper::setPitch(qint8 pitch)
 {
     m_pitch = pitch;
+    m_soundTouch.setPitchSemiTones(m_pitch);
 }
 
 void SoundTouchWrapper::setRate(qint8 rate)
 {
     m_rate = rate;
+    m_soundTouch.setRateChange(m_rate);
 }
 
 void SoundTouchWrapper::setTempo(qint8 tempo)
 {
     m_tempo = tempo;
+    m_soundTouch.setTempoChange(m_tempo);
 }
 
 void SoundTouchWrapper::process()

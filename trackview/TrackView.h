@@ -3,6 +3,7 @@
 
 #include <QAction>
 #include <QCommonStyle>
+#include <QDebug>
 #include <QHeaderView>
 #include <QInputDialog>
 #include <QMenu>
@@ -10,11 +11,14 @@
 #include <QScrollBar>
 #include <QTableView>
 
+#include <QRegExp>
+
+#include "HttpRequestWorker.h"
+#include "PlayingView.h"
+#include "SoundTouchManager.h"
 #include "TrackDelegate.h"
 #include "TrackFilterProxy.h"
 #include "TrackModel.h"
-#include "PlayingView.h"
-#include "SoundTouchManager.h"
 
 class TrackDelegate;
 class TrackFilterProxy;
@@ -58,6 +62,34 @@ class TrackView : public QTableView
         void appendItem(Track* track);
         void removeItem(Track* track);
 
+        void handle_result(HttpRequestWorker* wrk)
+        {
+            QString url_str = wrk->m_lyricsUrl;
+
+            HttpRequestInput input(url_str, "GET");
+
+            HttpRequestWorker* worker = new HttpRequestWorker(this);
+            QObject::connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handle_result_1(HttpRequestWorker*)));
+            worker->execute(&input);
+        }
+
+        void handle_result_1(HttpRequestWorker* wrk)
+        {
+            qDebug() << "\n\n\n\n\n\n\n\n\n\n--------------------------------------HTML" << wrk->m_response;
+
+            QRegExp rx("/(<p[^>]*content[^>]*>.*?<?p>)/g");
+
+            QStringList list;
+            int pos = 0;
+
+            while ((pos = rx.indexIn(wrk->m_response, pos)) != -1) {
+                list << rx.cap(1);
+                pos += rx.matchedLength();
+            }
+
+            qDebug() << list;
+        }
+
     signals:
         void trackDoubleClicked(Track* track);
 
@@ -79,4 +111,4 @@ class TrackView : public QTableView
         quint8 m_mode;
 };
 
-#endif // TRACKVIEW_H
+#endif// TRACKVIEW_H

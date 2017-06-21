@@ -49,4 +49,4 @@ class Playlist : public QObject
 QDataStream &operator<<(QDataStream& out, const Playlist& playlist);
 QDataStream &operator>>(QDataStream& in, Playlist& playlist);
 
-#endif // PLAYLIST_H
+#endif// PLAYLIST_H

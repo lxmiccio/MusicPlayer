@@ -22,4 +22,4 @@ class LineWidget : public QWidget
         QHBoxLayout* m_layout;
 };
 
-#endif // LINEWIDGET_H
+#endif// LINEWIDGET_H

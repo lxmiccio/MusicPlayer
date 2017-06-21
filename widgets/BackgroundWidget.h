@@ -32,4 +32,4 @@ class BackgroundWidget : public QWidget
         QPixmap m_backgroundSlice;
 };
 
-#endif // BACKGROUNDWIDGET_H
+#endif// BACKGROUNDWIDGET_H

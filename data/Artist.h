@@ -48,4 +48,4 @@ class Artist : public QObject
 bool operator==(const Artist& artist1, const Artist& artist2);
 bool operator<(const Artist& artist1, const Artist& artist2);
 
-#endif // ARTIST_H
+#endif// ARTIST_H

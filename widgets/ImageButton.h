@@ -27,4 +27,4 @@ class ImageButton : public QAbstractButton
         QSize m_sizeHint;
 };
 
-#endif // IMAGEBUTTON_H
+#endif// IMAGEBUTTON_H

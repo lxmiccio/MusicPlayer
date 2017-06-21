@@ -71,7 +71,7 @@ void AlbumGrid::resizeEvent(QResizeEvent* event)
         m_albumsPerRow = albumsPerRow(event->size().width());
         m_itemsPerRow = itemsPerRow(event->size().width());
         qDebug() << m_itemsPerRow << m_albumsPerRow;
-        repaintCovers();
+        //repaintCovers();
     }
 
     //m_layout->invalidate();
@@ -80,34 +80,36 @@ void AlbumGrid::resizeEvent(QResizeEvent* event)
 void AlbumGrid::repaintCovers()
 {
     qDebug() << m_itemsPerRow<<(m_albumCovers.size() / m_albumsPerRow);
-   setColumnCount(m_itemsPerRow);
-    setRowCount(m_albumCovers.size() / m_albumsPerRow);
-
-    m_currentColumn = -1;
-    m_currentRow = 0;
-
-    foreach(AlbumCover* i_albumCover, m_albumCovers)
+    if(m_albumsPerRow != 0)
     {
+        setColumnCount(m_itemsPerRow);
+        setRowCount(m_albumCovers.size() / m_albumsPerRow);
 
-        if(m_currentColumn == m_itemsPerRow)
+        m_currentColumn = -1;
+        m_currentRow = 0;
+
+        foreach(AlbumCover* i_albumCover, m_albumCovers)
         {
-            m_currentColumn = 0;
-            m_currentRow++;
 
-            setCellWidget(m_currentRow, m_currentColumn, i_albumCover);
-            setCellWidget(m_currentRow, ++m_currentColumn, m_spacerWidget);
+            if(m_currentColumn == m_itemsPerRow)
+            {
+                m_currentColumn = 0;
+                m_currentRow++;
 
-            //    cellWidget(m_currentRow, m_currentColumn)->setFlags(item(m_currentRow, m_currentColumn)->flags() & ~Qt::ItemIsSelectable);
-        }
-        else
-        {
-            setCellWidget(m_currentRow, ++m_currentColumn, i_albumCover);
-            setCellWidget(m_currentRow, ++m_currentColumn, m_spacerWidget);
-            //    item(m_currentRow, m_currentColumn)->setFlags(item(m_currentRow, m_currentColumn)->flags() & ~Qt::ItemIsSelectable);
+                setCellWidget(m_currentRow, m_currentColumn, i_albumCover);
+                setCellWidget(m_currentRow, ++m_currentColumn, m_spacerWidget);
 
-        }
+                //    cellWidget(m_currentRow, m_currentColumn)->setFlags(item(m_currentRow, m_currentColumn)->flags() & ~Qt::ItemIsSelectable);
+            }
+            else
+            {
+                setCellWidget(m_currentRow, ++m_currentColumn, i_albumCover);
+                setCellWidget(m_currentRow, ++m_currentColumn, m_spacerWidget);
+                //    item(m_currentRow, m_currentColumn)->setFlags(item(m_currentRow, m_currentColumn)->flags() & ~Qt::ItemIsSelectable);
 
-        /*
+            }
+
+            /*
         if(m_albumsCurrentColumn == 0)
         {
             QHBoxLayout* layout = new QHBoxLayout();
@@ -146,9 +148,10 @@ void AlbumGrid::repaintCovers()
             m_layouts.at(m_layouts.size() - 1)->insertItem(m_currentColumn, m_middleHorizontalSpacer);
             m_currentColumn++;
         }*/
+        }
     }
 }
-\
+
 void AlbumGrid::onAlbumAdded(Album* album)
 {
     if(album)
@@ -414,14 +417,13 @@ void AlbumGrid::clearLayout(QLayout* layout)
             clearLayout(i_item->layout());
             delete i_item->layout();
         }
-#if 0
+
         if(i_item->widget())
         {
             delete i_item->widget();
         }
 
         delete i_item;
-#endif
     }
 }
 

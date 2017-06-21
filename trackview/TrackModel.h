@@ -42,4 +42,4 @@ class TrackModel : public QAbstractItemModel
         TrackItem* m_rootItem;
 };
 
-#endif // TRACKMODEL_H
+#endif// TRACKMODEL_H

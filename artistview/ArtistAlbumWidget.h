@@ -53,7 +53,7 @@ class ArtistAlbumWidget : public QWidget
         QVBoxLayout* m_leftLayout;
         QVBoxLayout* m_rightLayout;
 
-#if LOWER_ALIGNMENT
+#ifdef LOWER_ALIGNMENT
         QVBoxLayout* m_layout;
         QHBoxLayout* m_upperLayout;
         QHBoxLayout* m_lowerLayout;
@@ -66,4 +66,4 @@ class ArtistAlbumWidget : public QWidget
 #endif
 };
 
-#endif // ARTISTALBUMWIDGET_H
+#endif// ARTISTALBUMWIDGET_H

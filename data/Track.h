@@ -44,7 +44,7 @@ class Track : public QObject
         quint16 year() const;
         void setYear(quint8 year);
 
-        const QString& path() const;
+        QString path() const;
         void setPath(const QString& path);
 
         Album* album() const;
@@ -68,7 +68,7 @@ class Track : public QObject
         quint32 m_duration;
         quint32 m_samplerate;
 
-        QString m_lyrics; /* Mutable so that can be changed in const functions */
+        QString m_lyrics;
 
         QString m_path;
 
@@ -78,4 +78,4 @@ class Track : public QObject
 bool operator==(const Track& track1, const Track& track2);
 bool operator<(const Track& track1, const Track& track2);
 
-#endif // TRACK_H
+#endif// TRACK_H

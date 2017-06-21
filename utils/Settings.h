@@ -31,4 +31,4 @@ class Settings
         static Settings::View stringToView(QString string);
 };
 
-#endif // SETTINGS_H
+#endif// SETTINGS_H

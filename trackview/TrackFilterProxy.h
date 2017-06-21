@@ -18,4 +18,4 @@ class TrackFilterProxy : public QSortFilterProxyModel
         bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 };
 
-#endif // TRACKFILTERPROXY_H
+#endif// TRACKFILTERPROXY_H

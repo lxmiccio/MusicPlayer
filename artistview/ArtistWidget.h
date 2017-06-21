@@ -53,4 +53,4 @@ class ArtistWidget : public ClickableWidget
         QHBoxLayout* m_layout;
 };
 
-#endif // ARTISTWIDGET_H
+#endif// ARTISTWIDGET_H

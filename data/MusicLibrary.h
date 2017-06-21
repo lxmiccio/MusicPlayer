@@ -67,4 +67,4 @@ class MusicLibrary : public QObject
         QMutex m_mutex;
 };
 
-#endif // MUSICLIBRARY_H
+#endif// MUSICLIBRARY_H

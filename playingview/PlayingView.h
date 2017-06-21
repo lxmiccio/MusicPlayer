@@ -75,4 +75,4 @@ class PlayingView : public QWidget
         quint8 m_mode;
 };
 
-#endif // PLAYINGVIEW_H
+#endif// PLAYINGVIEW_H

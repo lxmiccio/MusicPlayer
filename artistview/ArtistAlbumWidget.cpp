@@ -43,7 +43,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_layout->addLayout(m_leftLayout);
     m_layout->addLayout(m_rightLayout);
 
-#if LOWER_ALIGNMENT
+#ifdef LOWER_ALIGNMENT
     m_upperLayoutLeftSpacer = new QSpacerItem(32, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_upperLayoutRightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_middleSpacer = new QSpacerItem(0, 16, QSizePolicy::Fixed, QSizePolicy::Fixed);

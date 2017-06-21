@@ -29,4 +29,4 @@ class MainWindow : public QMainWindow
         QMenuBar* m_menuBar;
 };
 
-#endif // MAINWINDOW_H
+#endif// MAINWINDOW_H

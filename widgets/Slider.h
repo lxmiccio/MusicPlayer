@@ -25,4 +25,4 @@ class Slider : public QSlider
         bool m_scrubbing;
 };
 
-#endif // SLIDER_H
+#endif// SLIDER_H

@@ -47,7 +47,7 @@ QString TagLibWrapper::readFlacLyrics(const QFileInfo &fileInfo)
 {
     Q_UNUSED(fileInfo);
 
-    //TODO --> read .lrc file if exists
+    //TODO --> read .lrc file ifexists
     return QString();
 }
 

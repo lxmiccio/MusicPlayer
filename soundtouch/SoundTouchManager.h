@@ -42,4 +42,4 @@ class SoundTouchManager : public QObject
         QVector<ChangeTempoRequest> m_changeTempoRequests;
 };
 
-#endif // SOUNDTOUCHMANAGER_H
+#endif// SOUNDTOUCHMANAGER_H

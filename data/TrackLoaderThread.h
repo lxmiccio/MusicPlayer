@@ -33,4 +33,4 @@ class TrackLoaderThread : public QObject
         QFutureWatcher<Mp3Tags*> m_futureWatcher;
 };
 
-#endif // LOADERTHREAD_H
+#endif// LOADERTHREAD_H

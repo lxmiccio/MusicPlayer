@@ -58,4 +58,4 @@ class MainWidget : public BackgroundWidget
         QVBoxLayout* m_layout;
 };
 
-#endif // MAINWIDGET_H
+#endif// MAINWIDGET_H

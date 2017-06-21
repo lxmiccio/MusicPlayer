@@ -24,4 +24,4 @@ class PlayingLyrics : public ScrollableArea
         QLabel* m_lyrics;
 };
 
-#endif // PLAYINGLYRICS_H
+#endif// PLAYINGLYRICS_H

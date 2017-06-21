@@ -55,4 +55,4 @@ class ArtistView : public QWidget
         QSpacerItem* m_middleVerticalSpacer;
 };
 
-#endif // ARTISTVIEW_H
+#endif// ARTISTVIEW_H

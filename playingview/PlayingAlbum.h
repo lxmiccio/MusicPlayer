@@ -37,4 +37,4 @@ class PlayingAlbum : public ClickableWidget
         QVBoxLayout* m_layout;
 };
 
-#endif // PLAYINGALBUM_H
+#endif// PLAYINGALBUM_H

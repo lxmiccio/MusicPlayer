@@ -81,7 +81,7 @@ bool LameWrapper::decode()
             wavFileSize *= i;
         }
 
-        /* if output file is still seekable, rewind and update size */
+        /* ifoutput file is still seekable, rewind and update size */
         if(fseek(m_output, 0l, SEEK_SET) == 0)
         {
             WriteWaveHeader(m_output, (int) wavFileSize, lame_get_in_samplerate(m_lame), channels, 16);

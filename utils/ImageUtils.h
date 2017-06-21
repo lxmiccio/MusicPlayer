@@ -16,4 +16,4 @@ class ImageUtils
         static QPixmap stringToImage(QImage image, const QString& string);
 };
 
-#endif // IMAGEUTILS_H
+#endif// IMAGEUTILS_H

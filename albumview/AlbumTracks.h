@@ -37,4 +37,4 @@ class AlbumTracks : public QWidget
         QHBoxLayout* m_layout;
 };
 
-#endif // ALBUMTRACKS_H
+#endif// ALBUMTRACKS_H

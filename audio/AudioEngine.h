@@ -58,4 +58,4 @@ class AudioEngine : public QObject
         QMediaPlaylist* m_mediaPlaylist;
 };
 
-#endif // AUDIOENGINE_H
+#endif// AUDIOENGINE_H

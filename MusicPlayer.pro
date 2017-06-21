@@ -55,7 +55,9 @@ SOURCES += main.cpp \
     widgets/Slider.cpp \
     widgets/TrackSlider.cpp \
     taglib/TagLibWrapper.cpp \
-    albumview/AlbumDelegate.cpp
+    albumview/AlbumDelegate.cpp \
+    api/HttpRequestInput.cpp \
+    api/HttpRequestWorker.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -101,9 +103,12 @@ HEADERS  += albumview/AlbumCover.h \
     widgets/Slider.h \
     widgets/TrackSlider.h \
     taglib/TagLibWrapper.h \
-    albumview/AlbumDelegate.h
+    albumview/AlbumDelegate.h \
+    api/HttpRequestInput.h \
+    api/HttpRequestWorker.h
 
 INCLUDEPATH += $$PWD/albumview
+INCLUDEPATH += $$PWD/api
 INCLUDEPATH += $$PWD/artistview
 INCLUDEPATH += $$PWD/audio
 INCLUDEPATH += $$PWD/data
@@ -121,37 +126,39 @@ RESOURCES += resources.qrc
 
 include($$PWD/../QHotkey/qhotkey.pri)
 
-INCLUDEPATH += $$PWD/../mp3lame/libmp3lame \
-               $$PWD/../mp3lame/utils \
-               $$PWD/../SoundTouch/include \
-               $$PWD/../SoundTouch/source/SoundStretch \
-               $$PWD/../SoundTouch/source/SoundTouch \
-               $$PWD/../TagLib/taglib \
-               $$PWD/../TagLib/taglib/ape \
-               $$PWD/../TagLib/taglib/asf \
-               $$PWD/../TagLib/taglib/flac \
-               $$PWD/../TagLib/taglib/it \
-               $$PWD/../TagLib/taglib/mod \
-               $$PWD/../TagLib/taglib/mp4 \
-               $$PWD/../TagLib/taglib/mpc \
-               $$PWD/../TagLib/taglib/mpeg \
-               $$PWD/../TagLib/taglib/mpeg/id3v1 \
-               $$PWD/../TagLib/taglib/mpeg/id3v2 \
-               $$PWD/../TagLib/taglib/mpeg/id3v2/frames \
-               $$PWD/../TagLib/taglib/ogg \
-               $$PWD/../TagLib/taglib/ogg/flac \
-               $$PWD/../TagLib/taglib/ogg/opus \
-               $$PWD/../TagLib/taglib/ogg/speex \
-               $$PWD/../TagLib/taglib/ogg/vorbis \
-               $$PWD/../TagLib/taglib/riff \
-               $$PWD/../TagLib/taglib/riff/aiff \
-               $$PWD/../TagLib/taglib/riff/wav \
-               $$PWD/../TagLib/taglib/s3m \
-               $$PWD/../TagLib/taglib/toolkit \
-               $$PWD/../TagLib/taglib/trueaudio \
-               $$PWD/../TagLib/taglib/wavpack \
-               $$PWD/../TagLib/taglib/xm
+INCLUDEPATH += $$PWD/../QMp3Lame/frontend \
+               $$PWD/../QMp3Lame/include \
+               $$PWD/../QMp3Lame/libmp3lame \
+               $$PWD/../QSoundTouch/include \
+               $$PWD/../QSoundTouch/source/SoundStretch \
+               $$PWD/../QSoundTouch/source/SoundTouch \
+               $$PWD/../QTagLib \
+               $$PWD/../QTagLib/taglib \
+               $$PWD/../QTagLib/taglib/ape \
+               $$PWD/../QTagLib/taglib/asf \
+               $$PWD/../QTagLib/taglib/flac \
+               $$PWD/../QTagLib/taglib/it \
+               $$PWD/../QTagLib/taglib/mod \
+               $$PWD/../QTagLib/taglib/mp4 \
+               $$PWD/../QTagLib/taglib/mpc \
+               $$PWD/../QTagLib/taglib/mpeg \
+               $$PWD/../QTagLib/taglib/mpeg/id3v1 \
+               $$PWD/../QTagLib/taglib/mpeg/id3v2 \
+               $$PWD/../QTagLib/taglib/mpeg/id3v2/frames \
+               $$PWD/../QTagLib/taglib/ogg \
+               $$PWD/../QTagLib/taglib/ogg/flac \
+               $$PWD/../QTagLib/taglib/ogg/opus \
+               $$PWD/../QTagLib/taglib/ogg/speex \
+               $$PWD/../QTagLib/taglib/ogg/vorbis \
+               $$PWD/../QTagLib/taglib/riff \
+               $$PWD/../QTagLib/taglib/riff/aiff \
+               $$PWD/../QTagLib/taglib/riff/wav \
+               $$PWD/../QTagLib/taglib/s3m \
+               $$PWD/../QTagLib/taglib/toolkit \
+               $$PWD/../QTagLib/taglib/trueaudio \
+               $$PWD/../QTagLib/taglib/wavpack \
+               $$PWD/../QTagLib/taglib/xm
 
-LIBS += -L$$PWD/../mp3lame/release -L$$PWD/../mp3lame/release/release -lmp3lame
-LIBS += -L$$PWD/../SoundTouch/release/ -L$$PWD/../SoundTouch/release/release -lSoundTouch
-LIBS += -L$$PWD/../TagLib/release -L$$PWD/../TagLib/release/release -lTagLib
+LIBS += -L$$PWD/../QMp3Lame/release -L$$PWD/../QMp3Lame/release/release -llame-3.99.5
+LIBS += -L$$PWD/../QSoundTouch/release/ -L$$PWD/../QSoundTouch/release/release -lsoundtouch
+LIBS += -L$$PWD/../QTagLib/release -L$$PWD/../QTagLib/release/release -ltaglib-1.11.1

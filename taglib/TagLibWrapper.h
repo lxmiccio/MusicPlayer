@@ -8,7 +8,7 @@
 #include <QString>
 #include <QVariantMap>
 
-#include <attachedPictureFrame.h>
+#include <attachedpictureframe.h>
 #include <fileref.h>
 #include <flacfile.h>
 #include <id3v2frame.h>
@@ -56,4 +56,4 @@ class TagLibWrapper
         static QString extensionToMimetype(const QString &extension);
 };
 
-#endif // TAGLIBWRAPPER_H
+#endif// TAGLIBWRAPPER_H

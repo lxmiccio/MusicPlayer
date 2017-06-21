@@ -15,4 +15,4 @@ class Utils
         static quint32 stringToSeconds(QString minutes);
 };
 
-#endif // UTILS_H
+#endif// UTILS_H

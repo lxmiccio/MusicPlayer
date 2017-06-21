@@ -41,4 +41,4 @@ class AlbumCover : public ClickableWidget
         QVBoxLayout* m_layout;
 };
 
-#endif // COVER_H
+#endif// COVER_H

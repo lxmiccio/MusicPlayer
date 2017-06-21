@@ -51,4 +51,4 @@ class TrackItem : public QObject
         QList<TrackItem*> m_childs;
 };
 
-#endif // TRACKITEM_H
+#endif// TRACKITEM_H

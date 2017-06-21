@@ -83,7 +83,7 @@ const QString& Track::lyrics() const
 
 void Track::setLyrics(const QString& lyrics)
 {
-    /* TODO: Change tag if .mp3, create .lrc file if .flac */
+    /* TODO: Change tag if.mp3, create .lrc file if.flac */
     m_lyrics = lyrics;
 }
 
@@ -132,8 +132,10 @@ void Track::setYear(quint8 year)
     m_year = year;
 }
 
-const QString& Track::path() const
+#include <QDebug>
+QString Track::path() const
 {
+    qDebug() << m_path;
     return m_path;
 }
 

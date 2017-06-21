@@ -1,7 +1,7 @@
 #include <QApplication>
+#include <QDateTime>
 #include <QFileInfo>
 #include <QFontDatabase>
-#include <QTime>
 
 #include "MainWindow.h"
 #include "Track.h"
@@ -20,8 +20,7 @@ int main(int argc, char *argv[])
     font.setStyleStrategy(QFont::PreferAntialias);
     QApplication::setFont(font);
 
-    QTime time = QTime::currentTime();
-    qsrand(static_cast<uint>(time.msec()));
+    qsrand(QDateTime::currentDateTime().toTime_t());
 
     MainWindow mainWindow;
     mainWindow.showMaximized();
@@ -31,6 +30,6 @@ int main(int argc, char *argv[])
     /* TODO here
      * Load album cover when loading tracks
      * Fix awful TrackSlider behaviour when a track starts, which is probably due to the slot TrackSlider::onTrackStarted(...) invoked twice
-     * Bug: if there is one song and user skips it, TrackSliders starts moving even if track is not playing
+     * Bug: ifthere is one song and user skips it, TrackSliders starts moving even iftrack is not playing
      */
 }

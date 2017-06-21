@@ -55,4 +55,4 @@ class LameWrapper : public QObject
         static QMutex MUTEX;
 };
 
-#endif // LAMEWRAPPER_H
+#endif// LAMEWRAPPER_H

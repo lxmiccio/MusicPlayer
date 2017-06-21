@@ -41,3 +41,7 @@ CMakeLists.txt.user
 debug/*
 release/*
 
+# Backup files
+*~
+*.h.*
+*.cpp.*

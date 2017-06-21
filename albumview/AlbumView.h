@@ -29,4 +29,4 @@ class AlbumView : public ScrollableArea
         QVBoxLayout* m_layout;
 };
 
-#endif // ALBUMVIEW_H
+#endif// ALBUMVIEW_H

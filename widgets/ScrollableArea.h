@@ -28,4 +28,4 @@ class ScrollableArea : public QScrollArea
         void deleteLayout(QLayout* layout);
 };
 
-#endif // SCROLLABLEAREA_H
+#endif// SCROLLABLEAREA_H

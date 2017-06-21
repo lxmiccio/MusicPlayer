@@ -17,4 +17,4 @@ class AlbumDelegate : public QStyledItemDelegate
         AlbumGrid* m_albumGrid;
 };
 
-#endif // ALBUMDELEGATE_H
+#endif// ALBUMDELEGATE_H

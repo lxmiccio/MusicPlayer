@@ -22,4 +22,4 @@ class TrackDelegate : public QStyledItemDelegate
         const TrackView* c_trackView;
 };
 
-#endif // TRACKDELEGATE_H
+#endif// TRACKDELEGATE_H

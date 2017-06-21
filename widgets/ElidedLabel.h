@@ -59,4 +59,4 @@ class ElidedLabel : public QFrame
         bool m_wordWrap;
 };
 
-#endif // ELIDEDLABEL_H
+#endif// ELIDEDLABEL_H

@@ -32,4 +32,4 @@ class ClickableWidget : public QWidget
         QTime m_time;
 };
 
-#endif // CLICKABLEWIDGET_H
+#endif// CLICKABLEWIDGET_H

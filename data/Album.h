@@ -62,4 +62,4 @@ class Album : public QObject
 bool operator==(const Album& album1, const Album& album2);
 bool operator<(const Album& album1, const Album& album2);
 
-#endif // ALBUM_H
+#endif// ALBUM_H

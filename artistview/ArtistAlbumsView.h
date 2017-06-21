@@ -40,4 +40,4 @@ class ArtistAlbumsView : public QWidget
         QVBoxLayout* m_layout;
 };
 
-#endif // ARTISTALBUMSVIEW_H
+#endif// ARTISTALBUMSVIEW_H

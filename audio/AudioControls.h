@@ -122,4 +122,4 @@ class AudioControls : public QWidget
         Slider* m_volumeSlider;
 };
 
-#endif // AUDIOCONTROLS_H
+#endif// AUDIOCONTROLS_H

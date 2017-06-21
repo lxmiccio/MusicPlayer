@@ -123,7 +123,7 @@ class AlbumGrid : public ScrollableArea
 };
 #endif
 
-#endif // ALBUMGRID_H
+#endif// ALBUMGRID_H
 #ifndef ALBUMGRID_H
 #define ALBUMGRID_H
 
@@ -246,4 +246,4 @@ class AlbumGrid : public ScrollableArea
 };
 #endif
 
-#endif // ALBUMGRID_H
+#endif// ALBUMGRID_H

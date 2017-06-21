@@ -33,4 +33,4 @@ class TrackSlider : public Slider
         QTimer m_timer;
 };
 
-#endif // TRACKSLIDER_H
+#endif// TRACKSLIDER_H

@@ -51,36 +51,39 @@ Track* SoundTouchManager::changeTrackTempo(QPair<Track*, qint16> trackPair)
     Track* track = trackPair.first;
     qint16 tempo = trackPair.second;
 
-    QString lameDecodeInput = track->path();
-    QString lameDecodeOutput = QString(track->path()).replace(".mp3", ".wav");
+    if(track && track->path().length() > 0)
     {
-        LameWrapper decoder(lameDecodeInput, lameDecodeOutput);
-        decoder.decode();
+        QString path = QString(track->path());
+
+        QString lameDecodeOutput = QString(path).replace(".mp3", ".wav");
+        {
+            LameWrapper decoder(path, lameDecodeOutput);
+            decoder.decode();
+        }
+
+        QString soundTouchOutput = QString(lameDecodeOutput).replace(".wav", "_" + QString(QString::number(tempo) + ".wav"));
+        {
+            SoundTouchWrapper soundTouch(lameDecodeOutput, soundTouchOutput);
+            soundTouch.setTempo(tempo);
+            soundTouch.process();
+        }
+
+        QString lameEncodeOutput = QString(soundTouchOutput).replace(".wav", ".mp3");
+        {
+            LameWrapper encoder(soundTouchOutput, lameEncodeOutput);
+            encoder.encode();
+        }
+
+        QFile(lameDecodeOutput).remove();
+        QFile(soundTouchOutput).remove();
+
+        TagLibWrapper::setMp3Tags(lameEncodeOutput, track->mp3Tags());
+        TagLibWrapper::setMp3Cover(lameEncodeOutput, track->album()->cover());
+        TagLibWrapper::readMp3Cover(QFileInfo(lameEncodeOutput));
     }
-
-    QString soundTouchOutput = QString(lameDecodeOutput).replace(".wav", "_" + QString(QString::number(tempo) + ".wav"));
-    {
-        SoundTouchWrapper soundTouch(lameDecodeOutput, soundTouchOutput);
-        soundTouch.setTempo(tempo);
-        soundTouch.process();
-    }
-
-    QString lameEncodeOutput = QString(soundTouchOutput).replace(".wav", ".mp3");
-    {
-        LameWrapper encoder(soundTouchOutput, lameEncodeOutput);
-        encoder.encode();
-    }
-
-    QFile(lameDecodeOutput).remove();
-    QFile(soundTouchOutput).remove();
-
-    TagLibWrapper::setMp3Tags(lameEncodeOutput, track->mp3Tags());
-    TagLibWrapper::setMp3Cover(lameEncodeOutput, track->album()->cover());
-    TagLibWrapper::readMp3Cover(QFileInfo(lameEncodeOutput));
-
-//    QVector<QFileInfo> files;
-//    files.append(QFileInfo(lameEncodeOutput));
-//    MusicLibrary::instance()->onTracksToLoad(files);
+    //    QVector<QFileInfo> files;
+    //    files.append(QFileInfo(lameEncodeOutput));
+    //    MusicLibrary::instance()->onTracksToLoad(files);
 
     return track;
 }

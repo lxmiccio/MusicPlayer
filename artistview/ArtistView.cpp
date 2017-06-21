@@ -169,6 +169,6 @@ void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
 
         repaintCoversAfterWidgetRemoved();
 
-        //TODO: Stop the track if it belonged to the deleted artist?
+        //TODO: Stop the track ifit belonged to the deleted artist?
     }
 }

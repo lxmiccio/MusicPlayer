@@ -23,7 +23,7 @@ class SoundTouchWrapper : public QObject
         void process();
 
     signals:
-        processed(QString outputFile);
+        void processed(QString outputFile);
 
     private:
         SoundTouch m_soundTouch;
@@ -44,4 +44,4 @@ class SoundTouchWrapper : public QObject
         static const quint16 BUFF_SIZE = 1024;
 };
 
-#endif // SOUNDTOUCHWRAPPER_H
+#endif// SOUNDTOUCHWRAPPER_H
