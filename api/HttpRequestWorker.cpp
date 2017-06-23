@@ -219,11 +219,7 @@ void HttpRequestWorker::execute(HttpRequestInput* input)
             request_content.append(boundary_delimiter);
         }
 
-
-        qDebug() << input->url();
-
         // prepare connection
-
         QNetworkRequest request = QNetworkRequest(QUrl(input->url()));
         request.setRawHeader("User-Agent", "Agent name goes here");
 
@@ -270,7 +266,6 @@ void HttpRequestWorker::on_manager_finished(QNetworkReply *reply)
     if(m_networkError == QNetworkReply::NoError)
     {
         m_response = reply->readAll();
-        qDebug() << m_response;
 
         // Parse document
         QJsonDocument doc(QJsonDocument::fromJson(m_response));
@@ -278,16 +273,13 @@ void HttpRequestWorker::on_manager_finished(QNetworkReply *reply)
         // Get JSON object
         QJsonObject json = doc.object();
 
-        qDebug() << "sssssss"<< json;
         QJsonObject jsonMessage = json["message"].toObject();
         QJsonObject jsonBody = jsonMessage["body"].toObject();
         QJsonArray jsonTrackList = jsonBody["track_list"].toArray();
         QJsonObject jsonTrack = jsonTrackList.at(0).toObject()["track"].toObject();
-        qDebug() << "sssss1111ss"<< jsonTrack;
         m_lyricsUrl = jsonTrack.value("track_share_url").toString();
 
         // Access properties
-        qDebug() <<"dddddddddddddd------------------" << m_lyricsUrl;
     }
     else {
         m_error = reply->errorString();

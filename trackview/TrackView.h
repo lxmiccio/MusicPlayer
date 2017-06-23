@@ -75,15 +75,16 @@ class TrackView : public QTableView
 
         void handle_result_1(HttpRequestWorker* wrk)
         {
-            qDebug() << "\n\n\n\n\n\n\n\n\n\n--------------------------------------HTML" << wrk->m_response;
 
-            QRegExp rx("/(<p[^>]*content[^>]*>.*?<?p>)/g");
+            QRegExp rx("<p([^>]*)content([^>]*)>(.*)</p>");
+            rx.setMinimal(true);
+           // QRegExp rx("<p([^>]*)content([^>]*)>.*?<?p>");
 
             QStringList list;
             int pos = 0;
 
             while ((pos = rx.indexIn(wrk->m_response, pos)) != -1) {
-                list << rx.cap(1);
+                list << rx.cap(3);
                 pos += rx.matchedLength();
             }
 
