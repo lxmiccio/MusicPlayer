@@ -194,10 +194,7 @@ void TrackView::onContextMenuRequested(QPoint position)
     QAction* x150 = tempoMenu.addAction("150%");
     QAction* x175 = tempoMenu.addAction("175%");
     QAction* x200 = tempoMenu.addAction("200%");
-
     menu.addMenu(&tempoMenu);
-
-
 
     QAction* selectedAction = menu.exec(viewport()->mapToGlobal(position));
 
@@ -236,17 +233,11 @@ void TrackView::onContextMenuRequested(QPoint position)
     }
     else if(selectedAction == lyrics)
     {
-        QString url_str = "http://api.musixmatch.com/ws/1.1/track.search";
-
-        HttpRequestInput input(url_str, "GET");
-
-        input.addParameter("apikey", "aeef299af4b395942213c77147c99ef8");
-        input.addParameter("q_artist", m_trackModel->rootItem()->child(indexAt(position).row())->track()->artist()->name());
-        input.addParameter("q_track", m_trackModel->rootItem()->child(indexAt(position).row())->track()->title());
-
-        HttpRequestWorker* worker = new HttpRequestWorker(this);
-        QObject::connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handle_result(HttpRequestWorker*)));
-        worker->execute(&input);
+        QModelIndexList selection = selectionModel()->selectedRows();
+        for(quint16 i = 0; i < selection.size(); ++i)
+        {
+            m_trackModel->rootItem()->child(selection.at(i).row())->track()->downloadLyrics();
+        }
     }
     else if(selectedAction == x125 || selectedAction == x150 || selectedAction == x175 || selectedAction == x200)
     {

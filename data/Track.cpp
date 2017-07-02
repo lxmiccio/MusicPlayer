@@ -1,4 +1,4 @@
-#include "Track.h"
+ #include "Track.h"
 
 Track::Track(QObject* parent) : QObject(parent)
 {
@@ -45,7 +45,7 @@ Mp3Tags Track::mp3Tags() const
     mp3Tags.artist = m_album->artist()->name();
     mp3Tags.album = m_album->title();
     mp3Tags.track = m_track;
-    mp3Tags.title = m_title + "25";
+    mp3Tags.title = m_title;
     mp3Tags.lyrics = m_lyrics;
 
     return mp3Tags;
@@ -112,6 +112,25 @@ const QString& Track::readLyrics(bool force)
     return m_lyrics;
 }
 
+void Track::downloadLyrics()
+{
+    HttpRequestInput input("http://api.musixmatch.com/ws/1.1/track.search", "GET");
+
+    QString title = m_title;
+    if(title.contains("(Feat", Qt::CaseInsensitive))
+    {
+        title = title.left(title.indexOf("(Feat", 0, Qt::CaseInsensitive) - 1);
+    }
+
+    input.addParameter("apikey", Settings::apiKey());
+    input.addParameter("q_artist", m_album->artist()->name());
+    input.addParameter("q_track", title);
+
+    HttpRequestWorker* worker = new HttpRequestWorker();
+    QObject::connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(onLyricsUrlFound(HttpRequestWorker*)));
+    worker->execute(&input);
+}
+
 quint32 Track::duration() const
 {
     return m_duration;
@@ -132,10 +151,8 @@ void Track::setYear(quint8 year)
     m_year = year;
 }
 
-#include <QDebug>
 QString Track::path() const
 {
-    qDebug() << m_path;
     return m_path;
 }
 
@@ -161,6 +178,45 @@ void Track::setAlbum(Album* album)
 Artist* Track::artist() const
 {
     return m_album ? m_album->artist() : NULL;
+}
+
+void Track::onLyricsUrlFound(HttpRequestWorker* worker)
+{
+    QString url = worker->lyricsUrl();
+
+    //delete worker;
+
+    HttpRequestInput* input = new HttpRequestInput(url);
+
+    HttpRequestWorker* newWorker = new HttpRequestWorker();
+    QObject::connect(newWorker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(onLyricsDownloaded(HttpRequestWorker*)));
+
+    qDebug() << "lyrics for track " << m_title << "downloading\n\n\n";
+    newWorker->execute(input);
+}
+#include <QDebug>
+void Track::onLyricsDownloaded(HttpRequestWorker* worker)
+{
+    QRegExp rx("<p([^>]*)content([^>]*)>(.*)</p>");
+    rx.setMinimal(true);
+
+    QStringList lyrics;
+    int index = 0;
+
+    while((index = rx.indexIn(worker->m_response, index)) != -1)
+    {
+        lyrics << rx.cap(3);
+        index += rx.matchedLength();
+    }
+
+    if(lyrics.size() > 0)
+    {
+        m_lyrics = lyrics.join("\n");
+        //m_lyrics.replace("\n\n", "\n");
+        TagLibWrapper::setMp3Lyrics(m_path, m_lyrics);
+    }
+qDebug() << "lyrics for track " << m_title << "downloaded\n\n\n";
+   // delete worker;
 }
 
 bool operator==(const Track& track1, const Track& track2)

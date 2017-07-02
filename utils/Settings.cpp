@@ -70,3 +70,9 @@ Settings::View Settings::stringToView(QString string)
 
     return view;
 }
+
+QString Settings::apiKey()
+{
+    QSettings settings(SettingsFiles::SETTINGS_FILE, QSettings::IniFormat);
+    return settings.value("API/musixmatch_key").toString();
+}

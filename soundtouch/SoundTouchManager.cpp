@@ -77,10 +77,14 @@ Track* SoundTouchManager::changeTrackTempo(QPair<Track*, qint16> trackPair)
         QFile(lameDecodeOutput).remove();
         QFile(soundTouchOutput).remove();
 
-        TagLibWrapper::setMp3Tags(lameEncodeOutput, track->mp3Tags());
+        Mp3Tags tags = track->mp3Tags();
+        tags.title = tags.title + "_25";
+
+        TagLibWrapper::setMp3Tags(lameEncodeOutput, tags);
         TagLibWrapper::setMp3Cover(lameEncodeOutput, track->album()->cover());
         TagLibWrapper::readMp3Cover(QFileInfo(lameEncodeOutput));
     }
+
     //    QVector<QFileInfo> files;
     //    files.append(QFileInfo(lameEncodeOutput));
     //    MusicLibrary::instance()->onTracksToLoad(files);

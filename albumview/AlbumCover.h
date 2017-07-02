@@ -1,18 +1,24 @@
 #ifndef COVER_H
 #define COVER_H
 
+#include <QHBoxLayout>
+#include <QSpacerItem>
 #include <QVBoxLayout>
+#include <QWidget>
 
-#include "Album.h"
-#include "ClickableLabel.h"
-#include "ClickableWidget.h"
-#include "ElidedLabel.h"
+#include "AlbumCoverWidget.h"
 
-class AlbumCover : public ClickableWidget
+class AlbumCover : public QWidget
 {
         Q_OBJECT
 
     public:
+        static const quint8 TOP = 1;
+        static const quint8 RIGHT = 2;
+        static const quint8 BOTTOM = 4;
+        static const quint8 LEFT = 8;
+        static const quint8 CENTER = 16;
+
         explicit AlbumCover(Album* album, QWidget* parent = 0);
         explicit AlbumCover(QWidget* parent = 0);
         ~AlbumCover();
@@ -20,25 +26,28 @@ class AlbumCover : public ClickableWidget
         Album* album() const;
         void setAlbum(Album* album);
 
-        static const quint16 COVER_HEIGHT = 215;
-        static const quint16 COVER_WIDTH = 175;
-        static const quint16 IMAGE_HEIGHT = 175;
-        static const quint16 IMAGE_WIDTH = 175;
+        quint8 position();
+        void setPosition(quint8 position);
+
+        quint8 margin();
+        void setMargin(quint8 margin);
 
     signals:
         void coverClicked(Album* album);
 
-    private slots:
-        void onAlbumChanged(Album* album, quint8 fields);
-        void onClicked();
-
     private:
-        Album* m_album;
+        quint8 m_margin;
+        quint8 m_position;
 
-        QLabel* m_cover;
-        ElidedLabel* m_albumTitle;
-        ElidedLabel* m_artistName;
-        QVBoxLayout* m_layout;
+        AlbumCoverWidget* m_albumCoverWidget;
+
+        QSpacerItem* m_topSpacer;
+        QSpacerItem* m_rightSpacer;
+        QSpacerItem* m_bottomSpacer;
+        QSpacerItem* m_leftSpacer;
+
+        QVBoxLayout* m_verticalLayout;
+        QHBoxLayout* m_layout;
 };
 
 #endif// COVER_H

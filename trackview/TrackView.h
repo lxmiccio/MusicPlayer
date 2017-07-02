@@ -3,7 +3,6 @@
 
 #include <QAction>
 #include <QCommonStyle>
-#include <QDebug>
 #include <QHeaderView>
 #include <QInputDialog>
 #include <QMenu>
@@ -61,35 +60,6 @@ class TrackView : public QTableView
     public slots:
         void appendItem(Track* track);
         void removeItem(Track* track);
-
-        void handle_result(HttpRequestWorker* wrk)
-        {
-            QString url_str = wrk->m_lyricsUrl;
-
-            HttpRequestInput input(url_str, "GET");
-
-            HttpRequestWorker* worker = new HttpRequestWorker(this);
-            QObject::connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handle_result_1(HttpRequestWorker*)));
-            worker->execute(&input);
-        }
-
-        void handle_result_1(HttpRequestWorker* wrk)
-        {
-
-            QRegExp rx("<p([^>]*)content([^>]*)>(.*)</p>");
-            rx.setMinimal(true);
-           // QRegExp rx("<p([^>]*)content([^>]*)>.*?<?p>");
-
-            QStringList list;
-            int pos = 0;
-
-            while ((pos = rx.indexIn(wrk->m_response, pos)) != -1) {
-                list << rx.cap(3);
-                pos += rx.matchedLength();
-            }
-
-            qDebug() << list;
-        }
 
     signals:
         void trackDoubleClicked(Track* track);

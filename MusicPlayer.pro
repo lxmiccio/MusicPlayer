@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core concurrent gui multimedia svg
+QT       += core concurrent gui multimedia network svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -57,7 +57,8 @@ SOURCES += main.cpp \
     taglib/TagLibWrapper.cpp \
     albumview/AlbumDelegate.cpp \
     api/HttpRequestInput.cpp \
-    api/HttpRequestWorker.cpp
+    api/HttpRequestWorker.cpp \
+    albumview/AlbumCoverWidget.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -105,7 +106,8 @@ HEADERS  += albumview/AlbumCover.h \
     taglib/TagLibWrapper.h \
     albumview/AlbumDelegate.h \
     api/HttpRequestInput.h \
-    api/HttpRequestWorker.h
+    api/HttpRequestWorker.h \
+    albumview/AlbumCoverWidget.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/api
@@ -159,6 +161,11 @@ INCLUDEPATH += $$PWD/../QMp3Lame/frontend \
                $$PWD/../QTagLib/taglib/wavpack \
                $$PWD/../QTagLib/taglib/xm
 
-LIBS += -L$$PWD/../QMp3Lame/release -L$$PWD/../QMp3Lame/release/release -llame-3.99.5
-LIBS += -L$$PWD/../QSoundTouch/release/ -L$$PWD/../QSoundTouch/release/release -lsoundtouch
+#LIBS += -L$$PWD/../QMp3Lame/release -L$$PWD/../QMp3Lame/release/release -llame-3.99.5
+#LIBS += -L$$PWD/../QSoundTouch/release/ -L$$PWD/../QSoundTouch/release/release -lsoundtouch
+#LIBS += -L$$PWD/../QTagLib/release -L$$PWD/../QTagLib/release/release -ltaglib-1.11.1
+
+LIBS += -L$$PWD/../mp3lame/release/release -L$$PWD/../mp3lame/release -lmp3lame
+LIBS += -L$$PWD/../SoundTouch/release/release -L$$PWD/../SoundTouch/release -lSoundTouch
+LIBS += -L$$PWD/../QTagLib/release -L$$PWD/../QTagLib/release/release -ltaglib-1.11.1
 LIBS += -L$$PWD/../QTagLib/release -L$$PWD/../QTagLib/release/release -ltaglib-1.11.1

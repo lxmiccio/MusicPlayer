@@ -264,6 +264,36 @@ void TagLibWrapper::setMp3Cover(const QString& filename, const QPixmap& cover)
     }
 #endif
 }
+#include<QDebug>
+void TagLibWrapper::setMp3Lyrics(const QString& filename, const QString& lyrics)
+{
+    qDebug()<<"  ccccccccccccccc"<<filename<<lyrics;
+    TagLib::MPEG::File file(filename.toStdString().data());
+
+    if(file.ID3v2Tag(true))
+    {
+        TagLib::ID3v2::FrameList frameList = file.ID3v2Tag()->frameListMap()["USLT"];
+        if(!frameList.isEmpty())
+        {
+            TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame*>(frameList.front());
+            if(frame)
+            {
+                frame->setText(lyrics.toStdString().data());
+            }
+        }
+        else
+        {
+            TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame("USLT");
+            frame->setText(lyrics.toStdString().data());
+
+            file.ID3v2Tag()->addFrame(frame);
+
+            /* Taglib takes care of deleting frame */
+        }
+
+        file.save();
+    }
+}
 
 void TagLibWrapper::setMp3Tags(const QString& filename, const Mp3Tags tags)
 {

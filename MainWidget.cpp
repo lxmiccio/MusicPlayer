@@ -10,8 +10,8 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_artistView = new ArtistView();
     m_artistView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    m_albumView = new AlbumView();
-    m_albumView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    //m_albumView = new AlbumView();
+    //m_albumView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_trackView = new TrackView(PlayingView::FULL);
     QObject::connect(m_trackView, SIGNAL(trackDoubleClicked(Track*)), this, SLOT(onTrackDoubleClicked(Track*)));
@@ -34,7 +34,7 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_horLayout = new QHBoxLayout();
     m_horLayout->setMargin(0);
     m_horLayout->setSpacing(0);
-    m_horLayout->addWidget(m_albumView);
+    //m_horLayout->addWidget(m_albumView);
     m_horLayout->addWidget(m_artistView);
     m_horLayout->addWidget(m_trackView);
     m_horLayout->addWidget(m_playingView);
@@ -114,7 +114,7 @@ void MainWidget::showView(Settings::View view)
         }
 
         m_artistView->hide();
-        m_albumView->hide();
+        //m_albumView->hide();
         m_trackView->hide();
         m_playingView->hide();
 

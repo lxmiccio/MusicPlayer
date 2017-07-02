@@ -1,7 +1,5 @@
 #include "HttpRequestWorker.h"
 
-#include <QDebug>
-
 HttpRequestWorker::HttpRequestWorker(QObject* parent) : QObject(parent)
 {
     qsrand(QDateTime::currentDateTime().toTime_t());
@@ -10,7 +8,7 @@ HttpRequestWorker::HttpRequestWorker(QObject* parent) : QObject(parent)
     connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_manager_finished(QNetworkReply*)));
 }
 
-QString HttpRequestWorker::http_attribute_encode(QString attribute, QString input)
+QString HttpRequestWorker::encodeAttribute(QString attribute, QString input)
 {
     bool utfEncoding = false;
 
@@ -137,7 +135,7 @@ void HttpRequestWorker::execute(HttpRequestInput* input)
 
                 // add header
                 request_content.append("Content-Disposition: form-data; ");
-                request_content.append(http_attribute_encode("name", key));
+                request_content.append(encodeAttribute("name", key));
                 request_content.append(new_line);
                 request_content.append("Content-Type: text/plain");
                 request_content.append(new_line);
@@ -188,8 +186,8 @@ void HttpRequestWorker::execute(HttpRequestInput* input)
 
                 // add header
                 request_content.append(QString("Content-Disposition: form-data; %1; %2").arg(
-                                           http_attribute_encode("name", file_info->variable_name),
-                                           http_attribute_encode("filename", file_info->request_filename)
+                                           encodeAttribute("name", file_info->variable_name),
+                                           encodeAttribute("filename", file_info->request_filename)
                                            ));
                 request_content.append(new_line);
 
@@ -266,19 +264,6 @@ void HttpRequestWorker::on_manager_finished(QNetworkReply *reply)
     if(m_networkError == QNetworkReply::NoError)
     {
         m_response = reply->readAll();
-
-        // Parse document
-        QJsonDocument doc(QJsonDocument::fromJson(m_response));
-
-        // Get JSON object
-        QJsonObject json = doc.object();
-
-        QJsonObject jsonMessage = json["message"].toObject();
-        QJsonObject jsonBody = jsonMessage["body"].toObject();
-        QJsonArray jsonTrackList = jsonBody["track_list"].toArray();
-        QJsonObject jsonTrack = jsonTrackList.at(0).toObject()["track"].toObject();
-        m_lyricsUrl = jsonTrack.value("track_share_url").toString();
-
         // Access properties
     }
     else {
@@ -288,4 +273,20 @@ void HttpRequestWorker::on_manager_finished(QNetworkReply *reply)
     reply->deleteLater();
 
     emit on_execution_finished(this);
+}
+
+QString HttpRequestWorker::lyricsUrl()
+{
+    /* Parse document */
+    QJsonDocument doc(QJsonDocument::fromJson(m_response));
+
+    /* Get JSON object */
+    QJsonObject json = doc.object();
+
+    QJsonObject jsonMessage = json["message"].toObject();
+    QJsonObject jsonBody = jsonMessage["body"].toObject();
+    QJsonArray jsonTrackList = jsonBody["track_list"].toArray();
+    QJsonObject jsonTrack = jsonTrackList.at(0).toObject()["track"].toObject();
+
+    return jsonTrack.value("track_share_url").toString();
 }

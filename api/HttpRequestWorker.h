@@ -20,13 +20,14 @@ class HttpRequestWorker : public QObject
 public:
     explicit HttpRequestWorker(QObject* parent = 0);
 
-    QString http_attribute_encode(QString attribute, QString input);
+    QString encodeAttribute(QString attribute, QString input);
     void execute(HttpRequestInput* input);
+
+    QString lyricsUrl();
 
     QByteArray m_response;
     QNetworkReply::NetworkError m_networkError;
     QString m_error;
-    QString m_lyricsUrl;
 
 
 signals:

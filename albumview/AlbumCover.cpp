@@ -1,117 +1,107 @@
 #include "AlbumCover.h"
 
-AlbumCover::AlbumCover(Album* album, QWidget* parent) : ClickableWidget(parent)
+AlbumCover::AlbumCover(Album* album, QWidget* parent) : QWidget(parent)
 {
-    m_album = album;
+    m_albumCoverWidget = new AlbumCoverWidget(album);
+    QObject::connect(m_albumCoverWidget, SIGNAL(coverClicked(Album*)), this, SIGNAL(coverClicked(Album*)));
 
-    m_cover = new QLabel();
+    m_topSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_bottomSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    m_albumTitle = new ElidedLabel();
-    m_albumTitle->setAlignment(Qt::AlignCenter);
-    m_albumTitle->setStyleSheet("color: white;");
+    m_verticalLayout = new QVBoxLayout();
+    m_verticalLayout->setMargin(0);
+    m_verticalLayout->addItem(m_topSpacer);
+    m_verticalLayout->addWidget(m_albumCoverWidget);
+    m_verticalLayout->addItem(m_bottomSpacer);
 
-    m_artistName = new ElidedLabel();
-    m_artistName->setAlignment(Qt::AlignCenter);
-    m_artistName->setStyleSheet("color: white;");
-
-    m_layout = new QVBoxLayout();
+    m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
-    m_layout->addWidget(m_cover);
-    m_layout->addWidget(m_albumTitle);
-    m_layout->addWidget(m_artistName);
+    m_layout->addItem(m_leftSpacer);
+    m_layout->addLayout(m_verticalLayout);
+    m_layout->addItem(m_rightSpacer);
 
-    setFixedSize(AlbumCover::COVER_WIDTH, AlbumCover::COVER_HEIGHT);
     setLayout(m_layout);
-
-    QObject::connect(this, SIGNAL(leftButtonClicked()), this, SLOT(onClicked()));
-
-    setAlbum(m_album);
 }
 
-AlbumCover::AlbumCover(QWidget* parent) : ClickableWidget(parent)
+AlbumCover::AlbumCover(QWidget* parent) : QWidget(parent)
 {
-    m_cover = new QLabel();
+    m_albumCoverWidget = new AlbumCoverWidget();
+    QObject::connect(m_albumCoverWidget, SIGNAL(coverClicked(Album*)), this, SIGNAL(coverClicked(Album*)));
 
-    m_albumTitle = new ElidedLabel();
-    m_albumTitle->setAlignment(Qt::AlignCenter);
-    m_albumTitle->setStyleSheet("color: white;");
+    m_topSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_bottomSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    m_artistName = new ElidedLabel();
-    m_artistName->setAlignment(Qt::AlignCenter);
-    m_artistName->setStyleSheet("color: white;");
+    m_verticalLayout = new QVBoxLayout();
+    m_verticalLayout->setMargin(0);
+    m_verticalLayout->addItem(m_topSpacer);
+    m_verticalLayout->addWidget(m_albumCoverWidget);
+    m_verticalLayout->addItem(m_bottomSpacer);
 
-    m_layout = new QVBoxLayout();
+    m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
-    m_layout->addWidget(m_cover);
-    m_layout->addWidget(m_albumTitle);
-    m_layout->addWidget(m_artistName);
+    m_layout->addItem(m_leftSpacer);
+    m_layout->addLayout(m_verticalLayout);
+    m_layout->addItem(m_rightSpacer);
 
-    setFixedSize(AlbumCover::COVER_WIDTH, AlbumCover::COVER_HEIGHT);
     setLayout(m_layout);
-
-    QObject::connect(this, SIGNAL(leftButtonClicked()), this, SLOT(onClicked()));
 }
 
 AlbumCover::~AlbumCover()
 {
-    deleteLayout(m_layout);
+    //deleteLayout(m_layout);
 }
 
 Album* AlbumCover::album() const
 {
-    return m_album;
+    return m_albumCoverWidget->album();
 }
 
 void AlbumCover::setAlbum(Album* album)
 {
     if(album)
     {
-        m_album = album;
-        QObject::connect(m_album, SIGNAL(albumUpdated(Album*, quint8)), this, SLOT(onAlbumChanged(Album*, quint8)));
-
-        if(m_album->cover().isNull())
-        {
-            m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(AlbumCover::COVER_WIDTH,
-                                                                                                   AlbumCover::COVER_HEIGHT,
-                                                                                                   Qt::KeepAspectRatio,
-                                                                                                   Qt::SmoothTransformation));
-        }
-        else
-        {
-            m_cover->setPixmap(QPixmap(m_album->cover().scaled(AlbumCover::COVER_WIDTH,
-                                                               AlbumCover::COVER_HEIGHT,
-                                                               Qt::KeepAspectRatio,
-                                                               Qt::SmoothTransformation)));
-        }
-
-        m_albumTitle->setText(album->title());
-        m_artistName->setText(album->artist() ? album->artist()->name() : "Unknown");
+        m_albumCoverWidget->setAlbum(album);
     }
 }
 
-void AlbumCover::onAlbumChanged(Album* album, quint8 fields)
+quint8 AlbumCover::position()
 {
-    if(album && album == m_album)
+    return m_position;
+}
+
+void AlbumCover::setPosition(quint8 position)
+{
+    if(position != m_position)
     {
-        if(fields & Album::TITLE)
-        {
-            m_albumTitle->setText(album->title());
-        }
-        else if(fields & Album::COVER)
-        {
-            m_cover->setPixmap(QPixmap(m_album->cover().scaled(AlbumCover::COVER_WIDTH,
-                                                               AlbumCover::COVER_HEIGHT,
-                                                               Qt::KeepAspectRatio,
-                                                               Qt::SmoothTransformation)));
-        }
-        else if(fields & Album::ARTIST && album->artist())
-        {
-            m_artistName->setText(album->artist()->name());
-        }
+        m_position = position;
+        m_margin -= 1;
+        setMargin(m_margin + 1);
     }
 }
 
-void AlbumCover::onClicked()
+quint8 AlbumCover::margin()
 {
-    emit coverClicked(m_album);
+    return m_margin;
+}
+
+void AlbumCover::setMargin(quint8 margin)
+{
+    if(margin != m_margin)
+    {
+        m_margin = margin;
+
+        quint8 marginTop = (m_position & TOP) ? 0 : 10;
+        quint8 marginRight = (m_position & RIGHT) ? 0 : margin;
+        quint8 marginBottom = (m_position & BOTTOM) ? 0 : 10;
+        quint8 marginLeft = (m_position & LEFT) ? 0 : margin;
+
+        m_topSpacer->changeSize(0, marginTop, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        m_rightSpacer->changeSize(marginRight, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        m_bottomSpacer->changeSize(0, marginBottom, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        m_leftSpacer->changeSize(marginLeft, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
 }

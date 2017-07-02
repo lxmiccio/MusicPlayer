@@ -33,7 +33,6 @@ class TrackModel : public QAbstractItemModel
         void removeLastItem();
         void removeItem(Track* track);
         void removeItemAt(int row);
-        void sort();
         void clear();
 
         TrackItem* rootItem();

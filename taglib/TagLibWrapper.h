@@ -51,6 +51,7 @@ class TagLibWrapper
         static void readMp3Lyrics(const QString& filename, Mp3Tags* tags);
         static void readMp3Tags(const QString& filename, Mp3Tags* tags);
         static void setMp3Cover(const QString& filename, const QPixmap& cover);
+        static void setMp3Lyrics(const QString& filename, const QString& lyrics);
         static void setMp3Tags(const QString& filename, const Mp3Tags tags);
 
         static QString extensionToMimetype(const QString &extension);

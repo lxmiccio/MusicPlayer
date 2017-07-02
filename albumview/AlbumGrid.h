@@ -37,7 +37,6 @@ class AlbumGrid : public QTableWidget
         void sort();
 
         quint8 albumsPerRow(quint16 width);
-        quint8 itemsPerRow(quint16 width);
         quint8 horizontalSpacerWidth(quint16 width);
 
     private:
@@ -54,7 +53,6 @@ class AlbumGrid : public QTableWidget
         QSpacerItem* m_middleVerticalSpacer; /* Spacer between horizontal layouts */
 
         QVector<AlbumCover*> m_albumCovers;
-        quint8 m_itemsPerRow; /* Number of albums for each rows */
         quint8 m_albumsPerRow; /* Number of albums for each rows */
         qint8 m_currentColumn; /* Column index including spacer */
         quint8 m_currentRow; /* Row index including spacer */

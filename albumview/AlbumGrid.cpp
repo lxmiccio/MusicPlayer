@@ -8,50 +8,47 @@
 #ifndef SCROLLABLE
 AlbumGrid::AlbumGrid(QWidget* parent) : QTableWidget(parent)
 {
+//    setStyleSheet("QTableWidget {background-color: transparent; border: none}"
+//                  "QHeaderView::section {background-color: transparent;}"
+//                  "QHeaderView {background-color: transparent;}"
+//                  "QTableCornerButton::section {background-color: transparent;}");
+//    m_albumsPerRow = albumsPerRow(rect().size().width());
+//    m_currentColumn = 0;
+//    m_currentRow = 0;
+//    qDebug()<<rect().size().width()<<m_albumsPerRow;
+
+//    horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+//    verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 
-    setStyleSheet("QTableWidget {background-color: transparent; border: none}"
-                  "QHeaderView::section {background-color: transparent;}"
-                  "QHeaderView {background-color: transparent;}"
-                  "QTableCornerButton::section {background-color: transparent;}");
-    m_albumsPerRow = albumsPerRow(rect().size().width());
-    m_itemsPerRow = itemsPerRow(rect().size().width());
-    m_currentColumn = -1;
-    m_currentRow = 0;
-    qDebug()<<rect().size().width()<<m_albumsPerRow;
+//    m_middleHorizontalSpacer = new QSpacerItem(24, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+//    //  this->columnWidth(AlbumCover::COVER_WIDTH);
 
+//    // this->rowHeight(AlbumCover::COVER_HEIGHT);
 
-    m_middleHorizontalSpacer = new QSpacerItem(24, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+//    m_spacerWidget = new QWidget();
+//    m_spacerWidget->setFixedWidth(30);
 
-    //  this->columnWidth(AlbumCover::COVER_WIDTH);
+//    setRowCount(1);
+//    setColumnCount(m_albumsPerRow);
+//    //CREATE ITEMDELEGATE TO SELECT ALBUM
+//    setSelectionBehavior(QAbstractItemView::SelectItems);
 
-    // this->rowHeight(AlbumCover::COVER_HEIGHT);
-
-    m_spacerWidget = new QWidget();
-    m_spacerWidget->setFixedWidth(30);
-
-    setRowCount(1);
-    setColumnCount(m_albumsPerRow);
-    //CREATE ITEMDELEGATE TO SELECT ALBUM
-    setSelectionBehavior(QAbstractItemView::SelectItems);
-
-    setShowGrid(false);
+//    setShowGrid(false);
 
 
-    AlbumDelegate* m_delegate = new AlbumDelegate(this);
-    setItemDelegate(m_delegate);
+//    AlbumDelegate* m_delegate = new AlbumDelegate(this);
+//    setItemDelegate(m_delegate);
 
 
-    horizontalHeader()->setVisible(false);
-    verticalHeader()->setVisible(false);
-    horizontalScrollBar()->hide();
+//    horizontalHeader()->setVisible(false);
+//    verticalHeader()->setVisible(false);
+//    horizontalScrollBar()->hide();
 
 
-    //QObject::connect(this, SIGNAL(filesDropped(QVector<QFileInfo>)), MusicLibrary::instance(), SLOT(onTracksToLoad(QVector<QFileInfo>)));
-    QObject::connect(MusicLibrary::instance(), SIGNAL(albumAdded(Album*)), this, SLOT(onAlbumAdded(Album*)));
+//    //QObject::connect(this, SIGNAL(filesDropped(QVector<QFileInfo>)), MusicLibrary::instance(), SLOT(onTracksToLoad(QVector<QFileInfo>)));
+//    QObject::connect(MusicLibrary::instance(), SIGNAL(albumAdded(Album*)), this, SLOT(onAlbumAdded(Album*)));
 }
 
 AlbumGrid::~AlbumGrid()
@@ -65,20 +62,95 @@ AlbumGrid::~AlbumGrid()
 
 void AlbumGrid::resizeEvent(QResizeEvent* event)
 {
-    QMutexLocker locker(&m_mutex);
-    if(m_albumsPerRow != albumsPerRow(event->size().width()))
-    {
-        m_albumsPerRow = albumsPerRow(event->size().width());
-        m_itemsPerRow = itemsPerRow(event->size().width());
-        qDebug() << m_itemsPerRow << m_albumsPerRow;
-        //repaintCovers();
-    }
+    repaintCovers();
+
+    //    if(m_albumsPerRow != albumsPerRow(event->size().width()))
+    //    {
+    //        repaintCovers();
+    //    }
 
     //m_layout->invalidate();
 }
 
 void AlbumGrid::repaintCovers()
 {
+    QMutexLocker locker(&m_mutex);
+    for(quint8 i = 0; i < rowCount(); ++i)
+    {
+        for(quint8 j = 0; j < columnCount(); ++j)
+        {
+            takeItem(i, j);
+        }
+    }
+
+    repaint();
+    m_albumsPerRow = albumsPerRow(rect().width());
+
+    // Deselects all selected items
+    //clearSelection();
+
+    // Disconnect all signals from table widget ! important !
+    //disconnect();
+
+    // Remove all items
+    //clearContents();
+
+    //this->model()->
+
+    // Set row count to 0 (remove rows)
+
+
+    if(m_albumsPerRow > 0)
+    {
+        setColumnCount(m_albumsPerRow);
+        setRowCount(1);
+
+        m_currentColumn = 0;
+        m_currentRow = 0;
+
+
+
+        foreach(AlbumCover* i_albumCover, m_albumCovers)
+        {
+            qDebug() << "debug1";
+            quint8 position = 0;
+            position |= (m_currentColumn == 0) ? AlbumCover::LEFT : position;
+            position |= (m_currentRow == 0) ? AlbumCover::TOP : position;
+            qDebug() << "debug2";
+            position |= (m_currentColumn == columnCount() - 1) ? AlbumCover::RIGHT : position;
+            position |= (m_currentRow == rowCount() - 1) ? AlbumCover::BOTTOM : position;
+            //            i_albumCover->setPosition(position);
+            //            i_albumCover->setMargin(horizontalSpacerWidth(rect().width()));
+            qDebug() << "debug3"<<columnCount() - 1;
+
+            if(m_currentColumn == columnCount() - 1)
+            {
+                qDebug() << "debug35";
+                m_currentColumn = 0;
+                m_currentRow++;
+
+                qDebug() << "debug4";
+                //insertRow(m_currentRow + 1);
+                qDebug() << "debug5";
+                //setCellWidget(m_currentRow, m_currentColumn++, i_albumCover);
+                qDebug() << "debug6";
+                //            }
+                //            else
+                //            {
+                //                if(i_albumCover)
+                //                {
+                //                    qDebug() << "debug7" << m_currentColumn << columnCount();
+                //                    qDebug()<< i_albumCover->album()->title();
+                //                    setCellWidget(m_currentRow, m_currentColumn++, i_albumCover);
+                //                    qDebug() << "debug8";
+                //                }
+            }
+        }
+    }
+
+
+
+#if 0
     qDebug() << m_itemsPerRow<<(m_albumCovers.size() / m_albumsPerRow);
     if(m_albumsPerRow != 0)
     {
@@ -150,6 +222,7 @@ void AlbumGrid::repaintCovers()
         }*/
         }
     }
+#endif
 }
 
 void AlbumGrid::onAlbumAdded(Album* album)
@@ -162,29 +235,31 @@ void AlbumGrid::onAlbumAdded(Album* album)
         QObject::connect(albumCover, SIGNAL(coverClicked(Album*)), this, SLOT(onCoverClicked(Album*)));
         m_albumCovers.push_back(albumCover);
 
-        if(m_currentColumn == m_itemsPerRow)
+        quint8 position = 0;
+        position |= (m_currentColumn == 0 || m_currentColumn == columnCount() - 1) ? AlbumCover::LEFT : position;
+        position |= (m_currentRow == 0 || m_currentColumn == columnCount() - 1) ? AlbumCover::TOP : position;
+        position |= (m_currentColumn == columnCount() - 1) ? AlbumCover::RIGHT : position;
+        position |= (m_currentRow == rowCount() - 1) ? AlbumCover::BOTTOM : position;
+        albumCover->setPosition(position);
+        albumCover->setMargin(horizontalSpacerWidth(rect().width()));
+        qDebug() << "row" << rowCount() << "column" << columnCount();
+        if(m_currentColumn == columnCount() - 1)
         {
+            qDebug() << "m_currentColumn == columnCount() - 1";
             m_currentColumn = 0;
             m_currentRow++;
 
             setRowCount(rowCount() + 1);
-            setCellWidget(m_currentRow, m_currentColumn, albumCover);
-            setCellWidget(m_currentRow, ++m_currentColumn, m_spacerWidget);
-
-            //    cellWidget(m_currentRow, m_currentColumn)->setFlags(item(m_currentRow, m_currentColumn)->flags() & ~Qt::ItemIsSelectable);
+            setCellWidget(m_currentRow, m_currentColumn++, albumCover);
         }
         else
         {
-            if(m_currentRow == 0)
-            {
-                setColumnCount(columnCount() + 2);
-            }
-
-            setCellWidget(m_currentRow, ++m_currentColumn, albumCover);
-            setCellWidget(m_currentRow, ++m_currentColumn, m_spacerWidget);
-            //    item(m_currentRow, m_currentColumn)->setFlags(item(m_currentRow, m_currentColumn)->flags() & ~Qt::ItemIsSelectable);
-
+            qDebug() << "m_currentColumn != columnCount() - 1";
+            setCellWidget(m_currentRow, m_currentColumn++, albumCover);
         }
+
+        resizeColumnsToContents();
+        resizeRowsToContents();
     }
 }
 
@@ -238,21 +313,9 @@ void AlbumGrid::sort()
 
 quint8 AlbumGrid::albumsPerRow(quint16 width)
 {
-    if(width)
+    if(width >= AlbumCoverWidget::COVER_WIDTH + 24)
     {
-        return ((width) / (AlbumCover::COVER_WIDTH + 24));
-    }
-    else
-    {
-        return 1;
-    }
-}
-
-quint8 AlbumGrid::itemsPerRow(quint16 width)
-{
-    if(width)
-    {
-        return (albumsPerRow(width) * 2) - 1;
+        return ((width) / (AlbumCoverWidget::COVER_WIDTH + 24));
     }
     else
     {
@@ -264,7 +327,7 @@ quint8 AlbumGrid::horizontalSpacerWidth(quint16 width)
 {
     if(albumsPerRow(width))
     {
-        return ((width - (AlbumCover::COVER_WIDTH * albumsPerRow(width))) / albumsPerRow(width));
+        return ((width - (AlbumCoverWidget::COVER_WIDTH * albumsPerRow(width))) / albumsPerRow(width));
     }
     else
     {

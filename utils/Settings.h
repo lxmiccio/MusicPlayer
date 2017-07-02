@@ -27,6 +27,8 @@ class Settings
         static void setView(Settings::View view);
         static Settings::View view();
 
+        static QString apiKey();
+
     private:
         static Settings::View stringToView(QString string);
 };

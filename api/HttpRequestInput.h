@@ -12,7 +12,6 @@ public:
     QString local_filename;
     QString request_filename;
     QString mime_type;
-
 };
 
 class HttpRequestInput

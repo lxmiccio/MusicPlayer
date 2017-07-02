@@ -8,6 +8,9 @@
 
 #include "Artist.h"
 #include "Album.h"
+#include "HttpRequestInput.h"
+#include "HttpRequestWorker.h"
+#include "Settings.h"
 #include "TagLibWrapper.h"
 
 class Album;
@@ -37,6 +40,7 @@ class Track : public QObject
         const QString& lyrics() const;
         void setLyrics(const QString& lyrics);
         const QString& readLyrics(bool force = false);
+        void downloadLyrics();
 
         quint32 duration() const;
         void setDuration(quint32 duration);
@@ -57,6 +61,10 @@ class Track : public QObject
         void albumChanged(Album* album);
         void albumUpdated(Album* album, quint8);
         void artistUpdated(Artist* artist, quint8);
+
+    private slots:
+        void onLyricsUrlFound(HttpRequestWorker* worker);
+        void onLyricsDownloaded(HttpRequestWorker* worker);
 
     private:
         QString m_title;
