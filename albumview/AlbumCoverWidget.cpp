@@ -115,4 +115,3 @@ void AlbumCoverWidget::onClicked()
 {
     emit coverClicked(m_album);
 }
-

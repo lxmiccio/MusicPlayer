@@ -1,4 +1,6 @@
- #include "Track.h"
+#include "Track.h"
+
+#include <QDebug>
 
 Track::Track(QObject* parent) : QObject(parent)
 {
@@ -114,7 +116,7 @@ const QString& Track::readLyrics(bool force)
 
 void Track::downloadLyrics()
 {
-    HttpRequestInput input("http://api.musixmatch.com/ws/1.1/track.search", "GET");
+    qDebug() << "Downloading lyrics for track" << m_title;
 
     QString title = m_title;
     if(title.contains("(Feat", Qt::CaseInsensitive))
@@ -122,6 +124,7 @@ void Track::downloadLyrics()
         title = title.left(title.indexOf("(Feat", 0, Qt::CaseInsensitive) - 1);
     }
 
+    HttpRequestInput input("http://api.musixmatch.com/ws/1.1/track.search", "GET");
     input.addParameter("apikey", Settings::apiKey());
     input.addParameter("q_artist", m_album->artist()->name());
     input.addParameter("q_track", title);
@@ -184,17 +187,17 @@ void Track::onLyricsUrlFound(HttpRequestWorker* worker)
 {
     QString url = worker->lyricsUrl();
 
-    //delete worker;
+    qDebug() << "Lyrics url for track" << m_title << "is" << url;
 
-    HttpRequestInput* input = new HttpRequestInput(url);
+    HttpRequestInput input(url);
 
     HttpRequestWorker* newWorker = new HttpRequestWorker();
     QObject::connect(newWorker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(onLyricsDownloaded(HttpRequestWorker*)));
+    newWorker->execute(&input);
 
-    qDebug() << "lyrics for track " << m_title << "downloading\n\n\n";
-    newWorker->execute(input);
+    worker->deleteLater();
 }
-#include <QDebug>
+
 void Track::onLyricsDownloaded(HttpRequestWorker* worker)
 {
     QRegExp rx("<p([^>]*)content([^>]*)>(.*)</p>");
@@ -212,11 +215,11 @@ void Track::onLyricsDownloaded(HttpRequestWorker* worker)
     if(lyrics.size() > 0)
     {
         m_lyrics = lyrics.join("\n");
-        //m_lyrics.replace("\n\n", "\n");
         TagLibWrapper::setMp3Lyrics(m_path, m_lyrics);
+
+        qDebug() << "Lyrics for track" << m_title << "is" << m_lyrics;
     }
-qDebug() << "lyrics for track " << m_title << "downloaded\n\n\n";
-   // delete worker;
+    worker->deleteLater();
 }
 
 bool operator==(const Track& track1, const Track& track2)

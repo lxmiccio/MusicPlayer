@@ -264,10 +264,9 @@ void TagLibWrapper::setMp3Cover(const QString& filename, const QPixmap& cover)
     }
 #endif
 }
-#include<QDebug>
+
 void TagLibWrapper::setMp3Lyrics(const QString& filename, const QString& lyrics)
 {
-    qDebug()<<"  ccccccccccccccc"<<filename<<lyrics;
     TagLib::MPEG::File file(filename.toStdString().data());
 
     if(file.ID3v2Tag(true))

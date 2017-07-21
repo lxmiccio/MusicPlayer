@@ -1,5 +1,7 @@
 #include "ArtistView.h"
 
+#include <QDebug>
+
 ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
 {
     m_selectedArtistWidget = NULL;
@@ -100,6 +102,7 @@ void ArtistView::onAlbumAdded(Album* album)
 {
     if(album && album->artist())
     {
+        qDebug() << "s";
         QMutexLocker locker(&m_mutex);
 
         m_albumViewScrollable->show();
@@ -169,6 +172,6 @@ void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
 
         repaintCoversAfterWidgetRemoved();
 
-        //TODO: Stop the track ifit belonged to the deleted artist?
+        //TODO: Stop the track if it belonged to the deleted artist?
     }
 }

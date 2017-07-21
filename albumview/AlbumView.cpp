@@ -21,7 +21,6 @@ AlbumView::AlbumView(QWidget* parent) : ScrollableArea(parent)
 
 AlbumView::~AlbumView()
 {
-    deleteLayout(m_layout);
 }
 
 void AlbumView::onAlbumGridCoverClicked(Album* album)
