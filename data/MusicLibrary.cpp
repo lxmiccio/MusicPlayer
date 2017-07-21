@@ -4,8 +4,6 @@ MusicLibrary* MusicLibrary::m_instance = 0;
 
 MusicLibrary::MusicLibrary()
 {
-    m_trackLoader = new TrackLoader();
-    QObject::connect(m_trackLoader, SIGNAL(tagsRead(Mp3Tags*)), this, SLOT(addTrack(Mp3Tags*)));
 }
 
 MusicLibrary* MusicLibrary::instance()
@@ -181,36 +179,33 @@ bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTi
     }
 }
 
-void MusicLibrary::addTrack(Mp3Tags* tags)
+void MusicLibrary::onTrackLoaded(Track* p_track, QString p_artist, QString p_album)
 {
-    if(tags)
+    if(p_track)
     {
         QMutexLocker locker(&m_mutex);
 
         Artist* l_artist = NULL;
         Album* l_album = NULL;
-        Track* l_track = NULL;
 
-        if(tags->duration > 0)
+        if(p_track->duration() > 0)
         {
-            QString l_artistName = tags->artist;
-            QString l_albumTitle = tags->album;
-            QString l_path = tags->path;
-            QString l_trackTitle = tags->title;
+            QString l_path = p_track->path();
+            QString l_trackTitle = p_track->title();
 
-            l_artist = artist(l_artistName);
+            l_artist = artist(p_artist);
             if(!l_artist)
             {
-                l_artist = new Artist(l_artistName);
+                l_artist = new Artist(p_artist);
                 QObject::connect(l_artist, SIGNAL(artistRemoved(Artist*)), this, SLOT(onArtistRemoved(Artist*)));
                 m_artists.push_back(l_artist);
                 emit artistAdded(l_artist);
             }
 
-            l_album = album(l_albumTitle, l_artist->name());
+            l_album = album(p_album, l_artist->name());
             if(!l_album)
             {
-                l_album = new Album(l_albumTitle, l_artist);
+                l_album = new Album(p_album, l_artist);
 
                 if(l_path.endsWith(".flac"))
                 {
@@ -229,19 +224,14 @@ void MusicLibrary::addTrack(Mp3Tags* tags)
             {
                 l_trackTitle = l_path.mid(l_path.lastIndexOf("/") + 1);
                 l_trackTitle = l_trackTitle.left(l_trackTitle.lastIndexOf("."));
-                tags->title = l_trackTitle;
+                p_track->setTitle(l_trackTitle);
             }
 
-            l_track = l_album->track(l_trackTitle);
-            if(!l_track)
-            {
-                l_track = new Track(tags, l_album);
-                l_album->addTrack(l_track);
-                emit trackAdded(l_track);
-            }
+            p_track->setAlbum(l_album);
+            l_album->addTrack(p_track);
+
+            emit trackAdded(p_track);
         }
-
-        delete tags;
     }
 }
 
@@ -264,7 +254,16 @@ void MusicLibrary::changeAlbumOnTrack(Track* track, QString newAlbum)
 
 void MusicLibrary::onTracksToLoad(const QVector<QFileInfo>& filesInfo)
 {
-    m_trackLoader->readTags(filesInfo);
+    for(QVector<QFileInfo>::ConstIterator i_file = filesInfo.begin(); i_file < filesInfo.end(); ++i_file)
+    {
+        if(i_file->suffix() == "flac" || i_file->suffix() == "mp3")
+        {
+            qDebug() << i_file->canonicalFilePath();
+            Track* track = new Track(i_file->canonicalFilePath());
+            QObject::connect(track, SIGNAL(trackLoaded(Track*, QString, QString)), this, SLOT(onTrackLoaded(Track*, QString, QString)));
+            track->load();
+        }
+    }
 }
 
 void MusicLibrary::onArtistRemoved(Artist* artist)

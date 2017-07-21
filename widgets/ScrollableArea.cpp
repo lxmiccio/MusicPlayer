@@ -2,7 +2,6 @@
 
 #include "GuiUtils.h"
 #include "Track.h"
-#include "TrackLoader.h"
 
 ScrollableArea::ScrollableArea(QWidget* parent) : QScrollArea(parent)
 {

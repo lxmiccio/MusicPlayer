@@ -26,8 +26,9 @@ class Track : public QObject
         static const quint8 LYRICS = 4;
 
         explicit Track(QObject* parent = 0);
-        Track(const Mp3Tags* tags, Album* album, QObject* parent = 0);
-        Track(quint16 track, const QString& title, const QString& lyrics, quint16 year, quint32 m_duration, const QString& m_path, Album* album, QObject* parent = 0);
+        Track(const QString& path, QObject* parent = 0);
+
+        void load(bool asynchronous = true);
 
         Mp3Tags mp3Tags() const;
 
@@ -57,29 +58,20 @@ class Track : public QObject
         Artist* artist() const;
 
     signals:
+        void loadTrack();
+        void trackLoaded(Track* track, QString artist, QString album);
         void trackUpdated(Track* track, quint8 fields);
         void albumChanged(Album* album);
         void albumUpdated(Album* album, quint8);
         void artistUpdated(Artist* artist, quint8);
 
     private slots:
+        void onLoadTrack();
         void onLyricsUrlFound(HttpRequestWorker* worker);
         void onLyricsDownloaded(HttpRequestWorker* worker);
 
     private:
-        QString m_title;
-        quint16 m_track;
-        quint32 m_year;
-
-        quint32 m_bitrate;
-        quint32 m_channels;
-        quint32 m_duration;
-        quint32 m_samplerate;
-
-        QString m_lyrics;
-
-        QString m_path;
-
+        Mp3Tags m_tags;
         Album* m_album;
 };
 

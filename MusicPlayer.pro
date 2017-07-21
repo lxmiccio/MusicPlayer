@@ -29,8 +29,6 @@ SOURCES += main.cpp \
     data/MusicLibrary.cpp \
     data/Playlist.cpp \
     data/Track.cpp \
-    data/TrackLoader.cpp \
-    data/TrackLoaderThread.cpp \
     mp3lame/LameWrapper.cpp \
     playingview/PlayingAlbum.cpp \
     playingview/PlayingLyrics.cpp \
@@ -76,8 +74,6 @@ HEADERS  += albumview/AlbumCover.h \
     data/MusicLibrary.h \
     data/Playlist.h \
     data/Track.h \
-    data/TrackLoader.h \
-    data/TrackLoaderThread.h \
     MainWidget.h \
     MainWindow.h \
     mp3lame/LameWrapper.h \

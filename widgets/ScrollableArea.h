@@ -3,6 +3,7 @@
 
 #include <QCommonStyle>
 #include <QDragEnterEvent>
+#include <QDirIterator>
 #include <QFileInfo>
 #include <QMimeData>
 #include <QScrollArea>

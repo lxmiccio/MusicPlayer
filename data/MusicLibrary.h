@@ -9,7 +9,6 @@
 #include "Artist.h"
 #include "TagLibWrapper.h"
 #include "Track.h"
-#include "TrackLoader.h"
 
 class TrackLoader;
 
@@ -57,12 +56,11 @@ class MusicLibrary : public QObject
         MusicLibrary();
 
     private slots:
-        void addTrack(Mp3Tags* tags);
+        void onTrackLoaded(Track* p_track, QString p_artist, QString p_album);
 
     private:
         static MusicLibrary* m_instance;
         QVector<Artist*> m_artists;
-        TrackLoader* m_trackLoader;
 
         QMutex m_mutex;
 };
