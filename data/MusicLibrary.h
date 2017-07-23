@@ -7,7 +7,6 @@
 
 #include "Album.h"
 #include "Artist.h"
-#include "TagLibWrapper.h"
 #include "Track.h"
 
 class TrackLoader;
@@ -40,6 +39,7 @@ class MusicLibrary : public QObject
 
     public slots:
         void onTracksToLoad(const QVector<QFileInfo>& filesInfo);
+        void onTempoChanged(QString path);
         void onArtistRemoved(Artist* artist);
         void onAlbumRemoved(Album* album);
         void onTrackRemoved(Track* track);

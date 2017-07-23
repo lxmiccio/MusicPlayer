@@ -8,9 +8,8 @@
 
 #include "Artist.h"
 #include "Album.h"
-#include "HttpRequestInput.h"
 #include "HttpRequestWorker.h"
-#include "Settings.h"
+#include "SoundTouchWrapper.h"
 #include "TagLibWrapper.h"
 
 class Album;
@@ -29,6 +28,8 @@ class Track : public QObject
         Track(const QString& path, QObject* parent = 0);
 
         void load(bool asynchronous = true);
+
+        void modifyTempo(qint16 tempo, bool asynchronous = true);
 
         Mp3Tags mp3Tags() const;
 
@@ -60,6 +61,8 @@ class Track : public QObject
     signals:
         void loadTrack();
         void trackLoaded(Track* track, QString artist, QString album);
+        void changeTempo(qint16 tempo);
+        void tempoChanged(QString path);
         void trackUpdated(Track* track, quint8 fields);
         void albumChanged(Album* album);
         void albumUpdated(Album* album, quint8);
@@ -67,10 +70,15 @@ class Track : public QObject
 
     private slots:
         void onLoadTrack();
+        void onChangeTempo(qint16 tempo);
         void onLyricsUrlFound(HttpRequestWorker* worker);
         void onLyricsDownloaded(HttpRequestWorker* worker);
 
     private:
+        QString toWav();
+        QString modifyTempo(QString lameDecodeOutput, qint16 tempo);
+        QString toMp3(QString soundTouchOutput);
+
         Mp3Tags m_tags;
         Album* m_album;
 };

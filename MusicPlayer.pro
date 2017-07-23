@@ -33,7 +33,6 @@ SOURCES += main.cpp \
     playingview/PlayingAlbum.cpp \
     playingview/PlayingLyrics.cpp \
     playingview/PlayingView.cpp \
-    soundtouch/SoundTouchManager.cpp \
     soundtouch/SoundTouchWrapper.cpp \
     trackview/TrackDelegate.cpp \
     trackview/TrackFilterProxy.cpp \
@@ -80,7 +79,6 @@ HEADERS  += albumview/AlbumCover.h \
     playingview/PlayingAlbum.h \
     playingview/PlayingLyrics.h \
     playingview/PlayingView.h \
-    soundtouch/SoundTouchManager.h \
     soundtouch/SoundTouchWrapper.h \
     trackview/TrackDelegate.h \
     trackview/TrackFilterProxy.h \

@@ -82,7 +82,6 @@ QPixmap TagLibWrapper::readMp3Cover(const QFileInfo &fileInfo)
 {
     TagLib::MPEG::File file(fileInfo.canonicalFilePath().toStdString().data());
     QPixmap cover;
-    qDebug() << "hereee";
 
     if(file.ID3v2Tag())
     {
@@ -94,7 +93,6 @@ QPixmap TagLibWrapper::readMp3Cover(const QFileInfo &fileInfo)
             {
                 pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*i_frame);
                 cover = QPixmap::fromImage(QImage::fromData(QByteArray(pictureFrame->picture().data(), static_cast<int>(pictureFrame->picture().size()))));
-                qDebug() << static_cast<int>(pictureFrame->type()) << pictureFrame->mimeType().toCString(true) << cover.width() << "x" << cover.height();
             }
         }
     }
@@ -168,8 +166,7 @@ void TagLibWrapper::setMp3Cover(const QString& filename, const QPixmap& cover)
         frame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(frames.front());
     }
 
-    QString coverPath = "prova.jpeg";
-    qDebug() << coverPath;
+    QString coverPath = "temp.jpeg";
     cover.save(coverPath);
 
     ImageFile image(QFileInfo(coverPath).absoluteFilePath().toUtf8().data());
@@ -182,87 +179,8 @@ void TagLibWrapper::setMp3Cover(const QString& filename, const QPixmap& cover)
 
     file->save();
     delete file;
-#if 0 /* works */
-    TagLib::MPEG::File* file = new TagLib::MPEG::File(filename.toUtf8().data());
-    TagLib::ID3v2::Tag *tag = file->ID3v2Tag(true);
-    TagLib::ID3v2::FrameList frames = tag->frameList("APIC");
-    TagLib::ID3v2::AttachedPictureFrame *frame = 0;
 
-    for(int i = 0;  i <= 20;++i)
-    {
-        //    if(frames.isEmpty())
-        //    {
-        //        qDebug() << "isemty";
-        frame = new TagLib::ID3v2::AttachedPictureFrame;
-        //    }
-        //    else
-        //    {
-        //        qDebug() << "notisemty";
-        //        frame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frames.front());
-        //    }
-        QString picname;
-        if(i == 1)
-        {
-            QPixmap pixmap32 = QPixmap::fromImage(QImage("prova.jpeg")).scaled(32,
-                                                                               32,
-                                                                               Qt::KeepAspectRatio,
-                                                                               Qt::SmoothTransformation);
-            pixmap32.save("prova32.jpeg");
-            picname = "prova32.jpeg";
-            picname = "prova.jpeg";
-        }
-        else
-        {
-            picname = "prova.jpeg";
-        }
-
-
-        QFileInfo fi(picname);
-        QFile f(picname);
-        f.setf
-                qDebug() << fi.absoluteFilePath();
-
-        ImageFile image(fi.absoluteFilePath().toUtf8().data());
-
-        frame->setPicture(image.data());
-        frame->setDescription("Cover");
-        frame->setType(static_cast<TagLib::ID3v2::AttachedPictureFrame::Type>(i));
-        frame->setMimeType("image/jpeg");
-        qDebug() << "isem"<< frame->picture().isEmpty();
-        tag->addFrame(frame);
-
-        qDebug() << file->save();
-        qDebug() << file->save();
-        qDebug() << file->save();
-        qDebug() << file->save();
-    }
-
-
-    delete file;
-#endif
-#if 0 /* Not working */
-    TagLib::MPEG::File file(filename.toStdString().data());
-
-    if(file.ID3v2Tag())
-    {
-        TagLib::ID3v2::FrameList frameList = file.ID3v2Tag()->frameListMap()["APIC"];
-        if(frameList.isEmpty())
-        {
-            TagLib::ID3v2::AttachedPictureFrame* frame = new TagLib::ID3v2::AttachedPictureFrame();
-            frame->setData(cover.toImage().bits());
-            //            frame->setPicture(...);
-            frame->setDescription("Cover");
-            frame->setMimeType("image/jpeg");
-            frame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
-
-            file.ID3v2Tag()->addFrame(frame);
-
-            /* Taglib takes care of deleting frame */
-        }
-
-        file.ID3v2Tag()->save();
-    }
-#endif
+    QFile(coverPath).remove();
 }
 
 void TagLibWrapper::setMp3Lyrics(const QString& filename, const QString& lyrics)

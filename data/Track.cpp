@@ -1,6 +1,10 @@
-#include "Track.h"
+﻿#include "Track.h"
 
-#include <QDebug>
+#include "HttpRequestInput.h"
+#include "LameWrapper.h"
+#include "MusicLibrary.h"
+#include "SoundTouchWrapper.h"
+#include "Settings.h"
 
 Track::Track(QObject* parent) : QObject(parent)
 {
@@ -11,6 +15,8 @@ Track::Track(const QString& path, QObject* parent) : QObject(parent)
     m_tags.path = path;
 
     QObject::connect(this, SIGNAL(loadTrack()), this, SLOT(onLoadTrack()));
+    QObject::connect(this, SIGNAL(changeTempo(qint16)), this, SLOT(onChangeTempo(qint16)));
+    QObject::connect(this, SIGNAL(tempoChanged(QString)), MusicLibrary::instance(), SLOT(onTempoChanged(QString)));
 }
 
 void Track::load(bool asynchronous)
@@ -22,6 +28,18 @@ void Track::load(bool asynchronous)
     else
     {
         onLoadTrack();
+    }
+}
+
+void Track::modifyTempo(qint16 tempo, bool asynchronous)
+{
+    if(asynchronous)
+    {
+        emit changeTempo(tempo);
+    }
+    else
+    {
+        onChangeTempo(tempo);
     }
 }
 
@@ -90,8 +108,6 @@ const QString& Track::readLyrics(bool force)
 
 void Track::downloadLyrics()
 {
-    qDebug() << "Downloading lyrics for track" << m_tags.title;
-
     QString title = m_tags.title;
     if(title.contains("(Feat", Qt::CaseInsensitive))
     {
@@ -175,11 +191,28 @@ void Track::onLoadTrack()
     emit trackLoaded(this, m_tags.artist, m_tags.album);
 }
 
+void Track::onChangeTempo(qint16 tempo)
+{
+    QString lameDecodeOutput = toWav();
+    QString soundTouchOutput = modifyTempo(lameDecodeOutput, tempo);
+    QString lameEncodeOutput = toMp3(soundTouchOutput);
+
+    QFile(lameDecodeOutput).remove();
+    QFile(soundTouchOutput).remove();
+
+    Mp3Tags tags = m_tags;
+    tags.title = QString(tags.title + " (x" + QString::number(tempo) + ")");
+
+    TagLibWrapper::setMp3Tags(lameEncodeOutput, tags);
+    TagLibWrapper::setMp3Cover(lameEncodeOutput, m_album->cover());
+    TagLibWrapper::readMp3Cover(QFileInfo(lameEncodeOutput));
+
+    emit tempoChanged(lameEncodeOutput);
+}
+
 void Track::onLyricsUrlFound(HttpRequestWorker* worker)
 {
     QString url = worker->lyricsUrl();
-
-    qDebug() << "Lyrics url for track" << m_tags.title << "is" << url;
 
     HttpRequestInput input(url);
 
@@ -212,6 +245,37 @@ void Track::onLyricsDownloaded(HttpRequestWorker* worker)
         qDebug() << "Lyrics for track" << m_tags.title << "is" << m_tags.lyrics;
     }
     worker->deleteLater();
+}
+
+QString Track::toWav()
+{
+    QString lameDecodeOutput = QString(m_tags.path).replace(".mp3", ".wav");
+
+    LameWrapper decoder(m_tags.path, lameDecodeOutput);
+    decoder.decode();
+
+    return lameDecodeOutput;
+}
+
+QString Track::modifyTempo(QString lameDecodeOutput, qint16 tempo)
+{
+    QString soundTouchOutput = QString(lameDecodeOutput).replace(".wav", " (x" + QString(QString::number(tempo) + ").wav"));
+
+    SoundTouchWrapper soundTouch(lameDecodeOutput, soundTouchOutput);
+    soundTouch.setTempo(tempo);
+    soundTouch.process();
+
+    return soundTouchOutput;
+}
+
+QString Track::toMp3(QString soundTouchOutput)
+{
+    QString lameEncodeOutput = QString(soundTouchOutput).replace(".wav", ".mp3");
+
+    LameWrapper encoder(soundTouchOutput, lameEncodeOutput);
+    encoder.encode();
+
+    return lameEncodeOutput;
 }
 
 bool operator==(const Track& track1, const Track& track2)

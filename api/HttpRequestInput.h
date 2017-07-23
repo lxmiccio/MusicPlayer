@@ -1,9 +1,10 @@
 #ifndef HTTPREQUESTINPUT_H
 #define HTTPREQUESTINPUT_H
 
-#include <QDebug>
+#include <QMap>
+#include <QString>
 
-enum HttpRequestVarLayout {LAYOUT_NOT_SET, LAYOUT_ADDRESS, LAYOUT_URL_ENCODED, LAYOUT_MULTIPART};
+enum HttpRequestVarLayout { LAYOUT_NOT_SET, LAYOUT_ADDRESS, LAYOUT_URL_ENCODED, LAYOUT_MULTIPART };
 
 class HttpRequestInputFileElement
 {
@@ -32,10 +33,6 @@ public:
     HttpRequestVarLayout var_layout;
     QMap<QString, QString> vars;
     QList<HttpRequestInputFileElement> files;
-
-
-
-private:
 };
 
 #endif// HTTPREQUESTINPUT_H

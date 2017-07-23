@@ -16,8 +16,6 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
 {
     m_mode = mode;
 
-    m_soundTouch = new SoundTouchManager();
-
     m_trackModel = new TrackModel();
 
 #if 0
@@ -190,10 +188,11 @@ void TrackView::onContextMenuRequested(QPoint position)
 
     QMenu tempoMenu("Change tempo");
 
-    QAction* x125 = tempoMenu.addAction("125%");
-    QAction* x150 = tempoMenu.addAction("150%");
-    QAction* x175 = tempoMenu.addAction("175%");
-    QAction* x200 = tempoMenu.addAction("200%");
+    QAction* x25 = tempoMenu.addAction("25%");
+    QAction* x50 = tempoMenu.addAction("50%");
+    QAction* x75 = tempoMenu.addAction("75%");
+    QAction* x100 = tempoMenu.addAction("100%");
+    QAction* valueTempo = tempoMenu.addAction("Value");
     menu.addMenu(&tempoMenu);
 
     QAction* selectedAction = menu.exec(viewport()->mapToGlobal(position));
@@ -239,36 +238,36 @@ void TrackView::onContextMenuRequested(QPoint position)
             m_trackModel->rootItem()->child(selection.at(i).row())->track()->downloadLyrics();
         }
     }
-    else if(selectedAction == x125 || selectedAction == x150 || selectedAction == x175 || selectedAction == x200)
+    else if(selectedAction == x25 || selectedAction == x50 || selectedAction == x75 || selectedAction == x100 || selectedAction == valueTempo)
     {
         quint16 tempo = 0;
 
-        if(selectedAction == x125)
+        if(selectedAction == x25)
         {
             tempo = 25;
         }
-        else if(selectedAction == x150)
+        else if(selectedAction == x50)
         {
             tempo = 50;
         }
-        else if(selectedAction == x175)
+        else if(selectedAction == x75)
         {
             tempo = 75;
         }
-        else if(selectedAction == x200)
+        else if(selectedAction == x100)
         {
             tempo = 100;
         }
-
-        QVector<Track*> tracks;
+        else if(selectedAction == valueTempo)
+        {
+            tempo = QInputDialog::getInt(0, "Change tempo", "Tempo(0-100):", 0, 0, 100);
+        }
 
         QModelIndexList selection = selectionModel()->selectedRows();
         for(quint16 i = 0; i < selection.size(); ++i)
         {
-            tracks.push_back(m_trackModel->rootItem()->child(selection.at(i).row())->track());
+            m_trackModel->rootItem()->child(selection.at(i).row())->track()->modifyTempo(tempo);
         }
-
-        m_soundTouch->changeTempo(tracks, tempo);
     }
 }
 

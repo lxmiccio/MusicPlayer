@@ -1,5 +1,7 @@
 #include "MusicLibrary.h"
 
+#include "TagLibWrapper.h"
+
 MusicLibrary* MusicLibrary::m_instance = 0;
 
 MusicLibrary::MusicLibrary()
@@ -258,12 +260,18 @@ void MusicLibrary::onTracksToLoad(const QVector<QFileInfo>& filesInfo)
     {
         if(i_file->suffix() == "flac" || i_file->suffix() == "mp3")
         {
-            qDebug() << i_file->canonicalFilePath();
             Track* track = new Track(i_file->canonicalFilePath());
             QObject::connect(track, SIGNAL(trackLoaded(Track*, QString, QString)), this, SLOT(onTrackLoaded(Track*, QString, QString)));
             track->load();
         }
     }
+}
+
+void MusicLibrary::onTempoChanged(QString path)
+{
+    QVector<QFileInfo> filesInfo;
+    filesInfo.push_back(QFileInfo(path));
+    onTracksToLoad(filesInfo);
 }
 
 void MusicLibrary::onArtistRemoved(Artist* artist)
