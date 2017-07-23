@@ -2,9 +2,7 @@
 
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
-
-#include "LameWrapper.h"
-#include "SoundTouchWrapper.h"
+#include "PlaylistManager.h"
 
 const quint8 TrackView::TRACK_INDEX;
 const quint8 TrackView::TITLE_INDEX;
@@ -183,16 +181,27 @@ void TrackView::onContextMenuRequested(QPoint position)
     QAction* changeAlbum = menu.addAction("Change album");
     QAction* changeTitle = menu.addAction("Change title");
     QAction* removeTrack = menu.addAction("Remove track");
+    QAction* downloadLyrics = menu.addAction("Download lyrics");
 
-    QAction* lyrics = menu.addAction("Lyrics");
+    QMenu playlistMenu("Add to playlist");
+    QAction* addPlaylist = playlistMenu.addAction("Create new");
+    playlistMenu.addSeparator();
+
+    QVector<QPair<QString,QAction*>> playlists;
+    QStringList playlistsName = PlaylistManager::instance()->playlistsName();
+    for(quint16 i = 0; i < playlistsName.size(); ++i)
+    {
+        playlists.append(qMakePair(playlistsName.at(i), playlistMenu.addAction(playlistsName.at(i))));
+    }
+
+    menu.addMenu(&playlistMenu);
 
     QMenu tempoMenu("Change tempo");
-
     QAction* x25 = tempoMenu.addAction("25%");
     QAction* x50 = tempoMenu.addAction("50%");
     QAction* x75 = tempoMenu.addAction("75%");
     QAction* x100 = tempoMenu.addAction("100%");
-    QAction* valueTempo = tempoMenu.addAction("Value");
+    QAction* valueTempo = tempoMenu.addAction("Custom value");
     menu.addMenu(&tempoMenu);
 
     QAction* selectedAction = menu.exec(viewport()->mapToGlobal(position));
@@ -230,7 +239,7 @@ void TrackView::onContextMenuRequested(QPoint position)
             MusicLibrary::instance()->removeTrack(m_trackModel->rootItem()->child(selection.at(i).row())->track());
         }
     }
-    else if(selectedAction == lyrics)
+    else if(selectedAction == downloadLyrics)
     {
         QModelIndexList selection = selectionModel()->selectedRows();
         for(quint16 i = 0; i < selection.size(); ++i)
@@ -268,6 +277,19 @@ void TrackView::onContextMenuRequested(QPoint position)
         {
             m_trackModel->rootItem()->child(selection.at(i).row())->track()->modifyTempo(tempo);
         }
+    }
+    else if(selectedAction == addPlaylist)
+    {
+        QString newPlaylist = QInputDialog::getText(0, "Create playlist", "Title:");
+        Playlist* playlist = new Playlist(newPlaylist);
+
+        QModelIndexList selection = selectionModel()->selectedRows();
+        for(quint16 i = 0; i < selection.size(); ++i)
+        {
+            playlist->addTrack(m_trackModel->rootItem()->child(selection.at(i).row())->track());
+        }
+
+        PlaylistManager::instance()->savePlaylist(playlist);
     }
 }
 

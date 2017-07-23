@@ -18,7 +18,7 @@ class Playlist : public QObject
         Q_OBJECT
 
     public:
-        explicit Playlist(const QString& name = QString("Playing"), QObject* parent = 0);
+        explicit Playlist(const QString& name = "Playing", QObject* parent = 0);
 
         static Playlist* fromAlbum(Album* album, Track* startingTrack = NULL);
         static Playlist* fromTracks(QVector<Track*> tracks, Track* startingTrack = NULL);

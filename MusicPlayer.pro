@@ -56,7 +56,8 @@ SOURCES += main.cpp \
     api/HttpRequestInput.cpp \
     api/HttpRequestWorker.cpp \
     albumview/AlbumCoverWidget.cpp \
-    albumview/AlbumTableItem.cpp
+    albumview/AlbumTableItem.cpp \
+    data/PlaylistManager.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -103,7 +104,8 @@ HEADERS  += albumview/AlbumCover.h \
     api/HttpRequestInput.h \
     api/HttpRequestWorker.h \
     albumview/AlbumCoverWidget.h \
-    albumview/AlbumTableItem.h
+    albumview/AlbumTableItem.h \
+    data/PlaylistManager.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/api

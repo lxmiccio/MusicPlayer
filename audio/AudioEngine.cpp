@@ -1,6 +1,6 @@
 #include "AudioEngine.h"
 
-QPointer<AudioEngine> AudioEngine::m_instance = 0;
+QPointer<AudioEngine> AudioEngine::m_instance = NULL;
 
 AudioEngine::AudioEngine()
 {
