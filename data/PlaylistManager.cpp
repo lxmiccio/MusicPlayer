@@ -1,17 +1,19 @@
 #include "PlaylistManager.h"
 
-QPointer<PlaylistManager> PlaylistManager::m_instance = 0;
+#include "Settings.h"
+
+QPointer<PlaylistManager> PlaylistManager::m_instance = NULL;
 
 PlaylistManager::PlaylistManager(QObject* parent) : QObject(parent)
 {
-loadPlaylists();
 }
 
 PlaylistManager* PlaylistManager::instance()
 {
-    if(!m_instance)
+    if(m_instance == 0)
     {
         m_instance = new PlaylistManager();
+        m_instance->loadPlaylists();
     }
 
     return m_instance;
@@ -19,7 +21,7 @@ PlaylistManager* PlaylistManager::instance()
 
 void PlaylistManager::deleteInstance()
 {
-    delete m_instance;
+    //delete m_instance;
 }
 
 QStringList PlaylistManager::playlistsName()
@@ -41,25 +43,24 @@ const QVector<Playlist*>& PlaylistManager::playlists()
 
 void PlaylistManager::loadPlaylists()
 {
-        QString filename = "playlists.ply";
-        QFile file(filename);
+    QFile file(Settings::playlistsFile());
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Could not open" << Settings::playlistsFile();
+        return;
+    }
 
-        if(!file.open(QIODevice::ReadOnly))
-        {
-            qDebug().nospace() << "Could not open playlists.ply";
-            return;
-        }
+    QDataStream in(&file);
+    while(!file.atEnd())
+    {
+        SerializablePlaylist serializable;
+        in >> serializable;
 
-        QDataStream in(&file);
+        Playlist* playlist = playlistFromSerializable(serializable);
+        m_playlists.push_back(playlist);
+    }
 
-        while(!file.atEnd())
-        {
-            Playlist playlist;
-            in >> playlist;
-            qDebug() << playlist.name();
-        }
-
-        file.close();
+    file.close();
 }
 
 void PlaylistManager::addPlaylist(Playlist* playlist)
@@ -74,20 +75,69 @@ void PlaylistManager::savePlaylist(Playlist* playlist)
 {
     if(playlist)
     {
-        addPlaylist(playlist);
+        m_playlists.push_back(playlist);
 
-        QFile file(playlist->name() + ".ply");
+        QFile file(Settings::playlistsFile());
+        QFile::OpenMode mode = QIODevice::WriteOnly;
 
-        if(!file.open(QIODevice::WriteOnly))
+        if(file.exists())
         {
-            qDebug().nospace() << "Could not open " << playlist->name() << ".ply";
+            mode = QIODevice::Append;
+        }
+
+        if(!file.open(mode))
+        {
+            qDebug() << "Could not open" << Settings::playlistsFile();
             return;
         }
 
+        SerializablePlaylist serializable = serializableFromPlaylist(playlist);
+
         QDataStream out(&file);
-        out << playlist;
+        out << serializable;
 
         file.flush();
         file.close();
     }
+}
+
+Playlist* PlaylistManager::playlistFromSerializable(SerializablePlaylist serializable)
+{
+    Playlist* playlist = new Playlist(serializable.m_name);
+
+    for(quint16 i = 0; i < serializable.m_tracks.size(); ++i)
+    {
+        QString path = serializable.m_tracks.at(i);
+        playlist->addTrack(path);
+    }
+
+    return playlist;
+}
+
+SerializablePlaylist PlaylistManager::serializableFromPlaylist(Playlist* playlist)
+{
+    SerializablePlaylist serializable;
+
+    if(playlist)
+    {
+        serializable.m_name = playlist->name();
+        foreach(Track* track, playlist->tracks())
+        {
+            serializable.m_tracks << track->path();
+        }
+    }
+
+    return serializable;
+}
+
+QDataStream &operator<<(QDataStream& out, const SerializablePlaylist& playlist)
+{
+    out << playlist.m_name << playlist.m_tracks;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream& in, SerializablePlaylist& playlist)
+{
+    in >> playlist.m_name >> playlist.m_tracks;
+    return in;
 }

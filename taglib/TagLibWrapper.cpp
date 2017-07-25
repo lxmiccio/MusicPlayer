@@ -1,8 +1,5 @@
 #include "TagLibWrapper.h"
 
-
-#include"qdebug.h"
-
 class ImageFile : public TagLib::File
 {
 public:

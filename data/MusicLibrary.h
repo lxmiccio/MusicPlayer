@@ -9,6 +9,8 @@
 #include "Artist.h"
 #include "Track.h"
 
+#include "PlaylistManager.h"
+
 class TrackLoader;
 
 class MusicLibrary : public QObject
@@ -37,7 +39,11 @@ class MusicLibrary : public QObject
         void changeArtistOnTrack(Track* track, QString newArtist);
         void changeAlbumOnTrack(Track* track, QString newAlbum);
 
+        Track* track(const QString& path);
+        bool exists(const QString& path);
+
     public slots:
+        void onTrackToLoad(Track* track);
         void onTracksToLoad(const QVector<QFileInfo>& filesInfo);
         void onTempoChanged(QString path);
         void onArtistRemoved(Artist* artist);

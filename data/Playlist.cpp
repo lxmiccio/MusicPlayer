@@ -1,5 +1,7 @@
 #include "Playlist.h"
 
+#include "MusicLibrary.h"
+
 Playlist::Playlist(const QString& name, QObject* parent) : QObject(parent)
 {
     m_name = name;
@@ -46,43 +48,30 @@ Playlist* Playlist::fromTracks(QVector<Track*> tracks, Track* startingTrack)
     return playlist;
 }
 
-const Playlist* Playlist::pathsFromPlaylist(QFileInfo& file)
-{
-    /* Never used so far */
-    Playlist* playlist = new Playlist("Playing");
-
-    QFile inFile(file.absoluteFilePath());
-    inFile.open(QIODevice::WriteOnly);
-    QDataStream stream(&inFile);
-    stream >> *playlist;
-
-    return playlist;
-}
-
-void Playlist::saveToFile() const
-{
-    /* Never used so far */
-    QFile file(QDir::currentPath() + QDir::separator() + m_name);
-    file.open(QIODevice::ReadOnly);
-    QDataStream stream(&file);
-    stream << *this;
-}
-
 const QVector<Track*>& Playlist::tracks() const
 {
     return m_tracks;
 }
 
-const QStringList& Playlist::tracksPath() const
+void Playlist::addTrack(const QString& path)
 {
-    return m_tracksPath;
+    if(!MusicLibrary::instance()->exists(path) && (path.endsWith("flac") || path.endsWith("mp3")))
+    {
+        Track* track = new Track(path);
+        MusicLibrary::instance()->onTrackToLoad(track);
+
+        m_tracks.push_back(track);
+    }
+    else
+    {
+        m_tracks.push_back(MusicLibrary::instance()->track(path));
+    }
 }
 
 void Playlist::addTrack(Track* track)
 {
     if(track)
     {
-        m_tracksPath << track->path();
         m_tracks.push_back(track);
     }
 }
@@ -116,22 +105,4 @@ void Playlist::clear()
 {
     m_tracks.clear();
     m_startingIndex = 0;
-}
-
-QDataStream &operator<<(QDataStream& out, const Playlist& playlist)
-{
-    /* Never used so far */
-    out << playlist.name();
-    out << playlist.tracksPath();
-    return out;
-}
-
-QDataStream &operator>>(QDataStream& in, Playlist& playlist)
-{
-    /* Never used so far */
-    QString name;
-    QStringList tracksPath;
-
-    in >> name >> tracksPath;
-    return in;
 }

@@ -45,6 +45,9 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_layout->addLayout(m_horLayout);
     m_layout->addWidget(m_audioControls);
     setLayout(m_layout);
+
+    /* Load playlists */
+    PlaylistManager::instance();
 }
 
 MainWidget::~MainWidget()

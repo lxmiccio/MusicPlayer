@@ -9,6 +9,16 @@
 
 #include "Playlist.h"
 
+class SerializablePlaylist
+{
+public:
+    QString m_name;
+    QStringList m_tracks;
+};
+
+QDataStream &operator<<(QDataStream& out, const SerializablePlaylist& playlist);
+QDataStream &operator>>(QDataStream& in, SerializablePlaylist& playlist);
+
 class PlaylistManager : public QObject
 {
 public:
@@ -22,10 +32,13 @@ public:
     void addPlaylist(Playlist* playlist);
     void savePlaylist(Playlist* playlist);
 
+    Playlist* playlistFromSerializable(SerializablePlaylist serializable);
+    SerializablePlaylist serializableFromPlaylist(Playlist* playlist);
+
 protected:
     PlaylistManager(QObject* parent = 0);
 
-public:
+private:
     static QPointer<PlaylistManager> m_instance;
 
     QVector<Playlist*> m_playlists;

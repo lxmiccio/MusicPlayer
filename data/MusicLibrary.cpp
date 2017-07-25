@@ -209,11 +209,11 @@ void MusicLibrary::onTrackLoaded(Track* p_track, QString p_artist, QString p_alb
             {
                 l_album = new Album(p_album, l_artist);
 
-                if(l_path.endsWith(".flac"))
+                if(l_path.endsWith("flac"))
                 {
                     l_album->setCover(TagLibWrapper::readFlacCover(QFileInfo(l_path)));
                 }
-                else if(l_path.endsWith(".mp3"))
+                else if(l_path.endsWith("mp3"))
                 {
                     l_album->setCover(TagLibWrapper::readMp3Cover(QFileInfo(l_path)));
                 }
@@ -252,6 +252,53 @@ void MusicLibrary::changeAlbumOnTrack(Track* track, QString newAlbum)
 
     track->setAlbum(l_album);
     l_album->addTrack(track);
+}
+
+Track* MusicLibrary::track(const QString& path)
+{
+    foreach(Artist* i_artist, m_artists)
+    {
+        foreach(Album* i_album, i_artist->albums())
+        {
+            foreach(Track* i_track, i_album->tracks())
+            {
+                if(i_track->path() == path)
+                {
+                    return i_track;
+                }
+            }
+        }
+    }
+
+    return NULL;
+}
+
+bool MusicLibrary::exists(const QString& path)
+{
+    foreach(Artist* i_artist, m_artists)
+    {
+        foreach(Album* i_album, i_artist->albums())
+        {
+            foreach(Track* i_track, i_album->tracks())
+            {
+                if(i_track->path() == path)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+void MusicLibrary::onTrackToLoad(Track* track)
+{
+    if(track)
+    {
+        QObject::connect(track, SIGNAL(trackLoaded(Track*, QString, QString)), this, SLOT(onTrackLoaded(Track*, QString, QString)));
+        track->load();
+    }
 }
 
 void MusicLibrary::onTracksToLoad(const QVector<QFileInfo>& filesInfo)

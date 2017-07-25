@@ -55,6 +55,11 @@ Settings::View Settings::view()
     return stringToView(settings.value("DEFAULT/view", "ARTIST_VIEW").toString());
 }
 
+QString Settings::playlistsFile()
+{
+    return "playlists.ply";
+}
+
 Settings::View Settings::stringToView(QString string)
 {
     Settings::View view = View::ARTIST_VIEW;
