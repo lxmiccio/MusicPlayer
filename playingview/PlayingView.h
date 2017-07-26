@@ -14,16 +14,8 @@
 #include "Playlist.h"
 #include "Track.h"
 #include "PlayingAlbum.h"
-#include "TrackDelegate.h"
-#include "TrackItem.h"
-#include "TrackView.h"
+#include "TracksListView.h"
 #include "PlayingLyrics.h"
-#include "TrackModel.h"
-
-class TrackDelegate;
-class TrackItem;
-class TrackView;
-class TrackModel;
 
 class PlayingView : public QWidget
 {
@@ -32,15 +24,6 @@ class PlayingView : public QWidget
     public:
         explicit PlayingView(quint8 mode, QWidget* parent = 0);
         ~PlayingView();
-
-        static const quint8 TRACK = 1;
-        static const quint8 TITLE = 2;
-        static const quint8 ALBUM = 4;
-        static const quint8 ARTIST = 8;
-        static const quint8 DURATION = 16;
-
-        static const quint8 FULL = TRACK | TITLE | ALBUM | ARTIST | DURATION;
-        static const quint8 REDUCED = TRACK | TITLE | DURATION;
 
         static const quint16 WIDGET_HEIGHT = 415;
 
@@ -64,10 +47,10 @@ class PlayingView : public QWidget
 
         QSpacerItem* m_spacer;
 
-        TrackView* m_trackView;
+        TracksListView* m_tracksListView;
         ScrollableArea* m_scrollableArea;
 
-        QVector<TrackItem*> m_items;
+        QVector<TracksListItem*> m_items;
 
         QVBoxLayout* m_leftLayout;
         QHBoxLayout* m_layout;

@@ -16,8 +16,8 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_albumTitle->setFont(font);
     m_albumTitle->setStyleSheet("color: white;");
 
-    m_trackView = new TrackView(PlayingView::REDUCED);
-    QObject::connect(m_trackView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
+    m_tracksListView = new TracksListView(TracksListView::REDUCED);
+    QObject::connect(m_tracksListView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
     QObject::connect(this, SIGNAL(playlistSelected(Playlist*)), AudioEngine::instance(), SLOT(onPlaylistSelected(Playlist*)));
 
     m_leftLayoutUpperSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -36,7 +36,7 @@ ArtistAlbumWidget::ArtistAlbumWidget(QWidget* parent) : QWidget(parent)
     m_rightLayout->setMargin(0);
     m_rightLayout->addWidget(m_albumTitle);
     m_rightLayout->addItem(m_rightLayoutMiddleSpacer);
-    m_rightLayout->addWidget(m_trackView);
+    m_rightLayout->addWidget(m_tracksListView);
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
@@ -109,9 +109,9 @@ void ArtistAlbumWidget::setAlbum(Album* album, quint8 fields)
 
         foreach(Track* i_track, m_album->tracks())
         {
-            m_trackView->appendItem(i_track);
+            m_tracksListView->appendItem(i_track);
         }
-        m_trackView->setMinimumHeight(m_trackView->fittingSize().height());
+        m_tracksListView->setMinimumHeight(m_tracksListView->fittingSize().height());
     }
 }
 
@@ -125,7 +125,7 @@ void ArtistAlbumWidget::onAlbumUpdated(Album* album, quint8 fields)
 
 void ArtistAlbumWidget::onDoubleClicked(const QModelIndex& index)
 {
-    Track* track = m_trackView->trackModel()->rootItem()->child(index.row())->track();
+    Track* track = m_tracksListView->tracksListModel()->rootItem()->child(index.row())->track();
 
     if(track)
     {
@@ -135,5 +135,5 @@ void ArtistAlbumWidget::onDoubleClicked(const QModelIndex& index)
 
 void ArtistAlbumWidget::clear()
 {
-    m_trackView->clear();
+    m_tracksListView->clear();
 }

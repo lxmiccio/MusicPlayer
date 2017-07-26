@@ -15,9 +15,11 @@ class Settings
     public:
         enum View
         {
-            ARTIST_VIEW = 0,
+            NO_VIEW = 0,
+            ARTIST_VIEW,
             ALBUM_VIEW,
             TRACK_VIEW,
+            PLAYLIST_VIEW,
             PLAYING_VIEW
         };
 

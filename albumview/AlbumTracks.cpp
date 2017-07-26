@@ -12,12 +12,12 @@ AlbumTracks::AlbumTracks(QWidget* parent) : QWidget(parent)
     m_leftLayout->addWidget(m_albumCover);
     m_leftLayout->addItem(m_lowerSpacer);
 
-    m_trackView = new TrackView(PlayingView::REDUCED);
+    m_tracksListView = new TracksListView(TracksListView::REDUCED);
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
     m_layout->addLayout(m_leftLayout);
-    m_layout->addWidget(m_trackView);
+    m_layout->addWidget(m_tracksListView);
     setLayout(m_layout);
 }
 
@@ -28,11 +28,11 @@ void AlbumTracks::onAlbumSelected(Album* album)
         m_album = album;
 
         m_albumCover->setAlbum(m_album);
-        m_trackView->clear();
+        m_tracksListView->clear();
 
         foreach(Track* i_track, m_album->tracks())
         {
-            m_trackView->appendItem(i_track);
+            m_tracksListView->appendItem(i_track);
         }
     }
 }

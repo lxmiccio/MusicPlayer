@@ -6,7 +6,7 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
 {
     m_mode = mode;
 
-    if(m_mode == PlayingView::FULL)
+    if(m_mode == TracksListView::FULL)
     {
         m_playingAlbum = NULL;
         m_playingLyrics = NULL;
@@ -32,22 +32,22 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
         m_scrollableArea = NULL;
     }
 
-    m_trackView = new TrackView(m_mode);
-    QObject::connect(m_trackView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
+    m_tracksListView = new TracksListView(m_mode);
+    QObject::connect(m_tracksListView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
 
-    if(m_mode == PlayingView::FULL)
+    if(m_mode == TracksListView::FULL)
     {
-        m_scrollableArea->setWidget(m_trackView);
-        m_layout->addWidget(m_trackView);
+        m_scrollableArea->setWidget(m_tracksListView);
+        m_layout->addWidget(m_tracksListView);
     }
     else
     {
         m_layout->addLayout(m_leftLayout);
         m_layout->addItem(m_spacer);
-        m_layout->addWidget(m_trackView);
+        m_layout->addWidget(m_tracksListView);
     }
 
     setMinimumHeight(PlayingView::WIDGET_HEIGHT);
@@ -71,9 +71,9 @@ void PlayingView::onAlbumSelected(Album* album)
 
         foreach(Track* i_track, album->tracks())
         {
-            TrackItem* item = new TrackItem(i_track);
+            TracksListItem* item = new TracksListItem(i_track);
             m_items.push_back(item);
-            m_trackView->appendItem(i_track);
+            m_tracksListView->appendItem(i_track);
         }
 
         m_playingAlbum->setAlbum(album);
@@ -88,9 +88,9 @@ void PlayingView::onPlaylistSelected(Playlist* playlist)
 
         foreach(Track* i_track, playlist->tracks())
         {
-            TrackItem* item = new TrackItem(i_track);
+            TracksListItem* item = new TracksListItem(i_track);
             m_items.push_back(item);
-            m_trackView->appendItem(i_track);
+            m_tracksListView->appendItem(i_track);
         }
 
         m_playingAlbum->setAlbum(playlist->tracks().at(0)->album());
@@ -118,5 +118,5 @@ void PlayingView::clear()
     qDeleteAll(m_items);
     m_items.clear();
 
-    m_trackView->clear();
+    m_tracksListView->clear();
 }

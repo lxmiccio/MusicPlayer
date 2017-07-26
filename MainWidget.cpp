@@ -13,14 +13,17 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_albumView = new AlbumView();
     m_albumView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    m_trackView = new TrackView(PlayingView::FULL);
-    QObject::connect(m_trackView, SIGNAL(trackDoubleClicked(Track*)), this, SLOT(onTrackDoubleClicked(Track*)));
-    QObject::connect(MusicLibrary::instance(), SIGNAL(trackAdded(Track*)), m_trackView, SLOT(appendItem(Track*)));
+    m_tracksListView = new TracksListView(TracksListView::FULL);
+    QObject::connect(m_tracksListView, SIGNAL(trackDoubleClicked(Track*)), this, SLOT(onTrackDoubleClicked(Track*)));
+    QObject::connect(MusicLibrary::instance(), SIGNAL(trackAdded(Track*)), m_tracksListView, SLOT(appendItem(Track*)));
 
-    m_playingView = new PlayingView(PlayingView::REDUCED);
+    m_playingView = new PlayingView(TracksListView::REDUCED);
     QObject::connect(m_playingView, SIGNAL(doubleClicked(Track*)), this, SLOT(onTrackDoubleClicked(Track*)));
     QObject::connect(m_playingView, SIGNAL(coverClicked()), this, SLOT(coverClicked()));
 
+    m_playlistView = new PlaylistView();
+
+    m_currentView = Settings::NO_VIEW;
     showView(Settings::view());
 
     m_audioControls = new AudioControls();
@@ -36,7 +39,8 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     m_horLayout->setSpacing(0);
     m_horLayout->addWidget(m_albumView);
     m_horLayout->addWidget(m_artistView);
-    m_horLayout->addWidget(m_trackView);
+    m_horLayout->addWidget(m_tracksListView);
+    m_horLayout->addWidget(m_playlistView);
     m_horLayout->addWidget(m_playingView);
 
     m_layout = new QVBoxLayout();
@@ -67,6 +71,11 @@ void MainWidget::onShowAlbumViewTriggered()
 void MainWidget::onShowTrackViewTriggered()
 {
     showView(Settings::TRACK_VIEW);
+}
+
+void MainWidget::onShowPlaylistViewTriggered()
+{
+    showView(Settings::PLAYLIST_VIEW);
 }
 
 void MainWidget::coverClicked()
@@ -102,7 +111,7 @@ void MainWidget::onTrackStarted(Track* track)
 
 void MainWidget::showView(Settings::View view)
 {
-    if(view != m_currentView)
+    if(view != m_currentView && view != Settings::NO_VIEW)
     {
         if(view == Settings::PLAYING_VIEW && m_currentView != Settings::PLAYING_VIEW)
         {
@@ -113,17 +122,19 @@ void MainWidget::showView(Settings::View view)
 
         if(m_currentView != Settings::PLAYING_VIEW)
         {
-            //Settings::setView(m_currentView);
+            Settings::setView(m_currentView);
         }
 
         m_artistView->hide();
         m_albumView->hide();
-        m_trackView->hide();
+        m_tracksListView->hide();
+        m_playlistView->hide();
         m_playingView->hide();
 
         if(m_currentView == Settings::ARTIST_VIEW) m_artistView->show();
         else if(m_currentView == Settings::ALBUM_VIEW) m_albumView->show();
-        else if(m_currentView == Settings::TRACK_VIEW) m_trackView->show();
+        else if(m_currentView == Settings::TRACK_VIEW) m_tracksListView->show();
+        else if(m_currentView == Settings::PLAYLIST_VIEW) { m_playlistView->show(); m_playlistView->changePlaylist(PlaylistManager::instance()->playlists().at(0)); }
         else if(m_currentView == Settings::PLAYING_VIEW) m_playingView->show();
     }
 }

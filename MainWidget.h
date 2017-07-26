@@ -15,7 +15,9 @@
 #include "ScrollableArea.h"
 #include "Settings.h"
 #include "Track.h"
+#include "TracksListView.h"
 #include "PlayingView.h"
+#include "PlaylistView.h"
 
 class MainWidget : public BackgroundWidget
 {
@@ -29,6 +31,7 @@ class MainWidget : public BackgroundWidget
         void onShowArtistViewTriggered();
         void onShowAlbumViewTriggered();
         void onShowTrackViewTriggered();
+        void onShowPlaylistViewTriggered();
         void onCoverClicked(Album* album);
         void onTrackStarted(Track* track);
         void onCurrentTrackClicked();
@@ -51,7 +54,8 @@ class MainWidget : public BackgroundWidget
         AlbumView* m_albumView;
         ArtistView* m_artistView;
         ScrollableArea* m_scrollableTrackView;
-        TrackView* m_trackView;
+        TracksListView* m_tracksListView;
+        PlaylistView* m_playlistView;
         PlayingView* m_playingView;
 
         QHBoxLayout* m_horLayout;

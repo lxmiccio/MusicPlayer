@@ -34,11 +34,6 @@ SOURCES += main.cpp \
     playingview/PlayingLyrics.cpp \
     playingview/PlayingView.cpp \
     soundtouch/SoundTouchWrapper.cpp \
-    trackview/TrackDelegate.cpp \
-    trackview/TrackFilterProxy.cpp \
-    trackview/TrackItem.cpp \
-    trackview/TrackModel.cpp \
-    trackview/TrackView.cpp \
     utils/ImageUtils.cpp \
     utils/Settings.cpp \
     utils/Utils.cpp \
@@ -57,7 +52,13 @@ SOURCES += main.cpp \
     api/HttpRequestWorker.cpp \
     albumview/AlbumCoverWidget.cpp \
     albumview/AlbumTableItem.cpp \
-    data/PlaylistManager.cpp
+    data/PlaylistManager.cpp \
+    playlistview/PlaylistView.cpp \
+    views/TrackInfoView.cpp \
+    views/trackslist/TracksListView.cpp \
+    views/trackslist/TracksListDelegate.cpp \
+    views/trackslist/TracksListItem.cpp \
+    views/trackslist/TracksListModel.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -81,11 +82,6 @@ HEADERS  += albumview/AlbumCover.h \
     playingview/PlayingLyrics.h \
     playingview/PlayingView.h \
     soundtouch/SoundTouchWrapper.h \
-    trackview/TrackDelegate.h \
-    trackview/TrackFilterProxy.h \
-    trackview/TrackItem.h \
-    trackview/TrackModel.h \
-    trackview/TrackView.h \
     utils/GuiUtils.h \
     utils/ImageUtils.h \
     utils/Settings.h \
@@ -105,7 +101,14 @@ HEADERS  += albumview/AlbumCover.h \
     api/HttpRequestWorker.h \
     albumview/AlbumCoverWidget.h \
     albumview/AlbumTableItem.h \
-    data/PlaylistManager.h
+    data/PlaylistManager.h \
+    PlaylistView.h \
+    playlistview/PlaylistView.h \
+    views/TrackInfoView.h \
+    views/trackslist/TracksListView.h \
+    views/trackslist/TracksListDelegate.h \
+    views/trackslist/TracksListItem.h \
+    views/trackslist/TracksListModel.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/api
@@ -116,10 +119,12 @@ INCLUDEPATH += $$PWD/engine
 INCLUDEPATH += $$PWD/gui
 INCLUDEPATH += $$PWD/mp3lame
 INCLUDEPATH += $$PWD/playingview
+INCLUDEPATH += $$PWD/playlistview
 INCLUDEPATH += $$PWD/soundtouch
 INCLUDEPATH += $$PWD/taglib
-INCLUDEPATH += $$PWD/trackview
 INCLUDEPATH += $$PWD/utils
+INCLUDEPATH += $$PWD/views
+INCLUDEPATH += $$PWD/views/trackslist
 INCLUDEPATH += $$PWD/widgets
 
 RESOURCES += resources.qrc

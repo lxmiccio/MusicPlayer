@@ -5,7 +5,7 @@
 #include <QWidget>
 
 #include "AlbumCover.h"
-#include "TrackView.h"
+#include "TracksListView.h"
 
 class AlbumTracks : public QWidget
 {
@@ -27,7 +27,7 @@ class AlbumTracks : public QWidget
         QSpacerItem* m_lowerSpacer;
         QVBoxLayout* m_leftLayout;
 
-        TrackView* m_trackView;
+        TracksListView* m_tracksListView;
         QHBoxLayout* m_layout;
 };
 

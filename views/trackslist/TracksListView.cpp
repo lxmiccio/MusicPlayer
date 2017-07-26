@@ -1,34 +1,17 @@
-#include "TrackView.h"
+#include "TracksListView.h"
 
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
-#include "PlaylistManager.h"
 
-const quint8 TrackView::TRACK_INDEX;
-const quint8 TrackView::TITLE_INDEX;
-const quint8 TrackView::ALBUM_INDEX;
-const quint8 TrackView::ARTIST_INDEX;
-const quint8 TrackView::DURATION_INDEX;
-
-TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
+TracksListView::TracksListView(quint8 mode, QWidget* parent) : QTableView(parent)
 {
     m_mode = mode;
 
-    m_trackModel = new TrackModel();
+    m_tracksListModel = new TracksListModel();
+    setModel(m_tracksListModel);
 
-#if 0
-    m_filterProxy = new TrackFilterProxy();
-    m_filterProxy->setDynamicSortFilter(true);
-    m_filterProxy->setSourceModel(m_trackModel);
-    m_filterProxy->sort(0, Qt::AscendingOrder);
-    QObject::connect(m_trackModel, SIGNAL(rowsInserted(QModelIndex, int, int)), m_filterProxy, SLOT(invalidate()));
-    setModel(m_filterProxy);
-#else
-    setModel(m_trackModel);
-#endif
-
-    m_trackDelegate = new TrackDelegate(this);
-    setItemDelegate(m_trackDelegate);
+    m_tracksListDelegate = new TracksListDelegate(this);
+    setItemDelegate(m_tracksListDelegate);
 
     horizontalHeader()->hide();
     verticalHeader()->hide();
@@ -53,102 +36,102 @@ TrackView::TrackView(quint8 mode, QWidget* parent) : QTableView(parent)
     QObject::connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
 }
 
-TrackView::~TrackView()
+TracksListView::~TracksListView()
 {
 
 }
 
-QSize TrackView::fittingSize()
+QSize TracksListView::fittingSize()
 {
     return sizeHint();
 }
 
-quint8 TrackView::mode() const
+quint8 TracksListView::mode() const
 {
     return m_mode;
 }
 
-TrackModel* TrackView::trackModel() const
+TracksListModel* TracksListView::tracksListModel() const
 {
-    return m_trackModel;
+    return m_tracksListModel;
 }
 
-int TrackView::rowCount() const
+int TracksListView::rowCount() const
 {
-    return m_trackModel->rowCount();
+    return m_tracksListModel->rowCount();
 }
 
-int TrackView::columnCount() const
+int TracksListView::columnCount() const
 {
-    return m_trackModel->columnCount();
+    return m_tracksListModel->columnCount();
 }
 
-void TrackView::propendItem(Track* track)
+void TracksListView::propendItem(Track* track)
 {
-    m_trackModel->propendItem(track);
+    m_tracksListModel->propendItem(track);
 }
 
-void TrackView::appendItem(Track* track)
+void TracksListView::appendItem(Track* track)
 {
-    m_trackModel->appendItem(track);
+    m_tracksListModel->appendItem(track);
 }
 
-void TrackView::removeItem(Track* track)
+void TracksListView::removeItem(Track* track)
 {
-    m_trackModel->removeItem(track);
+    m_tracksListModel->removeItem(track);
 }
 
-void TrackView::insertItemAt(Track* track, int row)
+void TracksListView::insertItemAt(Track* track, int row)
 {
-    m_trackModel->insertItemAt(track, row);
+    m_tracksListModel->insertItemAt(track, row);
 }
 
-void TrackView::removeFirstItem()
+void TracksListView::removeFirstItem()
 {
-    m_trackModel->removeFirstItem();
+    m_tracksListModel->removeFirstItem();
 }
 
-void TrackView::removeLastItem()
+void TracksListView::removeLastItem()
 {
-    m_trackModel->removeLastItem();
+    m_tracksListModel->removeLastItem();
 }
 
-void TrackView::removeItemAt(int row)
+void TracksListView::removeItemAt(int row)
 {
-    m_trackModel->removeItemAt(row);
+    m_tracksListModel->removeItemAt(row);
 }
 
-void TrackView::clear()
+void TracksListView::clear()
 {
-    m_trackModel->clear();
+    m_tracksListModel->clear();
 }
 
-void TrackView::resizeEvent(QResizeEvent* event)
+void TracksListView::resizeEvent(QResizeEvent* event)
 {
-    int width = event->size().width() - TrackView::TRACK_WIDTH - TrackView::DURATION_WIDTH;
+    int width = event->size().width() - TracksListView::TRACK_WIDTH - TracksListView::DURATION_WIDTH;
 
-    if(m_mode == PlayingView::FULL)
+    if(m_mode == TracksListView::FULL)
     {
-        setColumnWidth(TrackView::TRACK_INDEX, TrackView::TRACK_WIDTH);
-        setColumnWidth(TrackView::TITLE_INDEX, width / 3);
-        setColumnWidth(TrackView::ALBUM_INDEX, width / 3);
-        setColumnWidth(TrackView::ARTIST_INDEX, width / 3);
-        setColumnWidth(TrackView::DURATION_INDEX, TrackView::DURATION_WIDTH);
+        setColumnWidth(TracksListView::TRACK_INDEX, TracksListView::TRACK_WIDTH);
+        setColumnWidth(TracksListView::TITLE_INDEX, width / 3);
+        setColumnWidth(TracksListView::ALBUM_INDEX, width / 3);
+        setColumnWidth(TracksListView::ARTIST_INDEX, width / 3);
+        setColumnWidth(TracksListView::DURATION_INDEX, TracksListView::DURATION_WIDTH);
     }
     else
     {
-        setColumnWidth(TrackView::TRACK_INDEX, TrackView::TRACK_WIDTH);
-        setColumnWidth(TrackView::TITLE_INDEX, width);
-        setColumnWidth(TrackView::DURATION_INDEX, TrackView::DURATION_WIDTH);
+        setColumnWidth(TracksListView::TRACK_INDEX, TracksListView::TRACK_WIDTH);
+        setColumnWidth(TracksListView::TITLE_INDEX, width);
+        setColumnWidth(TracksListView::DURATION_INDEX, TracksListView::DURATION_WIDTH);
 
-        setColumnHidden(TrackView::ALBUM_INDEX, true);
-        setColumnHidden(TrackView::ARTIST_INDEX, true);
+        setColumnHidden(TracksListView::ALBUM_INDEX, true);
+        setColumnHidden(TracksListView::ARTIST_INDEX, true);
     }
 
     QTableView::resizeEvent(event);
 }
 
-QSize TrackView::sizeHint()
+QSize TracksListView::sizeHint()
 {
     QSize hint = QTableView::sizeHint();
 
@@ -173,7 +156,7 @@ QSize TrackView::sizeHint()
     return hint;
 }
 
-void TrackView::onContextMenuRequested(QPoint position)
+void TracksListView::onContextMenuRequested(QPoint position)
 {
     QMenu menu(this);
 
@@ -211,7 +194,7 @@ void TrackView::onContextMenuRequested(QPoint position)
 #if 0
         QString newArtist = QInputDialog::getText(0, "Track editing", "Artist:");
         Artist* artist = MusicLibrary::instance()->album(newArtist);
-        const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
+        const_cast<Track*>(m_tracksListModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
 #endif
     }
     else if(selectedAction == changeAlbum)
@@ -223,20 +206,20 @@ void TrackView::onContextMenuRequested(QPoint position)
         {
             //changedAlbum(oldTrack(track*), newAlbum(qstring));
         }
-        const_cast<Track*>(m_trackModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
+        const_cast<Track*>(m_tracksListModel->rootItem()->child(indexAt(position).row())->track())->setTitle(newTitle);
 #endif
     }
     else if(selectedAction == changeTitle)
     {
         QString newTitle = QInputDialog::getText(0, "Track editing", "Title:");
-        m_trackModel->rootItem()->child(indexAt(position).row())->track()->setTitle(newTitle);
+        m_tracksListModel->rootItem()->child(indexAt(position).row())->track()->setTitle(newTitle);
     }
     else if(selectedAction == removeTrack)
     {
         QModelIndexList selection = selectionModel()->selectedRows();
         for(quint16 i = 0; i < selection.size(); ++i)
         {
-            MusicLibrary::instance()->removeTrack(m_trackModel->rootItem()->child(selection.at(i).row())->track());
+            MusicLibrary::instance()->removeTrack(m_tracksListModel->rootItem()->child(selection.at(i).row())->track());
         }
     }
     else if(selectedAction == downloadLyrics)
@@ -244,7 +227,7 @@ void TrackView::onContextMenuRequested(QPoint position)
         QModelIndexList selection = selectionModel()->selectedRows();
         for(quint16 i = 0; i < selection.size(); ++i)
         {
-            m_trackModel->rootItem()->child(selection.at(i).row())->track()->downloadLyrics();
+            m_tracksListModel->rootItem()->child(selection.at(i).row())->track()->downloadLyrics();
         }
     }
     else if(selectedAction == x25 || selectedAction == x50 || selectedAction == x75 || selectedAction == x100 || selectedAction == valueTempo)
@@ -275,7 +258,7 @@ void TrackView::onContextMenuRequested(QPoint position)
         QModelIndexList selection = selectionModel()->selectedRows();
         for(quint16 i = 0; i < selection.size(); ++i)
         {
-            m_trackModel->rootItem()->child(selection.at(i).row())->track()->modifyTempo(tempo);
+            m_tracksListModel->rootItem()->child(selection.at(i).row())->track()->modifyTempo(tempo);
         }
     }
     else if(selectedAction == addPlaylist)
@@ -286,14 +269,14 @@ void TrackView::onContextMenuRequested(QPoint position)
         QModelIndexList selection = selectionModel()->selectedRows();
         for(quint16 i = 0; i < selection.size(); ++i)
         {
-            playlist->addTrack(m_trackModel->rootItem()->child(selection.at(i).row())->track());
+            playlist->addTrack(m_tracksListModel->rootItem()->child(selection.at(i).row())->track());
         }
 
         PlaylistManager::instance()->savePlaylist(playlist);
     }
 }
 
-void TrackView::onItemDoubleClicked(const QModelIndex& index)
+void TracksListView::onItemDoubleClicked(const QModelIndex& index)
 {
-    emit trackDoubleClicked(m_trackModel->rootItem()->child(index.row())->track());
+    emit trackDoubleClicked(m_tracksListModel->rootItem()->child(index.row())->track());
 }

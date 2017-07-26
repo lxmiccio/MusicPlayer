@@ -15,11 +15,9 @@
 #include "HttpRequestWorker.h"
 #include "PlayingView.h"
 #include "TrackDelegate.h"
-#include "TrackFilterProxy.h"
 #include "TrackModel.h"
 
 class TrackDelegate;
-class TrackFilterProxy;
 
 class TrackView : public QTableView
 {
@@ -73,7 +71,6 @@ class TrackView : public QTableView
 
     private:
         TrackModel* m_trackModel;
-        TrackFilterProxy* m_filterProxy;
         TrackDelegate* m_trackDelegate;
 
         quint8 m_mode;
