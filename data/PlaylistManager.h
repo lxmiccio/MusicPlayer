@@ -28,9 +28,13 @@ public:
     QStringList playlistsName();
     const QVector<Playlist*>& playlists();
 
+    Playlist* playlist(const QString& name);
+
     void loadPlaylists();
     void addPlaylist(Playlist* playlist);
     void savePlaylist(Playlist* playlist);
+
+    void sort();
 
     Playlist* playlistFromSerializable(SerializablePlaylist serializable);
     SerializablePlaylist serializableFromPlaylist(Playlist* playlist);

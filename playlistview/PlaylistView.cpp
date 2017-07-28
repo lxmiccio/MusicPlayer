@@ -1,5 +1,7 @@
 #include "PlaylistView.h"
 
+#include "PlaylistManager.h"
+
 PlaylistView::PlaylistView(QWidget* parent) : QWidget(parent)
 {
     m_playlist = NULL;
@@ -7,13 +9,19 @@ PlaylistView::PlaylistView(QWidget* parent) : QWidget(parent)
     m_trackInfoView = new TrackInfoView();
 
     m_tracksListView = new TracksListView(TracksListView::FULL);
-    QObject::connect(m_tracksListView, SIGNAL(trackDoubleClicked(Track*)), m_trackInfoView, SLOT(changeTrack(Track*)));
+    QObject::connect(m_tracksListView, SIGNAL(trackClicked(Track*)), m_trackInfoView, SLOT(changeTrack(Track*)));
 
     m_layout = new QHBoxLayout();
     m_layout->addWidget(m_trackInfoView);
     m_layout->addWidget(m_tracksListView);
+    m_layout->setAlignment(m_trackInfoView, Qt::AlignTop);
 
     setLayout(m_layout);
+}
+
+void PlaylistView::changePlaylist(const QString& name)
+{
+    changePlaylist(PlaylistManager::instance()->playlist(name));
 }
 
 void PlaylistView::changePlaylist(Playlist* playlist)
@@ -22,9 +30,11 @@ void PlaylistView::changePlaylist(Playlist* playlist)
     {
         m_playlist = playlist;
 
+        m_trackInfoView->changeTrack(m_playlist->tracks().first());
+
+        m_tracksListView->clear();
         foreach(Track* i_track, m_playlist->tracks())
         {
-            qDebug() << i_track->title();
             m_tracksListView->appendItem(i_track);
         }
         m_tracksListView->setMinimumHeight(m_tracksListView->fittingSize().height());

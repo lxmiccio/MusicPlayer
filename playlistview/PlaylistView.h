@@ -14,6 +14,7 @@ public:
     explicit PlaylistView(QWidget* parent = 0);
 
 public slots:
+    void changePlaylist(const QString& name);
     void changePlaylist(Playlist* playlist);
 
 private:

@@ -75,6 +75,9 @@ void MainWidget::onShowTrackViewTriggered()
 
 void MainWidget::onShowPlaylistViewTriggered()
 {
+    QAction* action = static_cast<QAction*>(QObject::sender());
+    m_playlistView->changePlaylist(action->text());
+
     showView(Settings::PLAYLIST_VIEW);
 }
 

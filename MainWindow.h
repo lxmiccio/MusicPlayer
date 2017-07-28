@@ -25,7 +25,8 @@ class MainWindow : public QMainWindow
         QAction* m_showArtistView;
         QAction* m_showAlbumView;
         QAction* m_showTrackView;
-        QAction* m_showPlaylistView;
+        QMenu* m_playlistMenu;
+        QVector<QAction*> m_playlistsView;
         QMenu* m_viewsMenu;
         QMenuBar* m_menuBar;
 };

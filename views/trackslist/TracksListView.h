@@ -66,6 +66,7 @@ public slots:
     void removeItem(Track* track);
 
 signals:
+    void trackClicked(Track* track);
     void trackDoubleClicked(Track* track);
 
 protected:
@@ -74,6 +75,7 @@ protected:
 
 private slots:
     void onContextMenuRequested(QPoint position);
+    void onItemClicked(const QModelIndex& index);
     void onItemDoubleClicked(const QModelIndex& index);
 
 private:

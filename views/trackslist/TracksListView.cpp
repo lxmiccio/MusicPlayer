@@ -33,6 +33,7 @@ TracksListView::TracksListView(quint8 mode, QWidget* parent) : QTableView(parent
     verticalScrollBar()->setStyle(new QCommonStyle());
     verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
 
+    QObject::connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(onItemClicked(QModelIndex)));
     QObject::connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
 }
 
@@ -274,6 +275,11 @@ void TracksListView::onContextMenuRequested(QPoint position)
 
         PlaylistManager::instance()->savePlaylist(playlist);
     }
+}
+
+void TracksListView::onItemClicked(const QModelIndex& index)
+{
+    emit trackClicked(m_tracksListModel->rootItem()->child(index.row())->track());
 }
 
 void TracksListView::onItemDoubleClicked(const QModelIndex& index)

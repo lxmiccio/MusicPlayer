@@ -41,6 +41,19 @@ const QVector<Playlist*>& PlaylistManager::playlists()
     return m_playlists;
 }
 
+Playlist* PlaylistManager::playlist(const QString& name)
+{
+    foreach(Playlist* i_playlist, m_playlists)
+    {
+        if(i_playlist->name() == name)
+        {
+            return i_playlist;
+        }
+    }
+
+    return NULL;
+}
+
 void PlaylistManager::loadPlaylists()
 {
     QFile file(Settings::playlistsFile());
@@ -61,6 +74,8 @@ void PlaylistManager::loadPlaylists()
     }
 
     file.close();
+
+    sort();
 }
 
 void PlaylistManager::addPlaylist(Playlist* playlist)
@@ -99,6 +114,14 @@ void PlaylistManager::savePlaylist(Playlist* playlist)
         file.flush();
         file.close();
     }
+}
+
+void PlaylistManager::sort()
+{
+    std::sort(m_playlists.begin(), m_playlists.end(), [] (const Playlist* playlist1, const Playlist* playlist2) -> bool
+    {
+        return playlist1->name() < playlist2->name();
+    });
 }
 
 Playlist* PlaylistManager::playlistFromSerializable(SerializablePlaylist serializable)
