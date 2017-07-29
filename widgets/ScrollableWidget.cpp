@@ -1,9 +1,9 @@
-#include "ScrollableArea.h"
+#include "ScrollableWidget.h"
 
 #include "GuiUtils.h"
 #include "Track.h"
 
-ScrollableArea::ScrollableArea(QWidget* parent) : QScrollArea(parent)
+ScrollableWidget::ScrollableWidget(QWidget* parent) : QScrollArea(parent)
 {
     setAcceptDrops(true);
     setStyleSheet(GuiUtils::SCROLLABLE_AREA_STYLE);
@@ -16,12 +16,12 @@ ScrollableArea::ScrollableArea(QWidget* parent) : QScrollArea(parent)
     verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
 }
 
-void ScrollableArea::dragEnterEvent(QDragEnterEvent* event)
+void ScrollableWidget::dragEnterEvent(QDragEnterEvent* event)
 {
     event->accept();
 }
 
-void ScrollableArea::dropEvent(QDropEvent* event)
+void ScrollableWidget::dropEvent(QDropEvent* event)
 {
     QList<QUrl> urls = event->mimeData()->urls();
     QListIterator<QUrl> urlsIterator(urls);
@@ -48,13 +48,13 @@ void ScrollableArea::dropEvent(QDropEvent* event)
     emit filesDropped(filesInfo);
 }
 
-void ScrollableArea::resizeEvent(QResizeEvent* event)
+void ScrollableWidget::resizeEvent(QResizeEvent* event)
 {
     emit resized(event);
     QScrollArea::resizeEvent(event);
 }
 
-void ScrollableArea::clearLayout(QLayout* layout)
+void ScrollableWidget::clearLayout(QLayout* layout)
 {
     QLayoutItem* i_item;
 
@@ -68,7 +68,7 @@ void ScrollableArea::clearLayout(QLayout* layout)
     }
 }
 
-void ScrollableArea::deleteLayout(QLayout* layout)
+void ScrollableWidget::deleteLayout(QLayout* layout)
 {
     if(layout && layout->count() > 0)
     {

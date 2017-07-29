@@ -43,15 +43,15 @@ void PlayingAlbum::setAlbum(Album* album)
 {
     if(album)
     {
-        c_album = album;
+        m_album = album;
 
-        if(c_album->cover().isNull())
+        if(m_album->cover().isNull())
         {
             m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(PlayingAlbum::IMAGE_WIDTH, PlayingAlbum::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         }
         else
         {
-            m_cover->setPixmap(QPixmap(c_album->cover().scaled(PlayingAlbum::IMAGE_WIDTH, PlayingAlbum::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+            m_cover->setPixmap(QPixmap(m_album->cover().scaled(PlayingAlbum::IMAGE_WIDTH, PlayingAlbum::IMAGE_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
         }
 
         m_albumTitle->setText(album->title());

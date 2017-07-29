@@ -4,10 +4,10 @@
 #include <QLabel>
 #include <QWidget>
 
-#include "ScrollableArea.h"
+#include "ScrollableWidget.h"
 #include "Track.h"
 
-class PlayingLyrics : public ScrollableArea
+class PlayingLyrics : public ScrollableWidget
 {
         Q_OBJECT
 
@@ -20,7 +20,7 @@ class PlayingLyrics : public ScrollableArea
         void onTrackUpdated(Track* track, quint8 fields);
 
     private:
-        Track* c_track;
+        Track* m_track;
         QLabel* m_lyrics;
 };
 

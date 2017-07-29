@@ -1,8 +1,8 @@
 #include "TracksListModel.h"
 
-TracksListModel::TracksListModel(QObject* parent) : QAbstractItemModel(parent)
+TracksListModel::TracksListModel(bool sort, QObject* parent) : QAbstractItemModel(parent)
 {
-    m_rootItem = new TracksListItem(QList<QVariant>() << "Track" << "Title" << "Album" << "Artist" << "Duration");
+    m_rootItem = new TracksListItem(QList<QVariant>() << "Track" << "Title" << "Album" << "Artist" << "Duration", sort);
 }
 
 TracksListModel::~TracksListModel()

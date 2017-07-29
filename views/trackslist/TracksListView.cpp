@@ -3,11 +3,11 @@
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
 
-TracksListView::TracksListView(quint8 mode, QWidget* parent) : QTableView(parent)
+TracksListView::TracksListView(quint8 mode, bool sort, QWidget* parent) : QTableView(parent)
 {
     m_mode = mode;
 
-    m_tracksListModel = new TracksListModel();
+    m_tracksListModel = new TracksListModel(sort);
     setModel(m_tracksListModel);
 
     m_tracksListDelegate = new TracksListDelegate(this);
@@ -34,6 +34,7 @@ TracksListView::TracksListView(quint8 mode, QWidget* parent) : QTableView(parent
     verticalScrollBar()->setStyleSheet(GuiUtils::SCROLL_BAR_STYLE);
 
     QObject::connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(onItemClicked(QModelIndex)));
+    QObject::connect(this, SIGNAL(pressed(QModelIndex)), this, SLOT(onItemPressed(QModelIndex)));
     QObject::connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
 }
 
@@ -171,11 +172,11 @@ void TracksListView::onContextMenuRequested(QPoint position)
     QAction* addPlaylist = playlistMenu.addAction("Create new");
     playlistMenu.addSeparator();
 
-    QVector<QPair<QString,QAction*>> playlists;
+    QVector<QAction*> playlists;
     QStringList playlistsName = PlaylistManager::instance()->playlistsName();
     for(quint16 i = 0; i < playlistsName.size(); ++i)
     {
-        playlists.append(qMakePair(playlistsName.at(i), playlistMenu.addAction(playlistsName.at(i))));
+        playlists.append(playlistMenu.addAction(playlistsName.at(i)));
     }
 
     menu.addMenu(&playlistMenu);
@@ -265,7 +266,13 @@ void TracksListView::onContextMenuRequested(QPoint position)
     else if(selectedAction == addPlaylist)
     {
         QString newPlaylist = QInputDialog::getText(0, "Create playlist", "Title:");
-        Playlist* playlist = new Playlist(newPlaylist);
+
+        Playlist* playlist = PlaylistManager::instance()->playlist(newPlaylist);
+
+        if(!playlist)
+        {
+            playlist = new Playlist(newPlaylist);
+        }
 
         QModelIndexList selection = selectionModel()->selectedRows();
         for(quint16 i = 0; i < selection.size(); ++i)
@@ -275,11 +282,31 @@ void TracksListView::onContextMenuRequested(QPoint position)
 
         PlaylistManager::instance()->savePlaylist(playlist);
     }
+    else if(playlists.contains(selectedAction))
+    {
+        Playlist* playlist = PlaylistManager::instance()->playlist(playlists.at(playlists.indexOf(selectedAction))->text());
+
+        if(playlist)
+        {
+            QModelIndexList selection = selectionModel()->selectedRows();
+            for(quint16 i = 0; i < selection.size(); ++i)
+            {
+                playlist->addTrack(m_tracksListModel->rootItem()->child(selection.at(i).row())->track());
+            }
+        }
+
+        PlaylistManager::instance()->savePlaylist(playlist);
+    }
 }
 
 void TracksListView::onItemClicked(const QModelIndex& index)
 {
     emit trackClicked(m_tracksListModel->rootItem()->child(index.row())->track());
+}
+
+void TracksListView::onItemPressed(const QModelIndex& index)
+{
+    emit trackPressed(m_tracksListModel->rootItem()->child(index.row())->track());
 }
 
 void TracksListView::onItemDoubleClicked(const QModelIndex& index)

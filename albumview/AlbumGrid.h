@@ -11,9 +11,9 @@
 
 #include "Album.h"
 #include "AlbumCover.h"
-#include "ScrollableArea.h"
+#include "ScrollableWidget.h"
 
-class AlbumGrid : public ScrollableArea
+class AlbumGrid : public ScrollableWidget
 {
         Q_OBJECT
 

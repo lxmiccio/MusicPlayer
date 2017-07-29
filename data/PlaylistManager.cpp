@@ -90,15 +90,14 @@ void PlaylistManager::savePlaylist(Playlist* playlist)
 {
     if(playlist)
     {
-        m_playlists.push_back(playlist);
+        if(!m_playlists.contains(playlist))
+        {
+            m_playlists.push_back(playlist);
+            sort();
+        }
 
         QFile file(Settings::playlistsFile());
         QFile::OpenMode mode = QIODevice::WriteOnly;
-
-        if(file.exists())
-        {
-            mode = QIODevice::Append;
-        }
 
         if(!file.open(mode))
         {
@@ -106,10 +105,13 @@ void PlaylistManager::savePlaylist(Playlist* playlist)
             return;
         }
 
-        SerializablePlaylist serializable = serializableFromPlaylist(playlist);
+        foreach(Playlist* i_playlist, m_playlists)
+        {
+            SerializablePlaylist serializable = serializableFromPlaylist(i_playlist);
 
-        QDataStream out(&file);
-        out << serializable;
+            QDataStream out(&file);
+            out << serializable;
+        }
 
         file.flush();
         file.close();

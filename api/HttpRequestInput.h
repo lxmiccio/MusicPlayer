@@ -8,31 +8,31 @@ enum HttpRequestVarLayout { LAYOUT_NOT_SET, LAYOUT_ADDRESS, LAYOUT_URL_ENCODED, 
 
 class HttpRequestInputFileElement
 {
-public:
-    QString variable_name;
-    QString local_filename;
-    QString request_filename;
-    QString mime_type;
+    public:
+        QString variable_name;
+        QString local_filename;
+        QString request_filename;
+        QString mime_type;
 };
 
 class HttpRequestInput
 {
-public:
-    HttpRequestInput(QString url = "", QString httpMethod = "GET");
+    public:
+        HttpRequestInput(QString url = "", QString httpMethod = "GET");
 
-    void addParameter(QString key, QString value);
-    void addFile(QString variable_name, QString local_filename, QString request_filename, QString mime_type);
+        void addParameter(QString key, QString value);
+        void addFile(QString variable_name, QString local_filename, QString request_filename, QString mime_type);
 
-    const QString& url();
-    void setUrl(const QString& url);
+        const QString& url();
+        void setUrl(const QString& url);
 
-    const QString& httpMethod();
+        const QString& httpMethod();
 
-    QString m_url;
-    QString m_httpMethod;
-    HttpRequestVarLayout var_layout;
-    QMap<QString, QString> vars;
-    QList<HttpRequestInputFileElement> files;
+        QString m_url;
+        QString m_httpMethod;
+        HttpRequestVarLayout var_layout;
+        QMap<QString, QString> vars;
+        QList<HttpRequestInputFileElement> files;
 };
 
 #endif// HTTPREQUESTINPUT_H

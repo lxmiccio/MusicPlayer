@@ -1,18 +1,19 @@
 #include "TracksListItem.h"
 
-TracksListItem::TracksListItem(const QList<QVariant>& data, TracksListItem* parent)
+TracksListItem::TracksListItem(const QList<QVariant>& data, bool sort, TracksListItem* parent)
 {
-    c_track = NULL;
+    m_track = NULL;
 
     m_data = data;
+    m_sort = sort;
     m_parent = parent;
 }
 
 TracksListItem::TracksListItem(Track* track, TracksListItem* parent)
 {
-    c_track = track;
-    QObject::connect(c_track, SIGNAL(destroyed(QObject*)), parent, SLOT(onTrackRemoved(QObject*)));
-    QObject::connect(c_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track* ,quint8)));
+    m_track = track;
+    QObject::connect(m_track, SIGNAL(destroyed(QObject*)), parent, SLOT(onTrackRemoved(QObject*)));
+    QObject::connect(m_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track* ,quint8)));
 
     m_data << QVariant(track->track())
            << QVariant(track->title())
@@ -20,6 +21,7 @@ TracksListItem::TracksListItem(Track* track, TracksListItem* parent)
            << QVariant(track->artist()->name())
            << QVariant(Utils::secondsToMinutes(track->duration()));
 
+    m_sort = false;
     m_parent = parent;
 }
 
@@ -131,7 +133,7 @@ void TracksListItem::clear()
 
 Track* TracksListItem::track() const
 {
-    return c_track;
+    return m_track;
 }
 
 void TracksListItem::onTrackRemoved(QObject* object)
@@ -154,7 +156,7 @@ void TracksListItem::onTrackUpdated(Track* track, quint8 fields)
 {
     Q_UNUSED(fields);
 
-    if(track == c_track)
+    if(track == m_track)
     {
         m_data.clear();
         m_data << QVariant(track->track())
@@ -167,19 +169,22 @@ void TracksListItem::onTrackUpdated(Track* track, quint8 fields)
 
 void TracksListItem::sort()
 {
-    std::sort(m_childs.begin(), m_childs.end(), [] (const TracksListItem* tracksListItem1, const TracksListItem* tracksListItem2) -> bool
+    if(m_sort)
     {
-        if(tracksListItem1->track()->artist()->name() != tracksListItem2->track()->artist()->name())
+        std::sort(m_childs.begin(), m_childs.end(), [] (const TracksListItem* tracksListItem1, const TracksListItem* tracksListItem2) -> bool
         {
-            return tracksListItem1->track()->artist()->name() < tracksListItem2->track()->artist()->name();
-        }
-        else if(tracksListItem1->track()->album()->title() != tracksListItem2->track()->album()->title())
-        {
-            return tracksListItem1->track()->album()->title() < tracksListItem2->track()->album()->title();
-        }
-        else
-        {
-            return tracksListItem1->track()->track() < tracksListItem2->track()->track();
-        }
-    });
+            if(tracksListItem1->track()->artist()->name() != tracksListItem2->track()->artist()->name())
+            {
+                return tracksListItem1->track()->artist()->name() < tracksListItem2->track()->artist()->name();
+            }
+            else if(tracksListItem1->track()->album()->title() != tracksListItem2->track()->album()->title())
+            {
+                return tracksListItem1->track()->album()->title() < tracksListItem2->track()->album()->title();
+            }
+            else
+            {
+                return tracksListItem1->track()->track() < tracksListItem2->track()->track();
+            }
+        });
+    }
 }

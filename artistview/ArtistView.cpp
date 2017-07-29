@@ -12,14 +12,14 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_leftLayout->setMargin(0);
     m_leftLayout->addItem(m_upperSpacer);
     m_leftLayout->addItem(m_lowerSpacer);
-    ScrollableArea* m_leftLayoutScrollable = new ScrollableArea();
+    ScrollableWidget* m_leftLayoutScrollable = new ScrollableWidget();
     QWidget* widget = new QWidget();
     widget->setLayout(m_leftLayout);
     m_leftLayoutScrollable->setWidget(widget);
     QObject::connect(m_leftLayoutScrollable, SIGNAL(filesDropped(QVector<QFileInfo>)), MusicLibrary::instance(), SLOT(onTracksToLoad(QVector<QFileInfo>)));
 
     m_albumView = new ArtistAlbumsView();
-    m_albumViewScrollable = new ScrollableArea();
+    m_albumViewScrollable = new ScrollableWidget();
     m_albumViewScrollable->setWidget(m_albumView);
     m_albumViewScrollable->hide();
     QObject::connect(this, SIGNAL(coverClicked(Artist*)), m_albumView, SLOT(onArtistChanged(Artist*)));

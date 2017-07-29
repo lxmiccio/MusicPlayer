@@ -10,7 +10,7 @@
 #include "ArtistAlbumsView.h"
 #include "ArtistWidget.h"
 #include "MusicLibrary.h"
-#include "ScrollableArea.h"
+#include "ScrollableWidget.h"
 
 class ArtistView : public QWidget
 {
@@ -45,10 +45,10 @@ class ArtistView : public QWidget
         QSplitter* m_splitter;
 
         QVBoxLayout* m_leftLayout;
-        ScrollableArea* m_leftLayoutScrollable;
+        ScrollableWidget* m_leftLayoutScrollable;
 
         ArtistAlbumsView* m_albumView;
-        ScrollableArea* m_albumViewScrollable;
+        ScrollableWidget* m_albumViewScrollable;
 
         QSpacerItem* m_lowerSpacer;
         QSpacerItem* m_upperSpacer;

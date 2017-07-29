@@ -13,7 +13,7 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
         m_leftLayout = NULL;
         m_spacer = NULL;
 
-        m_scrollableArea = new ScrollableArea();
+        m_scrollableWidget = new ScrollableWidget();
     }
     else
     {
@@ -29,7 +29,7 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
 
         m_spacer = new QSpacerItem(48, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-        m_scrollableArea = NULL;
+        m_scrollableWidget = NULL;
     }
 
     m_tracksListView = new TracksListView(m_mode);
@@ -40,7 +40,7 @@ PlayingView::PlayingView(quint8 mode, QWidget* parent) : QWidget(parent)
 
     if(m_mode == TracksListView::FULL)
     {
-        m_scrollableArea->setWidget(m_tracksListView);
+        m_scrollableWidget->setWidget(m_tracksListView);
         m_layout->addWidget(m_tracksListView);
     }
     else

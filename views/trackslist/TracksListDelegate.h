@@ -11,14 +11,14 @@ class TracksListView;
 
 class TracksListDelegate : public QStyledItemDelegate
 {
-public:
-    explicit TracksListDelegate(TracksListView* tracksListView, QObject* parent = 0);
+    public:
+        explicit TracksListDelegate(TracksListView* tracksListView, QObject* parent = 0);
 
-    virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-    virtual void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
-private:
-    TracksListView* m_tracksListView;
+    private:
+        TracksListView* m_tracksListView;
 };
 
 #endif // TRACKSLISTDELEGATE_H

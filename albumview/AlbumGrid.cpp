@@ -3,7 +3,7 @@
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
 
-AlbumGrid::AlbumGrid(QWidget* parent) : ScrollableArea(parent)
+AlbumGrid::AlbumGrid(QWidget* parent) : ScrollableWidget(parent)
 {
     m_leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_lowerSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);

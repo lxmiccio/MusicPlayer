@@ -9,9 +9,9 @@
 #include "AlbumGrid.h"
 #include "AlbumTracks.h"
 #include "AlbumCover.h"
-#include "ScrollableArea.h"
+#include "ScrollableWidget.h"
 
-class AlbumView : public ScrollableArea
+class AlbumView : public ScrollableWidget
 {
         Q_OBJECT
 

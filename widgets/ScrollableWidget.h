@@ -1,5 +1,5 @@
-#ifndef SCROLLABLEAREA_H
-#define SCROLLABLEAREA_H
+#ifndef SCROLLABLEWIDGET_H
+#define SCROLLABLEWIDGET_H
 
 #include <QCommonStyle>
 #include <QDragEnterEvent>
@@ -9,12 +9,12 @@
 #include <QScrollArea>
 #include <QScrollBar>
 
-class ScrollableArea : public QScrollArea
+class ScrollableWidget : public QScrollArea
 {
         Q_OBJECT
 
     public:
-        explicit ScrollableArea(QWidget* parent = 0);
+        explicit ScrollableWidget(QWidget* parent = 0);
 
     signals:
         void filesDropped(const QVector<QFileInfo>& filesInfo);
@@ -29,4 +29,4 @@ class ScrollableArea : public QScrollArea
         void deleteLayout(QLayout* layout);
 };
 
-#endif// SCROLLABLEAREA_H
+#endif// SCROLLABLEWIDGET_H

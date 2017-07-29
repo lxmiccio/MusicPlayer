@@ -116,11 +116,6 @@ void MainWidget::showView(Settings::View view)
 {
     if(view != m_currentView && view != Settings::NO_VIEW)
     {
-        if(view == Settings::PLAYING_VIEW && m_currentView != Settings::PLAYING_VIEW)
-        {
-            m_previousView = m_currentView;
-        }
-
         m_currentView = view;
 
         if(m_currentView != Settings::PLAYING_VIEW)

@@ -48,7 +48,7 @@ class PlayingView : public QWidget
         QSpacerItem* m_spacer;
 
         TracksListView* m_tracksListView;
-        ScrollableArea* m_scrollableArea;
+        ScrollableWidget* m_scrollableWidget;
 
         QVector<TracksListItem*> m_items;
 

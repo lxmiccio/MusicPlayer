@@ -3,7 +3,7 @@
 #include "AudioEngine.h"
 #include "PlayingAlbum.h"
 
-PlayingLyrics::PlayingLyrics(QWidget* parent) : ScrollableArea(parent)
+PlayingLyrics::PlayingLyrics(QWidget* parent) : ScrollableWidget(parent)
 {
     m_lyrics = new QLabel();
     m_lyrics->setStyleSheet("color: white;");
@@ -24,12 +24,12 @@ void PlayingLyrics::onTrackStarted(Track* track)
 {
     if(track)
     {
-        if(track != c_track)
+        if(track != m_track)
         {
-            c_track = track;
-            QObject::connect(c_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track*, quint8)));
+            m_track = track;
+            QObject::connect(m_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track*, quint8)));
 
-            m_lyrics->setText(c_track->lyrics());
+            m_lyrics->setText(m_track->lyrics());
         }
 
         verticalScrollBar()->setSliderPosition(0);
@@ -38,7 +38,7 @@ void PlayingLyrics::onTrackStarted(Track* track)
 
 void PlayingLyrics::onTrackUpdated(Track* track, quint8 fields)
 {
-    if(track && track == c_track && (fields & Track::LYRICS))
+    if(track && track == m_track && (fields & Track::LYRICS))
     {
         m_lyrics->setText(track->lyrics());
     }

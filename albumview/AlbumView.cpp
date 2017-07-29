@@ -2,7 +2,7 @@
 
 #include "MusicLibrary.h"
 
-AlbumView::AlbumView(QWidget* parent) : ScrollableArea(parent)
+AlbumView::AlbumView(QWidget* parent) : ScrollableWidget(parent)
 {
     m_albumGrid = new AlbumGrid();
     QObject::connect(m_albumGrid, SIGNAL(coverClicked(Album*)), this, SLOT(onAlbumGridCoverClicked(Album*)));

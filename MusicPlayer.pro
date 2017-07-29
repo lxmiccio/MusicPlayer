@@ -43,7 +43,6 @@ SOURCES += main.cpp \
     widgets/ElidedLabel.cpp \
     widgets/ImageButton.cpp \
     widgets/LineWidget.cpp \
-    widgets/ScrollableArea.cpp \
     widgets/Slider.cpp \
     widgets/TrackSlider.cpp \
     taglib/TagLibWrapper.cpp \
@@ -58,7 +57,8 @@ SOURCES += main.cpp \
     views/trackslist/TracksListView.cpp \
     views/trackslist/TracksListDelegate.cpp \
     views/trackslist/TracksListItem.cpp \
-    views/trackslist/TracksListModel.cpp
+    views/trackslist/TracksListModel.cpp \
+    widgets/ScrollableWidget.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -92,7 +92,6 @@ HEADERS  += albumview/AlbumCover.h \
     widgets/ElidedLabel.h \
     widgets/ImageButton.h \
     widgets/LineWidget.h \
-    widgets/ScrollableArea.h \
     widgets/Slider.h \
     widgets/TrackSlider.h \
     taglib/TagLibWrapper.h \
@@ -108,7 +107,8 @@ HEADERS  += albumview/AlbumCover.h \
     views/trackslist/TracksListView.h \
     views/trackslist/TracksListDelegate.h \
     views/trackslist/TracksListItem.h \
-    views/trackslist/TracksListModel.h
+    views/trackslist/TracksListModel.h \
+    widgets/ScrollableWidget.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/api

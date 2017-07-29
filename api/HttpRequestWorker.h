@@ -15,29 +15,29 @@
 
 class HttpRequestWorker : public QObject
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    explicit HttpRequestWorker(QObject* parent = 0);
+    public:
+        explicit HttpRequestWorker(QObject* parent = 0);
 
-    QString encodeAttribute(QString attribute, QString input);
-    void execute(HttpRequestInput* input);
+        QString encodeAttribute(QString attribute, QString input);
+        void execute(HttpRequestInput* input);
 
-    QString lyricsUrl();
+        QString lyricsUrl();
 
-    QByteArray m_response;
-    QNetworkReply::NetworkError m_networkError;
-    QString m_error;
+        QByteArray m_response;
+        QNetworkReply::NetworkError m_networkError;
+        QString m_error;
 
 
-signals:
-    void on_execution_finished(HttpRequestWorker *worker);
+    signals:
+        void on_execution_finished(HttpRequestWorker *worker);
 
-private:
-    QNetworkAccessManager *m_manager;
+    private:
+        QNetworkAccessManager *m_manager;
 
-private slots:
-    void on_manager_finished(QNetworkReply *reply);
+    private slots:
+        void on_manager_finished(QNetworkReply *reply);
 
 };
 

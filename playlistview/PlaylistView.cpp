@@ -8,12 +8,15 @@ PlaylistView::PlaylistView(QWidget* parent) : QWidget(parent)
 
     m_trackInfoView = new TrackInfoView();
 
-    m_tracksListView = new TracksListView(TracksListView::FULL);
-    QObject::connect(m_tracksListView, SIGNAL(trackClicked(Track*)), m_trackInfoView, SLOT(changeTrack(Track*)));
+    m_tracksListView = new TracksListView(TracksListView::FULL, false);
+    QObject::connect(m_tracksListView, SIGNAL(trackPressed(Track*)), m_trackInfoView, SLOT(changeTrack(Track*)));
+
+    m_trackListScrollable = new ScrollableWidget();
+    m_trackListScrollable->setWidget(m_tracksListView);
 
     m_layout = new QHBoxLayout();
     m_layout->addWidget(m_trackInfoView);
-    m_layout->addWidget(m_tracksListView);
+    m_layout->addWidget(m_trackListScrollable);
     m_layout->setAlignment(m_trackInfoView, Qt::AlignTop);
 
     setLayout(m_layout);

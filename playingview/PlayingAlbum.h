@@ -26,7 +26,7 @@ class PlayingAlbum : public ClickableWidget
         static const quint16 IMAGE_WIDTH = 175;
 
     private:
-        Album* c_album;
+        Album* m_album;
 
         QLabel* m_cover;
         QSpacerItem* m_spacer1;
