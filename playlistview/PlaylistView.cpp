@@ -9,7 +9,7 @@ PlaylistView::PlaylistView(QWidget* parent) : QWidget(parent)
     m_trackInfoView = new TrackInfoView();
 
     m_tracksListView = new TracksListView(TracksListView::FULL, false);
-    QObject::connect(m_tracksListView, SIGNAL(trackPressed(Track*)), m_trackInfoView, SLOT(changeTrack(Track*)));
+    QObject::connect(m_tracksListView, SIGNAL(trackSelected(Track*)), m_trackInfoView, SLOT(changeTrack(Track*)));
 
     m_trackListScrollable = new ScrollableWidget();
     m_trackListScrollable->setWidget(m_tracksListView);
@@ -18,6 +18,8 @@ PlaylistView::PlaylistView(QWidget* parent) : QWidget(parent)
     m_layout->addWidget(m_trackInfoView);
     m_layout->addWidget(m_trackListScrollable);
     m_layout->setAlignment(m_trackInfoView, Qt::AlignTop);
+    m_layout->setMargin(0);
+    m_layout->setSpacing(32);
 
     setLayout(m_layout);
 }
@@ -40,6 +42,6 @@ void PlaylistView::changePlaylist(Playlist* playlist)
         {
             m_tracksListView->appendItem(i_track);
         }
-        m_tracksListView->setMinimumHeight(m_tracksListView->fittingSize().height());
+        //m_tracksListView->setMinimumHeight(m_tracksListView->fittingSize().height());
     }
 }

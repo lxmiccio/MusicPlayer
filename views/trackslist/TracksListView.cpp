@@ -36,6 +36,8 @@ TracksListView::TracksListView(quint8 mode, bool sort, QWidget* parent) : QTable
     QObject::connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(onItemClicked(QModelIndex)));
     QObject::connect(this, SIGNAL(pressed(QModelIndex)), this, SLOT(onItemPressed(QModelIndex)));
     QObject::connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
+
+    QObject::connect(this->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentRowChanged(QModelIndex, QModelIndex)));
 }
 
 TracksListView::~TracksListView()
@@ -304,6 +306,11 @@ void TracksListView::onItemClicked(const QModelIndex& index)
     emit trackClicked(m_tracksListModel->rootItem()->child(index.row())->track());
 }
 
+void TracksListView::onItemEntered(const QModelIndex& index)
+{
+    emit trackEntered(m_tracksListModel->rootItem()->child(index.row())->track());
+}
+
 void TracksListView::onItemPressed(const QModelIndex& index)
 {
     emit trackPressed(m_tracksListModel->rootItem()->child(index.row())->track());
@@ -312,4 +319,14 @@ void TracksListView::onItemPressed(const QModelIndex& index)
 void TracksListView::onItemDoubleClicked(const QModelIndex& index)
 {
     emit trackDoubleClicked(m_tracksListModel->rootItem()->child(index.row())->track());
+}
+
+void TracksListView::onCurrentRowChanged(QModelIndex current, QModelIndex previous)
+{
+    Q_UNUSED(previous);
+
+    if(current.row() >= 0)
+    {
+        emit trackSelected(m_tracksListModel->rootItem()->child(current.row())->track());
+    }
 }

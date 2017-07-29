@@ -66,7 +66,9 @@ class TracksListView : public QTableView
 
     signals:
         void trackClicked(Track* track);
+        void trackEntered(Track* track);
         void trackPressed(Track* track);
+        void trackSelected(Track* track);
         void trackDoubleClicked(Track* track);
 
     protected:
@@ -76,8 +78,10 @@ class TracksListView : public QTableView
     private slots:
         void onContextMenuRequested(QPoint position);
         void onItemClicked(const QModelIndex& index);
+        void onItemEntered(const QModelIndex& index);
         void onItemPressed(const QModelIndex& index);
         void onItemDoubleClicked(const QModelIndex& index);
+        void onCurrentRowChanged(QModelIndex current, QModelIndex previous);
 
     private:
         TracksListModel* m_tracksListModel;

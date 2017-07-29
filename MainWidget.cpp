@@ -132,7 +132,7 @@ void MainWidget::showView(Settings::View view)
         if(m_currentView == Settings::ARTIST_VIEW) m_artistView->show();
         else if(m_currentView == Settings::ALBUM_VIEW) m_albumView->show();
         else if(m_currentView == Settings::TRACK_VIEW) m_tracksListView->show();
-        else if(m_currentView == Settings::PLAYLIST_VIEW) { m_playlistView->show(); m_playlistView->changePlaylist(PlaylistManager::instance()->playlists().at(0)); }
+        else if(m_currentView == Settings::PLAYLIST_VIEW) m_playlistView->show();
         else if(m_currentView == Settings::PLAYING_VIEW) m_playingView->show();
     }
 }
