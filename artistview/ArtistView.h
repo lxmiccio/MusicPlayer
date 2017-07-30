@@ -1,6 +1,39 @@
 #ifndef ARTISTVIEW_H
 #define ARTISTVIEW_H
 
+#if 1
+#include <QHBoxLayout>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QSpacerItem>
+#include <QSplitter>
+
+#include "ArtistsListView.h"
+
+class ArtistView : public QWidget
+{
+        Q_OBJECT
+
+    public:
+        ArtistView(QWidget* parent = 0);
+        ~ArtistView();
+
+    private:
+        void repaintCovers();
+
+    private slots:
+        void onArtistAdded(Artist* artist);
+        void onArtistSelected(Artist* artist);
+
+    private:
+        QMutex m_mutex;
+
+        ArtistsListView* m_artistsListView;
+        QSplitter* m_splitter;
+
+        QHBoxLayout* m_layout;
+};
+#else
 #include <QMutex>
 #include <QMutexLocker>
 #include <QSpacerItem>
@@ -54,5 +87,6 @@ class ArtistView : public QWidget
         QSpacerItem* m_upperSpacer;
         QSpacerItem* m_middleVerticalSpacer;
 };
+#endif
 
 #endif// ARTISTVIEW_H

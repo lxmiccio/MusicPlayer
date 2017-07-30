@@ -71,7 +71,7 @@ void PlayingView::onAlbumSelected(Album* album)
 
         foreach(Track* i_track, album->tracks())
         {
-            TracksListItem* item = new TracksListItem(i_track);
+            TracksListItem* item = new TracksListItem(i_track, m_tracksListView->tracksListModel()->rootItem());
             m_items.push_back(item);
             m_tracksListView->appendItem(i_track);
         }
@@ -88,7 +88,7 @@ void PlayingView::onPlaylistSelected(Playlist* playlist)
 
         foreach(Track* i_track, playlist->tracks())
         {
-            TracksListItem* item = new TracksListItem(i_track);
+            TracksListItem* item = new TracksListItem(i_track, m_tracksListView->tracksListModel()->rootItem());
             m_items.push_back(item);
             m_tracksListView->appendItem(i_track);
         }

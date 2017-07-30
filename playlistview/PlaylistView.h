@@ -2,6 +2,7 @@
 #define PLAYLISTVIEW_H
 
 #include <QHBoxLayout>
+#include <QPointer>
 #include <QWidget>
 
 #include "Playlist.h"
@@ -11,6 +12,8 @@
 
 class PlaylistView : public QWidget
 {
+        Q_OBJECT
+
     public:
         explicit PlaylistView(QWidget* parent = 0);
 
@@ -18,8 +21,15 @@ class PlaylistView : public QWidget
         void changePlaylist(const QString& name);
         void changePlaylist(Playlist* playlist);
 
+    private slots:
+        void onContextMenuRequested(QPoint position);
+        void onPlaylistUpdated();
+
+    signals:
+        void allTracksRemoved();
+
     private:
-        Playlist* m_playlist;
+        QPointer<Playlist> m_playlist;
 
         TrackInfoView* m_trackInfoView;
         TracksListView* m_tracksListView;

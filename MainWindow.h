@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QAction>
-#include <QApplication>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMenuBar>
@@ -13,13 +12,17 @@ class MainWindow : public QMainWindow
         Q_OBJECT
 
     public:
-        explicit MainWindow(QWidget* parent = 0);
-        QStackedWidget* stackedWidget();
+        static MainWindow* instance();
 
-    public slots:
-        void previousView();
+    protected:
+        explicit MainWindow(QWidget* parent = 0);
+
+    private slots:
+        void onPlaylistsChanged();
 
     private:
+        static MainWindow* m_instance;
+
         QStackedWidget* m_stackedWidget;
 
         QAction* m_showArtistView;

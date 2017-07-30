@@ -21,6 +21,8 @@ QDataStream &operator>>(QDataStream& in, SerializablePlaylist& playlist);
 
 class PlaylistManager : public QObject
 {
+        Q_OBJECT
+
     public:
         static PlaylistManager* instance();
         static void deleteInstance();
@@ -31,7 +33,6 @@ class PlaylistManager : public QObject
         Playlist* playlist(const QString& name);
 
         void loadPlaylists();
-        void addPlaylist(Playlist* playlist);
         void savePlaylist(Playlist* playlist);
 
         void sort();
@@ -40,7 +41,13 @@ class PlaylistManager : public QObject
         SerializablePlaylist serializableFromPlaylist(Playlist* playlist);
 
     protected:
-        PlaylistManager(QObject* parent = 0);
+        explicit PlaylistManager(QObject* parent = 0);
+
+    private slots:
+        void onPlaylistUpdated();
+
+    signals:
+        void playlistsChanged();
 
     private:
         static QPointer<PlaylistManager> m_instance;

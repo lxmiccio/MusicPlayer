@@ -79,6 +79,7 @@ void Playlist::addTrack(Track* track)
 void Playlist::removeTrack(Track* track)
 {
     m_tracks.removeOne(track);
+    emit playlistUpdated();
 }
 
 const QString& Playlist::name() const

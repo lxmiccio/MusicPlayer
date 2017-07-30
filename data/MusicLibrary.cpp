@@ -47,13 +47,11 @@ Artist* MusicLibrary::artist(const QString& name) const
 
 bool MusicLibrary::removeArtist(Artist* artist)
 {
-    QMutexLocker locker(&m_mutex);
     return m_artists.removeOne(artist);
 }
 
 bool MusicLibrary::removeArtist(const QString& name)
 {
-    QMutexLocker locker(&m_mutex);
     return m_artists.removeOne(artist(name));
 }
 
@@ -109,8 +107,6 @@ Album* MusicLibrary::album(const QString& title, const QString& artistName) cons
 
 bool MusicLibrary::removeAlbum(Album* album)
 {
-    QMutexLocker locker(&m_mutex);
-
     if(album && album->artist())
     {
         return album->artist()->removeAlbum(album);
@@ -123,8 +119,6 @@ bool MusicLibrary::removeAlbum(Album* album)
 
 bool MusicLibrary::removeAlbum(const QString& albumName, const QString& artistName)
 {
-    QMutexLocker locker(&m_mutex);
-
     if(artist(artistName))
     {
         return artist(artistName)->removeAlbum(albumName);
@@ -155,8 +149,6 @@ const QVector<Track*> MusicLibrary::tracks() const
 
 bool MusicLibrary::removeTrack(Track* track)
 {
-    QMutexLocker locker(&m_mutex);
-
     if(track && track->album())
     {
         return track->album()->removeTrack(track);
@@ -169,8 +161,6 @@ bool MusicLibrary::removeTrack(Track* track)
 
 bool MusicLibrary::removeTrack(const QString& trackTitle, const QString& albumTitle)
 {
-    QMutexLocker locker(&m_mutex);
-
     if(album(albumTitle))
     {
         return album(albumTitle)->removeTrack(trackTitle);

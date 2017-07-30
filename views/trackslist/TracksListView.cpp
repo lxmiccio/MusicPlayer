@@ -1,5 +1,11 @@
 #include "TracksListView.h"
 
+#include <QCommonStyle>
+#include <QHeaderView>
+#include <QInputDialog>
+#include <QMenu>
+#include <QScrollBar>
+
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
 
@@ -221,9 +227,9 @@ void TracksListView::onContextMenuRequested(QPoint position)
     else if(selectedAction == removeTrack)
     {
         QModelIndexList selection = selectionModel()->selectedRows();
-        for(quint16 i = 0; i < selection.size(); ++i)
+        while(!selection.isEmpty())
         {
-            MusicLibrary::instance()->removeTrack(m_tracksListModel->rootItem()->child(selection.at(i).row())->track());
+            MusicLibrary::instance()->removeTrack(m_tracksListModel->rootItem()->child(selection.takeLast().row())->track());
         }
     }
     else if(selectedAction == downloadLyrics)
@@ -270,7 +276,6 @@ void TracksListView::onContextMenuRequested(QPoint position)
         QString newPlaylist = QInputDialog::getText(0, "Create playlist", "Title:");
 
         Playlist* playlist = PlaylistManager::instance()->playlist(newPlaylist);
-
         if(!playlist)
         {
             playlist = new Playlist(newPlaylist);
@@ -287,7 +292,6 @@ void TracksListView::onContextMenuRequested(QPoint position)
     else if(playlists.contains(selectedAction))
     {
         Playlist* playlist = PlaylistManager::instance()->playlist(playlists.at(playlists.indexOf(selectedAction))->text());
-
         if(playlist)
         {
             QModelIndexList selection = selectionModel()->selectedRows();

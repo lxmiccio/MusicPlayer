@@ -21,7 +21,6 @@ SOURCES += main.cpp \
     artistview/ArtistAlbumsView.cpp \
     artistview/ArtistAlbumWidget.cpp \
     artistview/ArtistView.cpp \
-    artistview/ArtistWidget.cpp \
     audio/AudioControls.cpp \
     audio/AudioEngine.cpp \
     data/Album.cpp \
@@ -58,7 +57,12 @@ SOURCES += main.cpp \
     views/trackslist/TracksListDelegate.cpp \
     views/trackslist/TracksListItem.cpp \
     views/trackslist/TracksListModel.cpp \
-    widgets/ScrollableWidget.cpp
+    widgets/ScrollableWidget.cpp \
+    views/artistslist/ArtistsListDelegate.cpp \
+    views/artistslist/ArtistsListItem.cpp \
+    views/artistslist/ArtistsListModel.cpp \
+    views/artistslist/ArtistsListView.cpp \
+    views/AlbumInfoView.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -67,7 +71,6 @@ HEADERS  += albumview/AlbumCover.h \
     artistview/ArtistAlbumsView.h \
     artistview/ArtistAlbumWidget.h \
     artistview/ArtistView.h \
-    artistview/ArtistWidget.h \
     audio/AudioControls.h \
     audio/AudioEngine.h \
     data/Album.h \
@@ -108,7 +111,12 @@ HEADERS  += albumview/AlbumCover.h \
     views/trackslist/TracksListDelegate.h \
     views/trackslist/TracksListItem.h \
     views/trackslist/TracksListModel.h \
-    widgets/ScrollableWidget.h
+    widgets/ScrollableWidget.h \
+    views/artistslist/ArtistsListDelegate.h \
+    views/artistslist/ArtistsListItem.h \
+    views/artistslist/ArtistsListModel.h \
+    views/artistslist/ArtistsListView.h \
+    views/AlbumInfoView.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/api
@@ -124,6 +132,7 @@ INCLUDEPATH += $$PWD/soundtouch
 INCLUDEPATH += $$PWD/taglib
 INCLUDEPATH += $$PWD/utils
 INCLUDEPATH += $$PWD/views
+INCLUDEPATH += $$PWD/views/artistslist
 INCLUDEPATH += $$PWD/views/trackslist
 INCLUDEPATH += $$PWD/widgets
 

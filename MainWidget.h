@@ -24,6 +24,11 @@ class MainWidget : public BackgroundWidget
         Q_OBJECT
 
     public:
+        static MainWidget* instance(QWidget* parent = 0);
+
+        void showPreviousView();
+
+    protected:
         MainWidget(QWidget* parent = 0);
         ~MainWidget();
 
@@ -43,6 +48,8 @@ class MainWidget : public BackgroundWidget
 
     private:
         void showView(Settings::View view);
+
+        static MainWidget* m_instance;
 
         const MainWindow* c_mainWindow;
 

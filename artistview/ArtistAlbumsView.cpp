@@ -93,7 +93,7 @@ void ArtistAlbumsView::onAlbumRemoved(Album* album)
     if(album)
     {
         quint16 index = widgetIndex(album);
-        delete m_widgets.takeAt(index);
+        m_widgets.takeAt(index)->deleteLater();
         delete m_lineWidgets.takeAt(index);
     }
 }

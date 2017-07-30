@@ -2,15 +2,9 @@
 #define TRACKSLISTVIEW_H
 
 #include <QAction>
-#include <QCommonStyle>
-#include <QHeaderView>
-#include <QInputDialog>
-#include <QMenu>
 #include <QResizeEvent>
-#include <QScrollBar>
 #include <QTableView>
 
-#include "HttpRequestWorker.h"
 #include "TracksListDelegate.h"
 #include "TracksListModel.h"
 

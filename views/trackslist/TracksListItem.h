@@ -11,8 +11,8 @@ class TracksListItem : public QObject
         Q_OBJECT
 
     public:
-        explicit TracksListItem(const QList<QVariant>& data, bool sort = true, TracksListItem* parent = 0);
-        explicit TracksListItem(Track* track, TracksListItem* parent = 0);
+        explicit TracksListItem(const QList<QVariant>& data, bool sort = true);
+        explicit TracksListItem(Track* track, TracksListItem* parent);
         ~TracksListItem();
 
         QVariant data(int column) const;

@@ -3,6 +3,7 @@
 
 #include <QMutex>
 #include <QMutexLocker>
+#include <QSharedPointer>
 #include <QVector>
 
 #include "Album.h"

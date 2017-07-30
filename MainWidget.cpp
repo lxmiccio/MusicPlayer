@@ -1,6 +1,9 @@
 #include "MainWidget.h"
 
+#include "MusicLibrary.h"
 #include "Playlist.h"
+
+MainWidget* MainWidget::m_instance = NULL;
 
 MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
 {
@@ -56,6 +59,21 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
 
 MainWidget::~MainWidget()
 {
+}
+
+MainWidget* MainWidget::instance(QWidget* parent)
+{
+    if(!m_instance)
+    {
+        m_instance = new MainWidget(parent);
+    }
+
+    return m_instance;
+}
+
+void MainWidget::showPreviousView()
+{
+    showView(Settings::ARTIST_VIEW);
 }
 
 void MainWidget::onShowArtistViewTriggered()

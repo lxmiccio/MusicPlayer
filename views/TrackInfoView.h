@@ -2,6 +2,7 @@
 #define TRACKINFOVIEW_H
 
 #include <QLabel>
+#include <QPointer>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -11,11 +12,6 @@
 class TrackInfoView : public QWidget
 {
         Q_OBJECT
-
-        static const quint16 COVER_HEIGHT = 215;
-        static const quint16 COVER_WIDTH = 175;
-        static const quint16 IMAGE_HEIGHT = 175;
-        static const quint16 IMAGE_WIDTH = 175;
 
     public:
         explicit TrackInfoView(QWidget* parent = 0);
@@ -29,7 +25,7 @@ class TrackInfoView : public QWidget
         void onArtistUpdated(Artist* artist, quint8 fields);
 
     private:
-        Track* m_track;
+        QPointer<Track> m_track; /* Use QPointer so that the pointer will result NULL if deleted by another object */
 
         QLabel* m_cover;
         quint16 m_coverHeight;

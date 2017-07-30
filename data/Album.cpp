@@ -72,7 +72,7 @@ bool Album::removeTrack(Track* track)
     {
         emit trackRemoved(track);
 
-        track->deleteLater();
+        delete track;
         track = NULL;
 
         if(m_tracks.isEmpty())

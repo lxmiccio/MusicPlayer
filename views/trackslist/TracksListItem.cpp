@@ -1,12 +1,12 @@
 #include "TracksListItem.h"
 
-TracksListItem::TracksListItem(const QList<QVariant>& data, bool sort, TracksListItem* parent)
+TracksListItem::TracksListItem(const QList<QVariant>& data, bool sort)
 {
     m_track = NULL;
 
     m_data = data;
     m_sort = sort;
-    m_parent = parent;
+    m_parent = NULL;
 }
 
 TracksListItem::TracksListItem(Track* track, TracksListItem* parent)

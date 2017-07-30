@@ -1,5 +1,77 @@
 #include "ArtistView.h"
 
+#include "MusicLibrary.h"
+
+#if 1
+ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
+{
+    m_artistsListView = new ArtistsListView();
+    QObject::connect(m_artistsListView, SIGNAL(artistSelected(Artist*)), SLOT(onArtistSelected(Artist*)));
+
+    m_splitter = new QSplitter();
+    m_splitter->setContentsMargins(0, 0, 0, 0);
+    m_splitter->setHandleWidth(3);
+    m_splitter->addWidget(m_artistsListView);
+
+    m_layout = new QHBoxLayout();
+    m_layout->setMargin(0);
+    m_layout->setSpacing(32);
+    m_layout->addWidget(m_splitter);
+
+    setLayout(m_layout);
+
+    QObject::connect(MusicLibrary::instance(), SIGNAL(artistAdded(Artist*)), this, SLOT(onArtistAdded(Artist*)));
+
+    //    m_leftLayout = new QVBoxLayout();
+    //    m_leftLayout->setMargin(0);
+    //    m_leftLayout->addItem(m_upperSpacer);
+    //    m_leftLayout->addItem(m_lowerSpacer);
+    //    ScrollableWidget* m_leftLayoutScrollable = new ScrollableWidget();
+    //    QWidget* widget = new QWidget();
+    //    widget->setLayout(m_leftLayout);
+    //    m_leftLayoutScrollable->setWidget(widget);
+    //    QObject::connect(m_leftLayoutScrollable, SIGNAL(filesDropped(QVector<QFileInfo>)), MusicLibrary::instance(), SLOT(onTracksToLoad(QVector<QFileInfo>)));
+
+    //    m_albumView = new ArtistAlbumsView();
+    //    m_albumViewScrollable = new ScrollableWidget();
+    //    m_albumViewScrollable->setWidget(m_albumView);
+    //    m_albumViewScrollable->hide();
+    //    QObject::connect(this, SIGNAL(coverClicked(Artist*)), m_albumView, SLOT(onArtistChanged(Artist*)));
+
+    //    m_splitter = new QSplitter();
+    //    m_splitter->setHandleWidth(3);
+    //    m_splitter->setContentsMargins(40, 16, 40, 12);
+    //    m_splitter->addWidget(m_leftLayoutScrollable);
+    //    m_splitter->addWidget(m_albumViewScrollable);
+
+    //    m_layout = new QVBoxLayout();
+    //    m_layout->setMargin(0);
+    //    m_layout->addWidget(m_splitter);
+    //    setLayout(m_layout);
+
+    //    QObject::connect(MusicLibrary::instance(), SIGNAL(albumAdded(Album*)), this, SLOT(onAlbumAdded(Album*)));
+}
+
+ArtistView::~ArtistView()
+{
+}
+
+void ArtistView::onArtistAdded(Artist* artist)
+{
+    if(artist)
+    {
+        m_artistsListView->appendItem(artist);
+    }
+}
+
+void ArtistView::onArtistSelected(Artist* artist)
+{
+    if(artist)
+    {
+    }
+}
+
+#else
 ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
 {
     m_selectedArtistWidget = NULL;
@@ -172,3 +244,4 @@ void ArtistView::onRemoveArtistWidgetClicked(ArtistWidget* widget)
         //TODO: Stop the track if it belonged to the deleted artist?
     }
 }
+#endif

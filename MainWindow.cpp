@@ -1,15 +1,14 @@
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 
 #include "MainWidget.h"
 #include "PlaylistManager.h"
 
+MainWindow* MainWindow::m_instance = NULL;
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-    m_stackedWidget = new QStackedWidget();
-    setCentralWidget(m_stackedWidget);
-
-    MainWidget* mainWidget = new MainWidget(this);
-    m_stackedWidget->addWidget(mainWidget);
+    MainWidget* mainWidget = MainWidget::instance(this);
+    setCentralWidget(mainWidget);
 
     m_showArtistView = new QAction("ArtistView");
     m_showAlbumView = new QAction("AlbumView");
@@ -25,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         QObject::connect(m_playlistsView.last(), SIGNAL(triggered(bool)), mainWidget, SLOT(onShowPlaylistViewTriggered()));
     }
 
+    QObject::connect(PlaylistManager::instance(), SIGNAL(playlistsChanged()), SLOT(onPlaylistsChanged()));
+
     m_viewsMenu = new QMenu("Views");
     m_viewsMenu->addAction(m_showArtistView);
     m_viewsMenu->addAction(m_showAlbumView);
@@ -39,28 +40,31 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QObject::connect(m_showTrackView, SIGNAL(triggered(bool)), mainWidget, SLOT(onShowTrackViewTriggered()));
 }
 
-QStackedWidget* MainWindow::stackedWidget()
+MainWindow* MainWindow::instance()
 {
-    return m_stackedWidget;
+    if(!m_instance)
+    {
+        m_instance = new MainWindow();
+    }
+
+    return m_instance;
 }
 
-void MainWindow::previousView()
+void MainWindow::onPlaylistsChanged()
 {
-    QString currentClassName = m_stackedWidget->currentWidget()->metaObject()->className();
-
-    for(qint8 i = m_stackedWidget->count() - 1; i >= 0; --i)
+    while(!m_playlistsView.isEmpty())
     {
-        QWidget* widget = m_stackedWidget->widget(i);
+        QAction* action = m_playlistsView.takeFirst();
+        QObject::disconnect(action, SIGNAL(triggered(bool)), MainWidget::instance(this), SLOT(onShowPlaylistViewTriggered()));
 
-        if(widget->metaObject()->className() == currentClassName)
-        {
-            m_stackedWidget->removeWidget(widget);
-            delete widget;
-        }
-        else
-        {
-            m_stackedWidget->setCurrentWidget(m_stackedWidget->widget(i));
-            break;
-        }
+        m_playlistMenu->removeAction(action);
+    }
+
+    for(quint16 i = 0; i < PlaylistManager::instance()->playlistsName().size(); ++i)
+    {
+        m_playlistsView.push_back(new QAction(PlaylistManager::instance()->playlistsName().at(i)));
+        m_playlistMenu->addAction(m_playlistsView.last());
+
+        QObject::connect(m_playlistsView.last(), SIGNAL(triggered(bool)), MainWidget::instance(this), SLOT(onShowPlaylistViewTriggered()));
     }
 }

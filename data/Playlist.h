@@ -37,6 +37,9 @@ class Playlist : public QObject
         void setStartingIndex(quint16 startingIndex);
         void clear();
 
+    signals:
+        void playlistUpdated();
+
     private:
         QString m_name;
         QVector<Track*> m_tracks;

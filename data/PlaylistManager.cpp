@@ -70,6 +70,8 @@ void PlaylistManager::loadPlaylists()
         in >> serializable;
 
         Playlist* playlist = playlistFromSerializable(serializable);
+        QObject::connect(playlist, SIGNAL(playlistUpdated()), SLOT(onPlaylistUpdated()));
+
         m_playlists.push_back(playlist);
     }
 
@@ -78,18 +80,13 @@ void PlaylistManager::loadPlaylists()
     sort();
 }
 
-void PlaylistManager::addPlaylist(Playlist* playlist)
-{
-    if(playlist)
-    {
-        m_playlists.push_back(playlist);
-    }
-}
 
 void PlaylistManager::savePlaylist(Playlist* playlist)
 {
     if(playlist)
     {
+        QObject::connect(playlist, SIGNAL(playlistUpdated()), SLOT(onPlaylistUpdated()));
+
         if(!m_playlists.contains(playlist))
         {
             m_playlists.push_back(playlist);
@@ -124,6 +121,19 @@ void PlaylistManager::sort()
     {
         return playlist1->name() < playlist2->name();
     });
+}
+
+void PlaylistManager::onPlaylistUpdated()
+{
+    Playlist* playlist = static_cast<Playlist*>(QObject::sender());
+
+    if(!playlist || playlist->tracks().isEmpty())
+    {
+        m_playlists.removeOne(playlist);
+        playlist->deleteLater();
+
+        emit playlistsChanged();
+    }
 }
 
 Playlist* PlaylistManager::playlistFromSerializable(SerializablePlaylist serializable)
