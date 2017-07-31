@@ -54,6 +54,7 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
 
 ArtistView::~ArtistView()
 {
+
 }
 
 void ArtistView::onArtistAdded(Artist* artist)

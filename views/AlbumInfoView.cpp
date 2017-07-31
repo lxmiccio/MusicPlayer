@@ -12,12 +12,19 @@ AlbumInfoView::AlbumInfoView(QWidget* parent) : QWidget(parent)
     m_albumTitle->setAlignment(Qt::AlignCenter);
     m_albumTitle->setStyleSheet(QString("color: white;"));
 
-    m_layout = new QVBoxLayout();
-    m_layout->setMargin(0);
-    m_layout->addWidget(m_cover);
-    m_layout->addWidget(m_albumTitle);
+    m_tracksListView = new TracksListView(TracksListView::REDUCED);
 
-    setFixedSize(m_coverWidth, m_coverHeight + 40);
+    m_verticalLayout = new QVBoxLayout();
+    m_verticalLayout->setMargin(0);
+    m_verticalLayout->addWidget(m_cover);
+    m_verticalLayout->addWidget(m_albumTitle);
+
+    m_layout = new QHBoxLayout();
+    m_layout->setMargin(0);
+    m_layout->addLayout(m_verticalLayout);
+    m_layout->addWidget(m_tracksListView);
+
+    setFixedSize(m_coverWidth, m_coverHeight);
     setLayout(m_layout);
 }
 
@@ -49,10 +56,15 @@ void AlbumInfoView::changeAlbum(Album* album)
         }
 
         m_album = album;
-
         QObject::connect(m_album, SIGNAL(albumUpdated(Album*, quint8)), this, SLOT(onAlbumUpdated(Album*, quint8)));
 
         m_albumTitle->setText(m_album->title());
+
+        m_tracksListView->clear();
+        foreach(Track* i_track, m_album->tracks())
+        {
+            m_tracksListView->appendItem(i_track);
+        }
     }
 }
 

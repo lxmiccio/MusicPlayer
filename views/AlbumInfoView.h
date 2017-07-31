@@ -1,6 +1,7 @@
 #ifndef ALBUMINFOVIEW_H
 #define ALBUMINFOVIEW_H
 
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QPointer>
 #include <QVBoxLayout>
@@ -8,6 +9,7 @@
 
 #include "Album.h"
 #include "ElidedLabel.h"
+#include "TracksListView.h"
 
 class AlbumInfoView : public QWidget
 {
@@ -30,8 +32,10 @@ class AlbumInfoView : public QWidget
         quint16 m_coverWidth;
 
         ElidedLabel* m_albumTitle;
+        TracksListView* m_tracksListView;
 
-        QVBoxLayout* m_layout;
+        QVBoxLayout* m_verticalLayout;
+        QHBoxLayout* m_layout;
 };
 
 #endif // ALBUMINFOVIEW_H

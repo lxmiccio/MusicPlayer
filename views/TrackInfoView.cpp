@@ -61,7 +61,6 @@ void TrackInfoView::changeTrack(Track* track)
         }
 
         m_track = track;
-
         QObject::connect(m_track, SIGNAL(trackUpdated(Track*, quint8)), this, SLOT(onTrackUpdated(Track*, quint8)));
         QObject::connect(m_track->album(), SIGNAL(albumUpdated(Album*, quint8)), this, SLOT(onAlbumUpdated(Album*, quint8)));
         QObject::connect(m_track->album()->artist(), SIGNAL(artistUpdated(Artist*, quint8)), this, SLOT(onArtistUpdated(Artist*, quint8)));
