@@ -11,6 +11,7 @@ class Utils
     public:
         static quint32 randomInteger(quint32 min, quint32 max);
         static QString randomString(quint32 length = 16);
+        static QString sanitizeLyrics(QString lyrics);
         static const QString secondsToMinutes(quint32 seconds);
         static quint32 stringToSeconds(QString minutes);
 };

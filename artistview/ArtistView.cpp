@@ -8,10 +8,13 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_artistsListView = new ArtistsListView();
     QObject::connect(m_artistsListView, SIGNAL(artistSelected(Artist*)), SLOT(onArtistSelected(Artist*)));
 
+    m_albumsTracksListView = new AlbumsTracksListView();
+
     m_splitter = new QSplitter();
     m_splitter->setContentsMargins(0, 0, 0, 0);
     m_splitter->setHandleWidth(3);
     m_splitter->addWidget(m_artistsListView);
+    m_splitter->addWidget(m_albumsTracksListView);
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
@@ -69,6 +72,7 @@ void ArtistView::onArtistSelected(Artist* artist)
 {
     if(artist)
     {
+        m_albumsTracksListView->appendItem(artist->albums().first());
     }
 }
 

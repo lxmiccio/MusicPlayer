@@ -22,4 +22,4 @@ class ArtistsListDelegate : public QStyledItemDelegate
         ArtistsListView* m_artistsListView;
 };
 
-#endif // ARTISTSLISTDELEGATE_
+#endif // ARTISTSLISTDELEGATE_H

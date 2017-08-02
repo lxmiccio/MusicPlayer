@@ -62,7 +62,11 @@ SOURCES += main.cpp \
     views/artistslist/ArtistsListItem.cpp \
     views/artistslist/ArtistsListModel.cpp \
     views/artistslist/ArtistsListView.cpp \
-    views/AlbumInfoView.cpp
+    views/AlbumInfoView.cpp \
+    views/albumstrackslist/AlbumsTracksListDelegate.cpp \
+    views/albumstrackslist/AlbumsTracksListItem.cpp \
+    views/albumstrackslist/AlbumsTracksListModel.cpp \
+    views/albumstrackslist/AlbumsTracksListView.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -116,7 +120,11 @@ HEADERS  += albumview/AlbumCover.h \
     views/artistslist/ArtistsListItem.h \
     views/artistslist/ArtistsListModel.h \
     views/artistslist/ArtistsListView.h \
-    views/AlbumInfoView.h
+    views/AlbumInfoView.h \
+    views/albumstrackslist/AlbumsTracksListDelegate.h \
+    views/albumstrackslist/AlbumsTracksListItem.h \
+    views/albumstrackslist/AlbumsTracksListModel.h \
+    views/albumstrackslist/AlbumsTracksListView.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/api
@@ -132,6 +140,7 @@ INCLUDEPATH += $$PWD/soundtouch
 INCLUDEPATH += $$PWD/taglib
 INCLUDEPATH += $$PWD/utils
 INCLUDEPATH += $$PWD/views
+INCLUDEPATH += $$PWD/views/albumstrackslist
 INCLUDEPATH += $$PWD/views/artistslist
 INCLUDEPATH += $$PWD/views/trackslist
 INCLUDEPATH += $$PWD/widgets

@@ -182,30 +182,42 @@ void TagLibWrapper::setMp3Cover(const QString& filename, const QPixmap& cover)
 
 void TagLibWrapper::setMp3Lyrics(const QString& filename, const QString& lyrics)
 {
-    TagLib::MPEG::File file(filename.toStdString().data());
+    TagLib::MPEG::File* file=new TagLib::MPEG::File(filename.toStdString().data());
 
-    if(file.ID3v2Tag(true))
+    QString newLyrics = Utils::sanitizeLyrics(lyrics);
+
+    if(file->ID3v2Tag(true))
     {
-        TagLib::ID3v2::FrameList frameList = file.ID3v2Tag()->frameListMap()["USLT"];
+        TagLib::ID3v2::FrameList frameList = file->ID3v2Tag()->frameListMap()["USLT"];
         if(!frameList.isEmpty())
         {
             TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame*>(frameList.front());
             if(frame)
             {
-                frame->setText(lyrics.toStdString().data());
+                TagLib::String string(newLyrics.toStdString().data(), TagLib::String::UTF8);
+
+                frame->setText(string);
+                frame->setTextEncoding(TagLib::String::UTF8);
+
+                file->ID3v2Tag()->addFrame(frame);
+
+                /* Taglib takes care of deleting frame */
             }
         }
         else
         {
-            TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame("USLT");
-            frame->setText(lyrics.toStdString().data());
+            TagLib::ID3v2::UnsynchronizedLyricsFrame* frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame(TagLib::String::UTF8);
+            TagLib::String string(newLyrics.toStdString().data(), TagLib::String::UTF8);
 
-            file.ID3v2Tag()->addFrame(frame);
+            frame->setText(string);
+            frame->setTextEncoding(TagLib::String::UTF8);
+
+            file->ID3v2Tag()->addFrame(frame);
 
             /* Taglib takes care of deleting frame */
         }
 
-        file.save();
+        file->save();
     }
 }
 

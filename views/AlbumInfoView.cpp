@@ -5,11 +5,12 @@ AlbumInfoView::AlbumInfoView(QWidget* parent) : QWidget(parent)
     m_album = NULL;
 
     m_cover = new QLabel();
+    m_cover->setAlignment(Qt::AlignTop);
     m_coverHeight = 175;
     m_coverWidth = 175;
 
     m_albumTitle = new ElidedLabel();
-    m_albumTitle->setAlignment(Qt::AlignCenter);
+    m_albumTitle->setAlignment(Qt::AlignHCenter);
     m_albumTitle->setStyleSheet(QString("color: white;"));
 
     m_tracksListView = new TracksListView(TracksListView::REDUCED);
@@ -39,20 +40,20 @@ void AlbumInfoView::changeAlbum(Album* album)
 
         if(!m_album || (m_album && m_album != album))
         {
-            if(!album->cover())
+            //if(!album->cover())
             {
                 m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(m_coverWidth,
                                                                                                        m_coverHeight,
                                                                                                        Qt::KeepAspectRatio,
                                                                                                        Qt::SmoothTransformation));
             }
-            else
-            {
-                m_cover->setPixmap(QPixmap(album->cover().scaled(m_coverWidth,
-                                                                 m_coverHeight,
-                                                                 Qt::KeepAspectRatio,
-                                                                 Qt::SmoothTransformation)));
-            }
+//            else
+//            {
+//                m_cover->setPixmap(QPixmap(album->cover().scaled(m_coverWidth,
+//                                                                 m_coverHeight,
+//                                                                 Qt::KeepAspectRatio,
+//                                                                 Qt::SmoothTransformation)));
+//            }
         }
 
         m_album = album;
@@ -72,6 +73,11 @@ void AlbumInfoView::onAlbumUpdated(Album* album, quint8 fields)
 {
     if(album == m_album)
     {
+        if(fields & Album::TITLE)
+        {
+            m_albumTitle->setText(m_album->title());
+        }
+
         if(fields & Album::COVER)
         {
             if(!m_album->cover())

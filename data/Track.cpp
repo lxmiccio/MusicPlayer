@@ -244,6 +244,7 @@ void Track::onLyricsDownloaded(HttpRequestWorker* worker)
 
         qDebug() << "Lyrics for track" << m_tags.title << "is" << m_tags.lyrics;
     }
+
     worker->deleteLater();
 }
 

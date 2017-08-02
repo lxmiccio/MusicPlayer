@@ -24,6 +24,14 @@ QString Utils::randomString(quint32 length)
     return randomString;
 }
 
+QString Utils::sanitizeLyrics(QString lyrics)
+{
+    lyrics = lyrics.replace("…", "...");
+    lyrics = lyrics.replace("‘", "'");
+    lyrics = lyrics.replace("’", "'");
+    return lyrics;
+}
+
 const QString Utils::secondsToMinutes(quint32 seconds)
 {
     return QString("%1:%2").arg(seconds / 60, 2, 10, QChar('0')).arg(seconds % 60, 2, 10, QChar('0'));
