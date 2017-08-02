@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QScrollBar>
 
+#include "AudioEngine.h"
 #include "GuiUtils.h"
 #include "MusicLibrary.h"
 
@@ -43,7 +44,7 @@ TracksListView::TracksListView(quint8 mode, bool sort, QWidget* parent) : QTable
     QObject::connect(this, SIGNAL(pressed(QModelIndex)), this, SLOT(onItemPressed(QModelIndex)));
     QObject::connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
 
-    QObject::connect(this->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentRowChanged(QModelIndex, QModelIndex)));
+    QObject::connect(selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentRowChanged(QModelIndex, QModelIndex)));
 }
 
 TracksListView::~TracksListView()
@@ -322,7 +323,20 @@ void TracksListView::onItemPressed(const QModelIndex& index)
 
 void TracksListView::onItemDoubleClicked(const QModelIndex& index)
 {
-    emit trackDoubleClicked(m_tracksListModel->rootItem()->child(index.row())->track());
+    Track* track = m_tracksListModel->rootItem()->child(index.row())->track();
+    emit trackDoubleClicked(track);
+
+    if(track && track->album())
+    {
+        QVector<Track*> tracks;
+        for(quint8 i = index.row(); i < m_tracksListModel->rowCount(); ++i)
+        {
+            tracks.push_back(m_tracksListModel->rootItem()->child(i)->track());
+        }
+
+        Playlist* playlist = Playlist::fromTracks(tracks);
+        AudioEngine::instance()->onPlaylistSelected(playlist);
+    }
 }
 
 void TracksListView::onCurrentRowChanged(QModelIndex current, QModelIndex previous)

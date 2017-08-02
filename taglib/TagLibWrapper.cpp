@@ -182,7 +182,7 @@ void TagLibWrapper::setMp3Cover(const QString& filename, const QPixmap& cover)
 
 void TagLibWrapper::setMp3Lyrics(const QString& filename, const QString& lyrics)
 {
-    TagLib::MPEG::File* file=new TagLib::MPEG::File(filename.toStdString().data());
+    TagLib::MPEG::File* file = new TagLib::MPEG::File(filename.toStdString().data());
 
     QString newLyrics = Utils::sanitizeLyrics(lyrics);
 

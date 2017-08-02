@@ -9,24 +9,35 @@ AlbumInfoView::AlbumInfoView(QWidget* parent) : QWidget(parent)
     m_coverHeight = 175;
     m_coverWidth = 175;
 
+    QFont font = QApplication::font();
+    font.setBold(true);
+    font.setPointSize(11);
+
     m_albumTitle = new ElidedLabel();
-    m_albumTitle->setAlignment(Qt::AlignHCenter);
+    m_albumTitle->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    m_albumTitle->setContentsMargins(36, 0, 0, 0);
+    m_albumTitle->setFont(font);
     m_albumTitle->setStyleSheet(QString("color: white;"));
 
     m_tracksListView = new TracksListView(TracksListView::REDUCED);
 
     m_verticalLayout = new QVBoxLayout();
     m_verticalLayout->setMargin(0);
-    m_verticalLayout->addWidget(m_cover);
+    m_verticalLayout->setSpacing(18);
     m_verticalLayout->addWidget(m_albumTitle);
+    m_verticalLayout->addWidget(m_tracksListView);
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
+    m_layout->addWidget(m_cover);
     m_layout->addLayout(m_verticalLayout);
-    m_layout->addWidget(m_tracksListView);
 
-    setFixedSize(m_coverWidth, m_coverHeight);
     setLayout(m_layout);
+}
+
+Album* AlbumInfoView::album()
+{
+    return m_album;
 }
 
 void AlbumInfoView::changeAlbum(Album* album)
@@ -40,20 +51,20 @@ void AlbumInfoView::changeAlbum(Album* album)
 
         if(!m_album || (m_album && m_album != album))
         {
-            //if(!album->cover())
+            if(!album->cover())
             {
                 m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(m_coverWidth,
                                                                                                        m_coverHeight,
                                                                                                        Qt::KeepAspectRatio,
                                                                                                        Qt::SmoothTransformation));
             }
-//            else
-//            {
-//                m_cover->setPixmap(QPixmap(album->cover().scaled(m_coverWidth,
-//                                                                 m_coverHeight,
-//                                                                 Qt::KeepAspectRatio,
-//                                                                 Qt::SmoothTransformation)));
-//            }
+            else
+            {
+                m_cover->setPixmap(QPixmap(album->cover().scaled(m_coverWidth,
+                                                                 m_coverHeight,
+                                                                 Qt::KeepAspectRatio,
+                                                                 Qt::SmoothTransformation)));
+            }
         }
 
         m_album = album;

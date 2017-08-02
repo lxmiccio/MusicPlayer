@@ -18,6 +18,8 @@ class AlbumInfoView : public QWidget
     public:
         explicit AlbumInfoView(QWidget* parent = 0);
 
+        Album* album();
+
     public slots:
         void changeAlbum(Album* album);
 
