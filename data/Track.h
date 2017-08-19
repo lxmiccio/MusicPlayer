@@ -43,6 +43,7 @@ class Track : public QObject
         void setLyrics(const QString& lyrics);
         const QString& readLyrics(bool force = false);
         void downloadLyrics();
+        void downloadLyrics(const QString& title);
 
         quint32 duration() const;
         void setDuration(quint32 duration);

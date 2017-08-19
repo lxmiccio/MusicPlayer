@@ -4,35 +4,50 @@
 #include <QMap>
 #include <QString>
 
-enum HttpRequestVarLayout { LAYOUT_NOT_SET, LAYOUT_ADDRESS, LAYOUT_URL_ENCODED, LAYOUT_MULTIPART };
-
-class HttpRequestInputFileElement
+enum HttpRequestVarLayout
 {
-    public:
-        QString variable_name;
-        QString local_filename;
-        QString request_filename;
-        QString mime_type;
+    LAYOUT_NOT_SET,
+    LAYOUT_ADDRESS,
+    LAYOUT_MULTIPART,
+    LAYOUT_URL_ENCODED
+};
+
+struct HttpRequestInputFileElement
+{
+        QString variableName;
+        QString localFilename;
+        QString requestFilename;
+        QString mimeType;
 };
 
 class HttpRequestInput
 {
     public:
-        HttpRequestInput(QString url = "", QString httpMethod = "GET");
+        HttpRequestInput(const QString& url = "", const QString& httpMethod = "GET");
 
-        void addParameter(QString key, QString value);
-        void addFile(QString variable_name, QString local_filename, QString request_filename, QString mime_type);
+        const QString& httpMethod();
 
         const QString& url();
         void setUrl(const QString& url);
 
-        const QString& httpMethod();
+        QList<HttpRequestInputFileElement>& files();
+        void addFile(const QString& variableName, const QString& localFilename, const QString& requestFilename, const QString& mimeType);
 
-        QString m_url;
+        QString parameter(const QString& key);
+        QMap<QString, QString> parameters();
+        void addParameter(const QString& key, const QString& value);
+
+        HttpRequestVarLayout layout();
+        void setLayout(HttpRequestVarLayout layout);
+
+    private:
         QString m_httpMethod;
-        HttpRequestVarLayout var_layout;
-        QMap<QString, QString> vars;
-        QList<HttpRequestInputFileElement> files;
+        QString m_url;
+
+        QList<HttpRequestInputFileElement> m_files;
+        QMap<QString, QString> m_parameters;
+
+        HttpRequestVarLayout m_layout;
 };
 
 #endif// HTTPREQUESTINPUT_H

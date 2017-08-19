@@ -2,6 +2,8 @@
 
 #include "sys/stat.h"
 
+#include <QDebug>
+
 QMutex LameWrapper::MUTEX;
 
 LameWrapper::LameWrapper(const QString& inputPath, const QString& outputPath, QObject* parent) : QObject(parent)
@@ -124,7 +126,7 @@ bool LameWrapper::encode()
 
                 if(read != written)
                 {
-                    // Error
+                    qDebug() << "ERROR";
                 }
             }
         }
@@ -135,7 +137,7 @@ bool LameWrapper::encode()
 
         if(read != written)
         {
-            // Error
+            qDebug() << "ERROR";
         }
 
         writeId3v1Tags();

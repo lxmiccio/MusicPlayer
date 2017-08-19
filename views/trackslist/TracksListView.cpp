@@ -175,6 +175,7 @@ void TracksListView::onContextMenuRequested(QPoint position)
     QAction* changeAlbum = menu.addAction("Change album");
     QAction* changeTitle = menu.addAction("Change title");
     QAction* removeTrack = menu.addAction("Remove track");
+    QAction* downloadCover = menu.addAction("Download cover");
     QAction* downloadLyrics = menu.addAction("Download lyrics");
 
     QMenu playlistMenu("Add to playlist");
@@ -222,7 +223,7 @@ void TracksListView::onContextMenuRequested(QPoint position)
     }
     else if(selectedAction == changeTitle)
     {
-        QString newTitle = QInputDialog::getText(0, "Track editing", "Title:");
+        QString newTitle = QInputDialog::getText(0, "Track editing", "Title:", QLineEdit::Normal, m_tracksListModel->rootItem()->child(indexAt(position).row())->track()->title());
         m_tracksListModel->rootItem()->child(indexAt(position).row())->track()->setTitle(newTitle);
     }
     else if(selectedAction == removeTrack)
@@ -231,6 +232,14 @@ void TracksListView::onContextMenuRequested(QPoint position)
         while(!selection.isEmpty())
         {
             MusicLibrary::instance()->removeTrack(m_tracksListModel->rootItem()->child(selection.takeLast().row())->track());
+        }
+    }
+    else if(selectedAction == downloadCover)
+    {
+        QModelIndexList selection = selectionModel()->selectedRows();
+        for(quint16 i = 0; i < selection.size(); ++i)
+        {
+            m_tracksListModel->rootItem()->child(selection.at(i).row())->track()->album()->downloadCover();
         }
     }
     else if(selectedAction == downloadLyrics)

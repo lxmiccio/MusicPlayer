@@ -76,7 +76,13 @@ Settings::View Settings::stringToView(QString string)
     return view;
 }
 
-QString Settings::apiKey()
+QString Settings::apiKeyLastFm()
+{
+    QSettings settings(SettingsFiles::SETTINGS_FILE, QSettings::IniFormat);
+    return settings.value("API/lastfm_key").toString();
+}
+
+QString Settings::apiKeyMusixMatch()
 {
     QSettings settings(SettingsFiles::SETTINGS_FILE, QSettings::IniFormat);
     return settings.value("API/musixmatch_key").toString();

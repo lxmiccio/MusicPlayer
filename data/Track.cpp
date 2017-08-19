@@ -33,14 +33,15 @@ void Track::load(bool asynchronous)
 
 void Track::modifyTempo(qint16 tempo, bool asynchronous)
 {
-    if(asynchronous)
-    {
-        emit changeTempo(tempo);
-    }
-    else
-    {
-        onChangeTempo(tempo);
-    }
+    emit changeTempo(tempo);
+    //    if(asynchronous)
+    //    {
+    //        emit changeTempo(tempo);
+    //    }
+    //    else
+    //    {
+    //        onChangeTempo(tempo);
+    //    }
 }
 
 Mp3Tags Track::mp3Tags() const
@@ -70,6 +71,8 @@ void Track::setTitle(const QString& title)
     {
         m_tags.title = title;
         emit trackUpdated(this, Track::TITLE);
+
+        TagLibWrapper::setMp3Tags(m_tags.path, m_tags);
     }
 }
 
@@ -112,16 +115,29 @@ void Track::downloadLyrics()
     if(title.contains("(Feat", Qt::CaseInsensitive))
     {
         title = title.left(title.indexOf("(Feat", 0, Qt::CaseInsensitive) - 1);
+        title = title.left(title.indexOf("(Feat", 0, Qt::CaseInsensitive) - 1);
     }
 
     HttpRequestInput input("http://api.musixmatch.com/ws/1.1/track.search", "GET");
-    input.addParameter("apikey", Settings::apiKey());
+    input.addParameter("apikey", Settings::apiKeyMusixMatch());
     input.addParameter("q_artist", m_album->artist()->name());
     input.addParameter("q_track", title);
 
     HttpRequestWorker* worker = new HttpRequestWorker();
-    QObject::connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(onLyricsUrlFound(HttpRequestWorker*)));
-    worker->execute(&input);
+    QObject::connect(worker, SIGNAL(requestFinished(HttpRequestWorker*)), this, SLOT(onLyricsUrlFound(HttpRequestWorker*)));
+    worker->execute(input);
+}
+
+void Track::downloadLyrics(const QString& title)
+{
+    HttpRequestInput input("http://api.musixmatch.com/ws/1.1/track.search", "GET");
+    input.addParameter("apikey", Settings::apiKeyMusixMatch());
+    input.addParameter("q_artist", m_album->artist()->name());
+    input.addParameter("q_track", title);
+
+    HttpRequestWorker* worker = new HttpRequestWorker();
+    QObject::connect(worker, SIGNAL(requestFinished(HttpRequestWorker*)), this, SLOT(onLyricsUrlFound(HttpRequestWorker*)));
+    worker->execute(input);
 }
 
 quint32 Track::duration() const
@@ -193,12 +209,13 @@ void Track::onLoadTrack()
 
 void Track::onChangeTempo(qint16 tempo)
 {
+    qDebug() << "changing tempo of " << m_tags.title;
     QString lameDecodeOutput = toWav();
     QString soundTouchOutput = modifyTempo(lameDecodeOutput, tempo);
     QString lameEncodeOutput = toMp3(soundTouchOutput);
 
-    QFile(lameDecodeOutput).remove();
-    QFile(soundTouchOutput).remove();
+    //    QFile(lameDecodeOutput).remove();
+    //    QFile(soundTouchOutput).remove();
 
     Mp3Tags tags = m_tags;
     tags.title = QString(tags.title + " (x" + QString::number(tempo) + ")");
@@ -212,37 +229,73 @@ void Track::onChangeTempo(qint16 tempo)
 
 void Track::onLyricsUrlFound(HttpRequestWorker* worker)
 {
-    QString url = worker->lyricsUrl();
+    if(!worker->isError())
+    {
+        QString url = worker->lyricsUrl();
 
-    HttpRequestInput input(url);
+        if(!url.isEmpty())
+        {
+            HttpRequestInput input(url);
 
-    HttpRequestWorker* newWorker = new HttpRequestWorker();
-    QObject::connect(newWorker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(onLyricsDownloaded(HttpRequestWorker*)));
-    newWorker->execute(&input);
+            HttpRequestWorker* newWorker = new HttpRequestWorker();
+            QObject::connect(newWorker, SIGNAL(requestFinished(HttpRequestWorker*)), this, SLOT(onLyricsDownloaded(HttpRequestWorker*)));
+            newWorker->execute(input);
+        }
+        else
+        {
+            QString newLyrics = worker->input().parameter("q_track");
+            if(newLyrics.length() >= 3)
+            {
+                downloadLyrics(newLyrics.left(newLyrics.length() - 2));
+            }
+        }
+    }
+    else
+    {
+        qDebug() << "Http request failed with error" << worker->errorMessage();
+    }
 
     worker->deleteLater();
 }
 
 void Track::onLyricsDownloaded(HttpRequestWorker* worker)
 {
-    QRegExp rx("<p([^>]*)content([^>]*)>(.*)</p>");
-    rx.setMinimal(true);
-
-    QStringList lyrics;
-    int index = 0;
-
-    while((index = rx.indexIn(worker->m_response, index)) != -1)
+    if(!worker->isError())
     {
-        lyrics << rx.cap(3);
-        index += rx.matchedLength();
+        QRegExp rx("<p([^>]*)content([^>]*)>(.*)</p>");
+        rx.setMinimal(true);
+
+        QStringList lyrics;
+        int index = 0;
+
+        while((index = rx.indexIn(worker->response(), index)) != -1)
+        {
+            lyrics << rx.cap(3);
+            index += rx.matchedLength();
+        }
+
+        if(lyrics.size() > 0)
+        {
+            m_tags.lyrics = lyrics.join("\n");
+
+            /* Remove title and artist if lyrics starts with them */
+            if(m_tags.lyrics.contains("\n") && (m_tags.lyrics.left(m_tags.lyrics.indexOf("\n")).contains(m_tags.title) && m_tags.lyrics.left(m_tags.lyrics.indexOf("\n")).contains(artist()->name())))
+            {
+                m_tags.lyrics = m_tags.lyrics.mid(m_tags.lyrics.indexOf("\n") + 1);
+            }
+
+            TagLibWrapper::setMp3Lyrics(m_tags.path, m_tags.lyrics);
+
+            qDebug() << "Lyrics for track" << m_tags.title << "is" << m_tags.lyrics;
+        }
+        else
+        {
+            qDebug() << "Lyrics is empty";
+        }
     }
-
-    if(lyrics.size() > 0)
+    else
     {
-        m_tags.lyrics = lyrics.join("\n");
-        TagLibWrapper::setMp3Lyrics(m_tags.path, m_tags.lyrics);
-
-        qDebug() << "Lyrics for track" << m_tags.title << "is" << m_tags.lyrics;
+        qDebug() << "Http request failed with error" << worker->errorMessage();
     }
 
     worker->deleteLater();

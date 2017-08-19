@@ -7,6 +7,7 @@
 #include <QVector>
 
 #include "Artist.h"
+#include "HttpRequestWorker.h"
 #include "Track.h"
 
 class Artist;
@@ -29,6 +30,7 @@ class Album : public QObject
 
         const QPixmap& cover() const;
         void setCover(const QPixmap& cover);
+        void downloadCover();
 
         const QVector<Track*>& tracks() const;
         Track* track(const QString& title) const;
@@ -50,6 +52,8 @@ class Album : public QObject
         void trackRemoved(Track* track);
 
     private slots:
+        void onAlbumInfoDownloaded(HttpRequestWorker* worker);
+        void onCoverDownloaded(HttpRequestWorker* worker);
         void onArtistUpdated(Artist* artist, quint8 fields);
 
     private:

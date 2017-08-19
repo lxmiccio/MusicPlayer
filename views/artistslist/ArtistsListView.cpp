@@ -153,6 +153,7 @@ void ArtistsListView::onCurrentRowChanged(QModelIndex current, QModelIndex previ
 
     if(current.row() >= 0)
     {
+        qDebug()<<current.row();
         emit artistSelected(m_artistsListModel->rootItem()->child(current.row())->artist());
     }
 }

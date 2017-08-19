@@ -1,5 +1,7 @@
 #include "Utils.h"
 
+#include <QDebug>
+
 quint32 Utils::randomInteger(quint32 min, quint32 max)
 {
     if(min < max)
@@ -26,9 +28,28 @@ QString Utils::randomString(quint32 length)
 
 QString Utils::sanitizeLyrics(QString lyrics)
 {
+    lyrics = lyrics.replace("\n\n\n", "\n\n");
+    lyrics = lyrics.replace("(– part 1)\n", "");
+    lyrics = lyrics.replace("(– part 2)\n", "");
+    lyrics = lyrics.replace("(– part 3)\n", "");
     lyrics = lyrics.replace("…", "...");
     lyrics = lyrics.replace("‘", "'");
     lyrics = lyrics.replace("’", "'");
+
+    while(lyrics.startsWith("\n"))
+    {
+        lyrics.remove(0, 1);
+    }
+
+    for(int i = 0; i < lyrics.length(); ++i)
+    {
+        QChar ch(lyrics.at(i));
+        if(ch.unicode() > 127)
+        {
+            qDebug() << "Strange char" << ch.unicode() << "at the centre of the string" << lyrics.mid(i-1, 3);
+        }
+    }
+
     return lyrics;
 }
 
@@ -45,7 +66,7 @@ quint32 Utils::stringToSeconds(QString minutes)
     QStringListIterator iterator(time);
     iterator.toBack();
 
-    for(quint8 i = 0; iterator.hasNext(); i++)
+    for(quint8 i = 0; iterator.hasNext(); ++i)
     {
         seconds += iterator.next().toUInt() * qPow(60, i);
     }

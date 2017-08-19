@@ -36,6 +36,13 @@ void Album::setCover(const QPixmap& cover)
     emit albumUpdated(this, Album::COVER);
 }
 
+void Album::downloadCover()
+{
+    HttpRequestWorker* worker = new HttpRequestWorker();
+    QObject::connect(worker, SIGNAL(requestFinished(HttpRequestWorker*)), this, SLOT(onAlbumInfoDownloaded(HttpRequestWorker*)));
+    worker->albumInfoLastFm(m_artist->name(), m_title);
+}
+
 const QVector<Track*>& Album::tracks() const
 {
     return m_tracks;
@@ -121,6 +128,49 @@ void Album::sort()
     {
         return track1->track() < track2->track();
     });
+}
+
+void Album::onAlbumInfoDownloaded(HttpRequestWorker* worker)
+{
+    if(!worker->isError())
+    {
+        QString url = worker->coverUrl();
+        if(!url.isEmpty())
+        {
+            HttpRequestInput input(url);
+
+            HttpRequestWorker* newWorker = new HttpRequestWorker();
+            QObject::connect(newWorker, SIGNAL(requestFinished(HttpRequestWorker*)), this, SLOT(onCoverDownloaded(HttpRequestWorker*)));
+            newWorker->execute(input);
+        }
+        else
+        {
+            qDebug() << "Url is empty";
+        }
+    }
+    else
+    {
+        qDebug() << "Http request failed with error" << worker->errorMessage();
+    }
+
+    worker->deleteLater();
+}
+
+void Album::onCoverDownloaded(HttpRequestWorker* worker)
+{
+    if(!worker->isError())
+    {
+        m_cover.loadFromData(worker->response());
+        emit albumUpdated(this, COVER);
+
+        qDebug() << "Cover downloaded";
+    }
+    else
+    {
+        qDebug() << "Http request failed with error" << worker->errorMessage();
+    }
+
+    worker->deleteLater();
 }
 
 void Album::onArtistUpdated(Artist* artist, quint8 fields)

@@ -18,23 +18,23 @@ void TracksListDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
 {
     if(option.state & QStyle::State_Selected)
     {
-        QRect rect;
+//        QRect rect;
 
-        if(index.column() == 0)
-        {
-            rect = QRect(QPoint(option.rect.topLeft().x() + 10, option.rect.topLeft().y()), option.rect.bottomRight());
-            painter->fillRect(rect, QColor(0, 0, 0, 10));
-        }
-        else if(index.column() == m_tracksListView->columnCount())
-        {
-            rect = QRect(option.rect.topLeft(), QPoint(option.rect.bottomRight().x() - 10, option.rect.bottomRight().y()));
-            painter->fillRect(rect, QColor(0, 0, 0, 10));
-        }
-        else
-        {
-            rect = option.rect;
-            painter->fillRect(rect, QColor(0, 0, 0, 10));
-        }
+//        if(index.column() == 0)
+//        {
+//            rect = QRect(QPoint(option.rect.topLeft().x() + 10, option.rect.topLeft().y()), option.rect.bottomRight());
+//            painter->fillRect(rect, QColor(0, 0, 0, 10));
+//        }
+//        else if(index.column() == m_tracksListView->columnCount())
+//        {
+//            rect = QRect(option.rect.topLeft(), QPoint(option.rect.bottomRight().x() - 10, option.rect.bottomRight().y()));
+//            painter->fillRect(rect, QColor(0, 0, 0, 10));
+//        }
+//        else
+//        {
+//            rect = option.rect;
+//            painter->fillRect(rect, QColor(0, 0, 0, 10));
+//        }
     }
     else
     {

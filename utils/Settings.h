@@ -31,7 +31,8 @@ class Settings
 
         static QString playlistsFile();
 
-        static QString apiKey();
+        static QString apiKeyLastFm();
+        static QString apiKeyMusixMatch();
 
     private:
         static Settings::View stringToView(QString string);

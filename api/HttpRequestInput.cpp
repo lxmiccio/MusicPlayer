@@ -1,24 +1,16 @@
 #include "HttpRequestInput.h"
 
-HttpRequestInput::HttpRequestInput(QString url, QString httpMethod)
+HttpRequestInput::HttpRequestInput(const QString& url, const QString& httpMethod)
 {
     m_url = url;
     m_httpMethod = httpMethod;
 
-    var_layout = LAYOUT_NOT_SET;
+    m_layout = LAYOUT_NOT_SET;
 }
 
-void HttpRequestInput::addParameter(QString key, QString value) {
-    vars[key] = value;
-}
-
-void HttpRequestInput::addFile(QString variable_name, QString local_filename, QString request_filename, QString mime_type) {
-    HttpRequestInputFileElement file;
-    file.variable_name = variable_name;
-    file.local_filename = local_filename;
-    file.request_filename = request_filename;
-    file.mime_type = mime_type;
-    files.append(file);
+const QString& HttpRequestInput::httpMethod()
+{
+    return m_httpMethod;
 }
 
 const QString& HttpRequestInput::url()
@@ -31,7 +23,43 @@ void HttpRequestInput::setUrl(const QString& url)
     m_url = url;
 }
 
-const QString& HttpRequestInput::httpMethod()
+QList<HttpRequestInputFileElement>& HttpRequestInput::files()
 {
-    return m_httpMethod;
+    return m_files;
+}
+
+void HttpRequestInput::addFile(const QString& variableName, const QString& localFilename, const QString& requestFilename, const QString& mimeType)
+{
+    HttpRequestInputFileElement file;
+    file.variableName = variableName;
+    file.localFilename = localFilename;
+    file.requestFilename = requestFilename;
+    file.mimeType = mimeType;
+
+    m_files.append(file);
+}
+
+QString HttpRequestInput::parameter(const QString& key)
+{
+    return m_parameters.value(key, "");
+}
+
+QMap<QString, QString> HttpRequestInput::parameters()
+{
+    return m_parameters;
+}
+
+void HttpRequestInput::addParameter(const QString& key, const QString& value)
+{
+    m_parameters.insert(key, value);
+}
+
+HttpRequestVarLayout HttpRequestInput::layout()
+{
+    return m_layout;
+}
+
+void HttpRequestInput::setLayout(HttpRequestVarLayout layout)
+{
+    m_layout = layout;
 }

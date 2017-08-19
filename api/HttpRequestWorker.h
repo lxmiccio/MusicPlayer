@@ -4,12 +4,11 @@
 #include <QBuffer>
 #include <QFile>
 #include <QFileInfo>
-#include <QNetworkReply>
-#include <QObject>
-
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QNetworkReply>
+#include <QObject>
 
 #include "HttpRequestInput.h"
 
@@ -20,25 +19,38 @@ class HttpRequestWorker : public QObject
     public:
         explicit HttpRequestWorker(QObject* parent = 0);
 
-        QString encodeAttribute(QString attribute, QString input);
-        void execute(HttpRequestInput* input);
+        void albumInfoLastFm(const QString& artist, const QString& album);
+        void artistInfoLastFm(const QString& artist);
 
+
+        QString encodeAttribute(QString attribute, QString input);
+        void execute(HttpRequestInput input);
+
+        QByteArray response();
+
+        HttpRequestInput input();
+
+        bool isError();
+        QNetworkReply::NetworkError error();
+        QString errorMessage();
+
+        QString coverUrl();
         QString lyricsUrl();
 
-        QByteArray m_response;
-        QNetworkReply::NetworkError m_networkError;
-        QString m_error;
-
-
     signals:
-        void on_execution_finished(HttpRequestWorker *worker);
-
-    private:
-        QNetworkAccessManager *m_manager;
+        void requestFinished(HttpRequestWorker* worker);
 
     private slots:
-        void on_manager_finished(QNetworkReply *reply);
+        void onRequestFinished(QNetworkReply* reply);
 
+    private:
+        QNetworkAccessManager* m_manager;
+        QByteArray m_response;
+
+        HttpRequestInput m_input;
+
+        QNetworkReply::NetworkError m_networkError;
+        QString m_error;
 };
 
 #endif// HTTPREQUESTWORKER_H
