@@ -2,7 +2,6 @@
 #define ARTIST_H
 
 #include <QObject>
-#include <QString>
 #include <QVector>
 
 #include "Album.h"
@@ -50,6 +49,10 @@ class Artist : public QObject
         void albumRemoved(Album* album);
 
     private:
+        static bool isImageAvailable(const QString& name);
+        static QPixmap readImage(const QString& name);
+        static void saveImage(const QString& name, const QPixmap& image);
+
         QString m_name;
         QPixmap m_image;
 

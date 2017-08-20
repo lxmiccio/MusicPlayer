@@ -21,7 +21,7 @@ void ArtistsListDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
     if(option.state & QStyle::State_Selected)
     {
         QRect rect = option.rect;
-        rect.setSize(m_artistsListView->maxSize());
+        rect.setSize(artistsListItem->sizeHint());
         painter->fillRect(rect.adjusted(0, 3, 0, -3), QColor(0, 0, 0, 75));
     }
 

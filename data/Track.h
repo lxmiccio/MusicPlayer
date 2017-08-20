@@ -2,7 +2,6 @@
 #define TRACK_H
 
 #include <QObject>
-#include <QString>
 #include <QVariant>
 #include <QVariantMap>
 

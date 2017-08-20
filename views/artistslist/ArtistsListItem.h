@@ -16,6 +16,8 @@ class ArtistsListItem : public QWidget
         explicit ArtistsListItem(Artist* artist, ArtistsListItem* parent);
         ~ArtistsListItem();
 
+        virtual QSize sizeHint();
+
         QVariant data(int column) const;
 
         ArtistsListItem* parent() const;
@@ -38,7 +40,6 @@ class ArtistsListItem : public QWidget
         Artist* artist() const;
 
     private slots:
-        void onAlbumAdded(Album* album);
         void onArtistUpdated(Artist* artist, quint8 fields);
 
     signals:
@@ -50,7 +51,6 @@ class ArtistsListItem : public QWidget
 
         Artist* m_artist;
 
-        bool m_hasCover;
         Label* m_cover;
         QLabel* m_artistName;
 

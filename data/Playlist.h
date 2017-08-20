@@ -6,7 +6,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QObject>
-#include <QString>
 #include <QStringList>
 #include <QVector>
 

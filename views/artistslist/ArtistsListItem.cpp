@@ -14,27 +14,22 @@ ArtistsListItem::ArtistsListItem(bool sort)
 ArtistsListItem::ArtistsListItem(Artist* artist, ArtistsListItem* parent)
 {
     m_artist = artist;
-    QObject::connect(m_artist, SIGNAL(albumAdded(Album*)), SLOT(onAlbumAdded(Album*)));
-    QObject::connect(m_artist, SIGNAL(albumUpdated(Album*, quint8)), SLOT(onAlbumAdded(Album*)));
     QObject::connect(m_artist, SIGNAL(artistUpdated(Artist*, quint8)), SLOT(onArtistUpdated(Artist*, quint8)));
-    m_artist->downloadImage();
 
     m_cover = new Label();
     m_cover->setAlignment(Qt::AlignCenter);
     m_cover->setContentsMargins(10, 10, 10, 10);
     m_cover->setRounded(true);
 
-    if(m_artist && !m_artist->albums().isEmpty())
+    if(!m_artist->image().isNull())
     {
-        m_hasCover = true;
-        m_cover->setPixmap(QPixmap(m_artist->albums().first()->cover().scaled(100,
-                                                                              100,
-                                                                              Qt::KeepAspectRatio,
-                                                                              Qt::SmoothTransformation)));
+        m_cover->setPixmap(QPixmap(m_artist->image().scaled(100,
+                                                            100,
+                                                            Qt::KeepAspectRatio,
+                                                            Qt::SmoothTransformation)));
     }
     else
     {
-        m_hasCover = false;
         m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(100,
                                                                                                100,
                                                                                                Qt::KeepAspectRatio,
@@ -60,6 +55,11 @@ ArtistsListItem::ArtistsListItem(Artist* artist, ArtistsListItem* parent)
 ArtistsListItem::~ArtistsListItem()
 {
     qDeleteAll(m_childs);
+}
+
+QSize ArtistsListItem::sizeHint()
+{
+    return QSize(300, 120);
 }
 
 QVariant ArtistsListItem::data(int column) const
@@ -170,18 +170,6 @@ Artist* ArtistsListItem::artist() const
     return m_artist;
 }
 
-void ArtistsListItem::onAlbumAdded(Album* album)
-{
-    if(!m_hasCover && album && !album->cover().isNull())
-    {
-        m_hasCover = true;
-        m_cover->setPixmap(QPixmap(m_artist->albums().first()->cover().scaled(100,
-                                                                              100,
-                                                                              Qt::KeepAspectRatio,
-                                                                              Qt::SmoothTransformation)));
-    }
-}
-
 void ArtistsListItem::onArtistUpdated(Artist* artist, quint8 fields)
 {
     if(artist == m_artist)
@@ -202,7 +190,6 @@ void ArtistsListItem::onArtistUpdated(Artist* artist, quint8 fields)
             }
             else
             {
-                m_hasCover = true;
                 m_cover->setPixmap(QPixmap(m_artist->image().scaled(100,
                                                                     100,
                                                                     Qt::KeepAspectRatio,

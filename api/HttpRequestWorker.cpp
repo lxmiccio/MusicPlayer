@@ -336,11 +336,11 @@ QString HttpRequestWorker::imageUrl()
     QJsonArray jsonImages = jsonMessage["image"].toArray();
 
     QJsonValue url;
-    if(jsonImages.size() == 6)
+    if(jsonImages.size() >= 4 && jsonImages.size() <= 6)
     {
-        url = jsonImages.at(4).toObject().value("#text");
+        url = jsonImages.at(3).toObject().value("#text");
     }
-    else if(jsonImages.size() > 0 && jsonImages.size() <= 5)
+    else if(jsonImages.size() > 0 && jsonImages.size() <= 3)
     {
         url = jsonImages.at(jsonImages.size() - 1).toObject().value("#text");
     }

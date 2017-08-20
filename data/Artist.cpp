@@ -1,5 +1,7 @@
 #include "Artist.h"
 
+#include <QDir>
+
 Artist::Artist(QObject* parent) : QObject(parent)
 {
 }
@@ -7,6 +9,15 @@ Artist::Artist(QObject* parent) : QObject(parent)
 Artist::Artist(const QString& name, QObject* parent) : QObject(parent)
 {
     m_name = name;
+
+    if(isImageAvailable(m_name))
+    {
+        m_image = readImage(m_name);
+    }
+    else
+    {
+        downloadImage();
+    }
 }
 
 const QString& Artist::name() const
@@ -158,6 +169,8 @@ void Artist::onImageDownloaded(HttpRequestWorker* worker)
         m_image.loadFromData(worker->response());
         emit artistUpdated(this, IMAGE);
 
+        saveImage(m_name, m_image);
+
         qDebug() << "Image downloaded for artist" << m_name;
     }
     else
@@ -166,6 +179,32 @@ void Artist::onImageDownloaded(HttpRequestWorker* worker)
     }
 
     worker->deleteLater();
+}
+
+bool Artist::isImageAvailable(const QString& name)
+{
+    return QFile("artists/" + name + ".png").exists();
+}
+
+QPixmap Artist::readImage(const QString& name)
+{
+    QPixmap pixmap;
+    pixmap.load("artists/" + name + ".png");
+
+    return pixmap;
+}
+
+void Artist::saveImage(const QString& name, const QPixmap& image)
+{
+    if(!QDir("artists").exists())
+    {
+        QDir().mkpath("artists");
+    }
+
+    QFile file("artists/" + name + ".png");
+    file.open(QIODevice::WriteOnly);
+
+    image.save(&file, "PNG");
 }
 
 bool operator==(const Artist& artist1, const Artist& artist2)

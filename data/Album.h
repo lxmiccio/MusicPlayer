@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QPixmap>
-#include <QString>
 #include <QVector>
 
 #include "Artist.h"

@@ -199,14 +199,14 @@ void MusicLibrary::onTrackLoaded(Track* p_track, QString p_artist, QString p_alb
             {
                 l_album = new Album(p_album, l_artist);
 
-//                if(l_path.endsWith("flac"))
-//                {
-//                    l_album->setCover(TagLibWrapper::readFlacCover(QFileInfo(l_path)));
-//                }
-//                else if(l_path.endsWith("mp3"))
-//                {
-//                    l_album->setCover(TagLibWrapper::readMp3Cover(QFileInfo(l_path)));
-//                }
+                if(l_path.endsWith("flac"))
+                {
+                    l_album->setCover(TagLibWrapper::readFlacCover(QFileInfo(l_path)));
+                }
+                else if(l_path.endsWith("mp3"))
+                {
+                    l_album->setCover(TagLibWrapper::readMp3Cover(QFileInfo(l_path)));
+                }
 
                 l_artist->addAlbum(l_album);
                 emit albumAdded(l_album);

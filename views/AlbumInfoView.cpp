@@ -58,7 +58,7 @@ Album* AlbumInfoView::album()
 
 QSize AlbumInfoView::fittingSize()
 {
-    return QSize(m_coverWidth + m_tracksListView->sizeHint().width(), m_albumTitle->sizeHint().height() + 12 + m_separator->sizeHint().height() + m_tracksListView->sizeHint().height());
+    return QSize(m_coverWidth + m_tracksListView->sizeHint().width(), std::max(m_cover->sizeHint().height(), m_albumTitle->sizeHint().height() + 12 + m_separator->sizeHint().height() + m_tracksListView->sizeHint().height()));
 }
 
 void AlbumInfoView::changeAlbum(Album* album)

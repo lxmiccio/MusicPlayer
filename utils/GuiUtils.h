@@ -2,7 +2,6 @@
 #define GUIUTILS_H
 
 #include <QLayout>
-#include <QString>
 #include <QWidget>
 
 namespace GuiUtils
