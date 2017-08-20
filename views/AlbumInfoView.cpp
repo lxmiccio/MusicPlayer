@@ -4,10 +4,16 @@ AlbumInfoView::AlbumInfoView(QWidget* parent) : QWidget(parent)
 {
     m_album = NULL;
 
-    m_cover = new QLabel();
-    m_cover->setAlignment(Qt::AlignTop);
     m_coverHeight = 175;
     m_coverWidth = 175;
+
+    m_cover = new Label();
+    m_cover->setAlignment(Qt::AlignBottom);
+    m_cover->setFixedSize(m_coverWidth, m_coverHeight);
+    m_cover->setRounded(true);
+    QObject::connect(m_cover, SIGNAL(clicked()), SLOT(onCoverClicked()));
+
+    m_spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     QFont font = QApplication::font();
     font.setBold(true);
@@ -15,22 +21,32 @@ AlbumInfoView::AlbumInfoView(QWidget* parent) : QWidget(parent)
 
     m_albumTitle = new ElidedLabel();
     m_albumTitle->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    m_albumTitle->setContentsMargins(36, 0, 0, 0);
     m_albumTitle->setFont(font);
     m_albumTitle->setStyleSheet(QString("color: white;"));
 
+    m_separator = new LineWidget(Qt::Horizontal);
+    m_separator->setContentsMargins(0, 12, 0, 0);
+    m_separator->setWidth(1);
+
     m_tracksListView = new TracksListView(TracksListView::REDUCED);
 
-    m_verticalLayout = new QVBoxLayout();
-    m_verticalLayout->setMargin(0);
-    m_verticalLayout->setSpacing(18);
-    m_verticalLayout->addWidget(m_albumTitle);
-    m_verticalLayout->addWidget(m_tracksListView);
+    m_leftLayout = new QVBoxLayout();
+    m_leftLayout->setMargin(0);
+    m_leftLayout->setSpacing(0);
+    m_leftLayout->addWidget(m_cover);
+    m_leftLayout->addItem(m_spacer);
+
+    m_rightLayout = new QVBoxLayout();
+    m_rightLayout->setContentsMargins(36, 0, 0, 0);
+    m_rightLayout->setSpacing(0);
+    m_rightLayout->addWidget(m_albumTitle);
+    m_rightLayout->addWidget(m_separator);
+    m_rightLayout->addWidget(m_tracksListView);
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);
-    m_layout->addWidget(m_cover);
-    m_layout->addLayout(m_verticalLayout);
+    m_layout->addLayout(m_leftLayout);
+    m_layout->addLayout(m_rightLayout);
 
     setLayout(m_layout);
 }
@@ -38,6 +54,11 @@ AlbumInfoView::AlbumInfoView(QWidget* parent) : QWidget(parent)
 Album* AlbumInfoView::album()
 {
     return m_album;
+}
+
+QSize AlbumInfoView::fittingSize()
+{
+    return QSize(m_coverWidth + m_tracksListView->sizeHint().width(), m_albumTitle->sizeHint().height() + 12 + m_separator->sizeHint().height() + m_tracksListView->sizeHint().height());
 }
 
 void AlbumInfoView::changeAlbum(Album* album)
@@ -107,4 +128,9 @@ void AlbumInfoView::onAlbumUpdated(Album* album, quint8 fields)
             }
         }
     }
+}
+
+void AlbumInfoView::onCoverClicked()
+{
+    emit coverClicked(m_album);
 }

@@ -9,6 +9,7 @@
 
 #include "ArtistAlbumsView.h"
 #include "ArtistsListView.h"
+#include "ScrollableWidget.h"
 
 class ArtistView : public QWidget
 {
@@ -26,6 +27,7 @@ class ArtistView : public QWidget
 
         ArtistsListView* m_artistsListView;
         ArtistAlbumsView* m_artistAlbumsView;
+        ScrollableWidget* m_scrollableWidget;
         QSplitter* m_splitter;
 
         QHBoxLayout* m_layout;

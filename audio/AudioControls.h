@@ -12,7 +12,7 @@
 #include <QWidget>
 
 #include "BackgroundWidget.h"
-#include "ClickableLabel.h"
+#include "Label.h"
 #include "ImageButton.h"
 #include "ImageUtils.h"
 #include "TrackSlider.h"
@@ -95,9 +95,9 @@ class AudioControls : public QWidget
 
         QHBoxLayout* m_upperHorizontalLayout;
         QSpacerItem* m_upperSpacer1;
-        ClickableLabel* m_artist;
+        Label* m_artist;
         QLabel* m_dash;
-        ClickableLabel* m_track;
+        Label* m_track;
         QSpacerItem* m_upperSpacer2;
 
         QHBoxLayout* m_lowerHorizontalLayout;

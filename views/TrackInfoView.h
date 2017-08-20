@@ -1,12 +1,12 @@
 #ifndef TRACKINFOVIEW_H
 #define TRACKINFOVIEW_H
 
-#include <QLabel>
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QWidget>
 
 #include "ElidedLabel.h"
+#include "Label.h"
 #include "Track.h"
 
 class TrackInfoView : public QWidget
@@ -27,9 +27,9 @@ class TrackInfoView : public QWidget
     private:
         QPointer<Track> m_track; /* Use QPointer so that the pointer will result NULL if deleted by another object */
 
-        QLabel* m_cover;
         quint16 m_coverHeight;
         quint16 m_coverWidth;
+        Label* m_cover;
 
         ElidedLabel* m_albumTitle;
         ElidedLabel* m_artistName;

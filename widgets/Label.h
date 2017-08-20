@@ -1,5 +1,5 @@
-#ifndef CLICKABLELABEL_H
-#define CLICKABLELABEL_H
+#ifndef LABEL_H
+#define LABEL_H
 
 #include <QApplication>
 #include <QLabel>
@@ -7,15 +7,16 @@
 #include <QPainter>
 #include <QTime>
 
-class ClickableLabel : public QLabel
+class Label : public QLabel
 {
         Q_OBJECT
 
     public:
-        explicit ClickableLabel(QWidget* parent = 0);
-        virtual ~ClickableLabel();
+        explicit Label(QWidget* parent = 0);
+        virtual ~Label();
 
         void setOpacity(float opacity);
+        void setRounded(bool rounded);
 
     signals:
         void clicked();
@@ -30,6 +31,8 @@ class ClickableLabel : public QLabel
     private:
         float m_opacity;
 
+        bool m_rounded;
+
         bool m_moved;
         QPoint m_dragPoint;
 
@@ -37,4 +40,4 @@ class ClickableLabel : public QLabel
         QTime m_time;
 };
 
-#endif// CLICKABLELABEL_H
+#endif// LABEL_H

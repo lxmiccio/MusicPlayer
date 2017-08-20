@@ -17,7 +17,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
 
     m_upperSpacer1 = new QSpacerItem(0, 0, QSizePolicy::Expanding);
 
-    m_artist = new ClickableLabel();
+    m_artist = new Label();
     m_artist->hide();
     m_artist->setFont(font);
     m_artist->setStyleSheet("color: white;");
@@ -30,7 +30,7 @@ AudioControls::AudioControls(QWidget* parent) : QWidget(parent), m_volumeShortcu
     sizePolicy.setRetainSizeWhenHidden(true);
     m_dash->setSizePolicy(sizePolicy);
 
-    m_track = new ClickableLabel();
+    m_track = new Label();
     m_track->hide();
     m_track->setFont(font);
     m_track->setStyleSheet("color: white;");

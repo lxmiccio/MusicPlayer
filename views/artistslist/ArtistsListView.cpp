@@ -12,6 +12,7 @@ ArtistsListView::ArtistsListView(bool sort, QWidget* parent) : QListView(parent)
 {
     m_artistsListModel = new ArtistsListModel(sort);
     setModel(m_artistsListModel);
+    QObject::connect(m_artistsListModel, SIGNAL(itemUpdated()), SLOT(repaint()));
 
     m_artistsListDelegate = new ArtistsListDelegate(this);
     setItemDelegate(m_artistsListDelegate);
@@ -38,7 +39,6 @@ ArtistsListView::ArtistsListView(bool sort, QWidget* parent) : QListView(parent)
     QObject::connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
 
     QObject::connect(this->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentRowChanged(QModelIndex, QModelIndex)));
-
 }
 
 ArtistsListView::~ArtistsListView()
@@ -153,7 +153,6 @@ void ArtistsListView::onCurrentRowChanged(QModelIndex current, QModelIndex previ
 
     if(current.row() >= 0)
     {
-        qDebug()<<current.row();
         emit artistSelected(m_artistsListModel->rootItem()->child(current.row())->artist());
     }
 }

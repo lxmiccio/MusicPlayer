@@ -1,22 +1,27 @@
-#include "ClickableLabel.h"
+#include "Label.h"
 
-ClickableLabel::ClickableLabel(QWidget* parent) : QLabel(parent), m_opacity(0.5), m_moved(false), m_pressed(false)
+Label::Label(QWidget* parent) : QLabel(parent), m_opacity(1), m_rounded(false), m_moved(false), m_pressed(false)
 {
     QLabel::setCursor(Qt::PointingHandCursor);
 }
 
-ClickableLabel::~ClickableLabel()
+Label::~Label()
 {
 }
 
-void ClickableLabel::setOpacity(float opacity)
+void Label::setOpacity(float opacity)
 {
     m_opacity = opacity;
 
     repaint();
 }
 
-void ClickableLabel::mousePressEvent(QMouseEvent* event)
+void Label::setRounded(bool rounded)
+{
+    m_rounded = rounded;
+}
+
+void Label::mousePressEvent(QMouseEvent* event)
 {
     QLabel::mousePressEvent(event);
 
@@ -28,7 +33,7 @@ void ClickableLabel::mousePressEvent(QMouseEvent* event)
     }
 }
 
-void ClickableLabel::mouseReleaseEvent(QMouseEvent* event)
+void Label::mouseReleaseEvent(QMouseEvent* event)
 {
     QLabel::mouseReleaseEvent(event);
 
@@ -41,7 +46,7 @@ void ClickableLabel::mouseReleaseEvent(QMouseEvent* event)
     m_pressed = false;
 }
 
-void ClickableLabel::mouseMoveEvent(QMouseEvent* event)
+void Label::mouseMoveEvent(QMouseEvent* event)
 {
     if(m_pressed)
     {
@@ -56,20 +61,34 @@ void ClickableLabel::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
-void ClickableLabel::paintEvent(QPaintEvent* event)
+void Label::paintEvent(QPaintEvent* event)
 {
     if(pixmap())
     {
         QImage image(pixmap()->toImage());
-        QBrush brush(image);
+        QBrush brush(*pixmap());
         QPen pen(Qt::transparent);
 
         QPainter painter(this);
-        painter.setPen(pen);
         painter.setBrush(brush);
+        painter.setOpacity(m_opacity);
+        painter.setPen(pen);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.drawRoundedRect(rect(), 10, 10);
-        setAlignment(Qt::AlignCenter);
+
+        if(m_rounded)
+        {
+            QRect r = rect();
+            r.setTopLeft(QPoint(r.topLeft().x() + contentsMargins().left(), r.topLeft().y() + contentsMargins().top()));
+            r.setSize(pixmap()->size());
+
+            painter.setBrushOrigin(r.topLeft());
+
+            painter.drawRoundedRect(r, 10, 10);
+        }
+        else
+        {
+            painter.drawRect(rect());
+        }
     }
     else
     {

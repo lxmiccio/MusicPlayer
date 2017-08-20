@@ -30,6 +30,7 @@ MainWidget::MainWidget(QWidget* parent) : BackgroundWidget(parent)
     showView(Settings::view());
 
     m_audioControls = new AudioControls();
+    m_audioControls->setContentsMargins(0, 24, 0, 0);
     QObject::connect(m_audioControls, SIGNAL(currentTrackClicked()), this, SLOT(onCurrentTrackClicked()));
 
     m_audioEngine = AudioEngine::instance();

@@ -1,10 +1,10 @@
 #ifndef ALBUMCOVERWIDGET_H
 #define ALBUMCOVERWIDGET_H
 
+#include <QLabel>
 #include <QVBoxLayout>
 
 #include "Album.h"
-#include "ClickableLabel.h"
 #include "ClickableWidget.h"
 #include "ElidedLabel.h"
 

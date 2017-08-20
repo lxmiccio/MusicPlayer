@@ -10,11 +10,14 @@ ArtistView::ArtistView(QWidget* parent) : QWidget(parent)
     m_artistAlbumsView = new ArtistAlbumsView();
     QObject::connect(m_artistsListView, SIGNAL(artistSelected(Artist*)), m_artistAlbumsView, SLOT(onArtistChanged(Artist*)));
 
+    m_scrollableWidget = new ScrollableWidget();
+    m_scrollableWidget->setWidget(m_artistAlbumsView);
+
     m_splitter = new QSplitter();
     m_splitter->setContentsMargins(0, 0, 0, 0);
     m_splitter->setHandleWidth(3);
     m_splitter->addWidget(m_artistsListView);
-    m_splitter->addWidget(m_artistAlbumsView);
+    m_splitter->addWidget(m_scrollableWidget);
 
     m_layout = new QHBoxLayout();
     m_layout->setMargin(0);

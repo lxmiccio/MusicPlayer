@@ -16,6 +16,7 @@ class Artist : public QObject
 
     public:
         static const quint8 NAME = 1;
+        static const quint8 IMAGE = 2;
 
         explicit Artist(QObject* parent = 0);
         explicit Artist(const QString& title, QObject* parent = 0);
@@ -31,7 +32,15 @@ class Artist : public QObject
 
         const QVector<Track*> tracks() const;
 
+        const QPixmap& image() const;
+        void setImage(const QPixmap& image);
+        void downloadImage();
+
         void sort();
+
+    private slots:
+        void onArtistInfoDownloaded(HttpRequestWorker* worker);
+        void onImageDownloaded(HttpRequestWorker* worker);
 
     signals:
         void artistUpdated(Artist* artist, quint8 fields);
@@ -41,8 +50,10 @@ class Artist : public QObject
         void albumRemoved(Album* album);
 
     private:
-        QVector<Album*> m_albums;
         QString m_name;
+        QPixmap m_image;
+
+        QVector<Album*> m_albums;
 };
 
 bool operator==(const Artist& artist1, const Artist& artist2);

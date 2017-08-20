@@ -35,6 +35,7 @@ class HttpRequestWorker : public QObject
         QString errorMessage();
 
         QString coverUrl();
+        QString imageUrl();
         QString lyricsUrl();
 
     signals:

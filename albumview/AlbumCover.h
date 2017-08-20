@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 
 #include "Album.h"
-#include "ClickableLabel.h"
+#include "Label.h"
 #include "ClickableWidget.h"
 #include "ElidedLabel.h"
 

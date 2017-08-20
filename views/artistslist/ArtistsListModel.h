@@ -34,6 +34,9 @@ class ArtistsListModel : public QAbstractItemModel
 
         ArtistsListItem* rootItem();
 
+    signals:
+        void itemUpdated();
+
     private:
         ArtistsListItem* m_rootItem;
 };

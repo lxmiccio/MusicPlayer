@@ -36,7 +36,6 @@ SOURCES += main.cpp \
     utils/Settings.cpp \
     utils/Utils.cpp \
     widgets/BackgroundWidget.cpp \
-    widgets/ClickableLabel.cpp \
     widgets/ClickableWidget.cpp \
     widgets/ElidedLabel.cpp \
     widgets/ImageButton.cpp \
@@ -61,7 +60,8 @@ SOURCES += main.cpp \
     views/artistslist/ArtistsListItem.cpp \
     views/artistslist/ArtistsListModel.cpp \
     views/artistslist/ArtistsListView.cpp \
-    views/AlbumInfoView.cpp
+    views/AlbumInfoView.cpp \
+    widgets/Label.cpp
 
 HEADERS  += albumview/AlbumCover.h \
     albumview/AlbumGrid.h \
@@ -88,7 +88,6 @@ HEADERS  += albumview/AlbumCover.h \
     utils/Settings.h \
     utils/Utils.h \
     widgets/BackgroundWidget.h \
-    widgets/ClickableLabel.h \
     widgets/ClickableWidget.h \
     widgets/ElidedLabel.h \
     widgets/ImageButton.h \
@@ -114,7 +113,8 @@ HEADERS  += albumview/AlbumCover.h \
     views/artistslist/ArtistsListItem.h \
     views/artistslist/ArtistsListModel.h \
     views/artistslist/ArtistsListView.h \
-    views/AlbumInfoView.h
+    views/AlbumInfoView.h \
+    widgets/Label.h
 
 INCLUDEPATH += $$PWD/albumview
 INCLUDEPATH += $$PWD/api

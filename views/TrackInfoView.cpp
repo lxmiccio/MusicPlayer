@@ -4,9 +4,12 @@ TrackInfoView::TrackInfoView(QWidget* parent) : QWidget(parent)
 {
     m_track = NULL;
 
-    m_cover = new QLabel();
     m_coverHeight = 175;
     m_coverWidth = 175;
+    m_cover = new Label();
+    m_cover->setAlignment(Qt::AlignTop);
+    m_cover->setFixedSize(m_coverWidth, m_coverHeight);
+    m_cover->setRounded(true);
 
     m_albumTitle = new ElidedLabel();
     m_albumTitle->setAlignment(Qt::AlignCenter);

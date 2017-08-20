@@ -122,14 +122,18 @@ Qt::ItemFlags ArtistsListModel::flags(const QModelIndex &index) const
 void ArtistsListModel::propendItem(Artist* artist)
 {
     beginInsertRows(QModelIndex(), 0, 0);
-    m_rootItem->prependChild(new ArtistsListItem(artist, m_rootItem));
+    ArtistsListItem* item = new ArtistsListItem(artist, m_rootItem);
+    QObject::connect(item, SIGNAL(itemUpdated()), SIGNAL(itemUpdated()));
+    m_rootItem->prependChild(item);
     endInsertRows();
 }
 
 void ArtistsListModel::appendItem(Artist* artist)
 {
     beginInsertRows(QModelIndex(), m_rootItem->row(), m_rootItem->row());
-    m_rootItem->appendChild(new ArtistsListItem(artist, m_rootItem));
+    ArtistsListItem* item = new ArtistsListItem(artist, m_rootItem);
+    QObject::connect(item, SIGNAL(itemUpdated()), SIGNAL(itemUpdated()));
+    m_rootItem->appendChild(item);
     endInsertRows();
 }
 
@@ -138,7 +142,9 @@ void ArtistsListModel::insertItemAt(Artist* artist, int row)
     if(row < m_rootItem->rowCount())
     {
         beginInsertRows(QModelIndex(), row, row);
-        m_rootItem->insertChildAt(new ArtistsListItem(artist, m_rootItem), row);
+        ArtistsListItem* item = new ArtistsListItem(artist, m_rootItem);
+        QObject::connect(item, SIGNAL(itemUpdated()), SIGNAL(itemUpdated()));
+        m_rootItem->insertChildAt(item, row);
         endInsertRows();
     }
 }

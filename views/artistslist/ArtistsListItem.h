@@ -2,10 +2,10 @@
 #define ARTISTSLISTITEM_H
 
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QWidget>
 
 #include "Artist.h"
+#include "Label.h"
 
 class ArtistsListItem : public QWidget
 {
@@ -39,6 +39,10 @@ class ArtistsListItem : public QWidget
 
     private slots:
         void onAlbumAdded(Album* album);
+        void onArtistUpdated(Artist* artist, quint8 fields);
+
+    signals:
+        void itemUpdated();
 
     private:
         void sort();
@@ -47,7 +51,7 @@ class ArtistsListItem : public QWidget
         Artist* m_artist;
 
         bool m_hasCover;
-        QLabel* m_cover;
+        Label* m_cover;
         QLabel* m_artistName;
 
         QHBoxLayout* m_layout;

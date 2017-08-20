@@ -7,6 +7,7 @@
 
 #include "Album.h"
 #include "AlbumGrid.h"
+#include "AlbumInfoView.h"
 #include "AlbumTracks.h"
 #include "AlbumCover.h"
 #include "ScrollableWidget.h"
@@ -25,6 +26,7 @@ class AlbumView : public ScrollableWidget
 
     private:
         AlbumGrid* m_albumGrid;
+        AlbumInfoView* m_albumInfo;
         AlbumTracks* m_albumTracks;
         QVBoxLayout* m_layout;
 };

@@ -100,12 +100,72 @@ const QVector<Track*> Artist::tracks() const
     return tracks;
 }
 
+const QPixmap& Artist::image() const
+{
+    return m_image;
+}
+
+void Artist::setImage(const QPixmap& image)
+{
+    m_image = image;
+}
+
+void Artist::downloadImage()
+{
+    HttpRequestWorker* worker = new HttpRequestWorker();
+    QObject::connect(worker, SIGNAL(requestFinished(HttpRequestWorker*)), this, SLOT(onArtistInfoDownloaded(HttpRequestWorker*)));
+    worker->artistInfoLastFm(m_name);
+}
+
 void Artist::sort()
 {
     std::sort(m_albums.begin(), m_albums.end(), [] (const Album* album1, const Album* album2) -> bool
     {
         return album1->title() < album2->title();
     });
+}
+
+void Artist::onArtistInfoDownloaded(HttpRequestWorker* worker)
+{
+    if(!worker->isError())
+    {
+        QString url = worker->imageUrl();
+        if(!url.isEmpty())
+        {
+            HttpRequestInput input(url);
+
+            HttpRequestWorker* newWorker = new HttpRequestWorker();
+            QObject::connect(newWorker, SIGNAL(requestFinished(HttpRequestWorker*)), this, SLOT(onImageDownloaded(HttpRequestWorker*)));
+            newWorker->execute(input);
+        }
+        else
+        {
+            qDebug() << "Url is empty";
+        }
+    }
+    else
+    {
+        qDebug() << "Http request failed with error" << worker->errorMessage();
+    }
+
+    worker->deleteLater();
+}
+
+void Artist::onImageDownloaded(HttpRequestWorker* worker)
+{
+    if(!worker->isError())
+    {
+        m_image.loadFromData(worker->response());
+        emit artistUpdated(this, IMAGE);
+
+        qDebug() << "Image downloaded for artist" << m_name;
+    }
+    else
+    {
+        qDebug() << "Http request failed with error" << worker->errorMessage();
+    }
+
+    worker->deleteLater();
 }
 
 bool operator==(const Artist& artist1, const Artist& artist2)

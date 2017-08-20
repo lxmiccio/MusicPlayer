@@ -14,9 +14,9 @@ void HttpRequestWorker::albumInfoLastFm(const QString& artist, const QString& al
 {
     HttpRequestInput input("http://ws.audioscrobbler.com/2.0/", "GET");
     input.addParameter("method", "album.getinfo");
+    input.addParameter("api_key", Settings::apiKeyLastFm());
     input.addParameter("artist", artist);
     input.addParameter("album", album);
-    input.addParameter("api_key", Settings::apiKeyLastFm());
     input.addParameter("format", "json");
 
     execute(input);
@@ -24,9 +24,11 @@ void HttpRequestWorker::albumInfoLastFm(const QString& artist, const QString& al
 
 void HttpRequestWorker::artistInfoLastFm(const QString& artist)
 {
-    HttpRequestInput input("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&format=json", "GET");
+    HttpRequestInput input("http://ws.audioscrobbler.com/2.0/", "GET");
+    input.addParameter("method", "artist.getinfo");
     input.addParameter("api_key", Settings::apiKeyLastFm());
     input.addParameter("artist", artist);
+    input.addParameter("format", "json");
 
     execute(input);
 }
@@ -319,6 +321,32 @@ QString HttpRequestWorker::coverUrl()
     else
     {
         qDebug() << "Cover seems to be unavailable, jsonImages.size() is" << jsonImages.size();
+    }
+
+    return url.toString();
+}
+
+QString HttpRequestWorker::imageUrl()
+{
+    QJsonDocument doc(QJsonDocument::fromJson(m_response));
+
+    QJsonObject json = doc.object();
+
+    QJsonObject jsonMessage = json["artist"].toObject();
+    QJsonArray jsonImages = jsonMessage["image"].toArray();
+
+    QJsonValue url;
+    if(jsonImages.size() == 6)
+    {
+        url = jsonImages.at(4).toObject().value("#text");
+    }
+    else if(jsonImages.size() > 0 && jsonImages.size() <= 5)
+    {
+        url = jsonImages.at(jsonImages.size() - 1).toObject().value("#text");
+    }
+    else
+    {
+        qDebug() << "Image seems to be unavailable, jsonImages.size() is" << jsonImages.size();
     }
 
     return url.toString();

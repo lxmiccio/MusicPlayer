@@ -16,10 +16,13 @@ ArtistsListItem::ArtistsListItem(Artist* artist, ArtistsListItem* parent)
     m_artist = artist;
     QObject::connect(m_artist, SIGNAL(albumAdded(Album*)), SLOT(onAlbumAdded(Album*)));
     QObject::connect(m_artist, SIGNAL(albumUpdated(Album*, quint8)), SLOT(onAlbumAdded(Album*)));
+    QObject::connect(m_artist, SIGNAL(artistUpdated(Artist*, quint8)), SLOT(onArtistUpdated(Artist*, quint8)));
+    m_artist->downloadImage();
 
-    m_cover = new QLabel();
+    m_cover = new Label();
     m_cover->setAlignment(Qt::AlignCenter);
-    m_cover->setContentsMargins(0, 10, 0, 10);
+    m_cover->setContentsMargins(10, 10, 10, 10);
+    m_cover->setRounded(true);
 
     if(m_artist && !m_artist->albums().isEmpty())
     {
@@ -176,6 +179,38 @@ void ArtistsListItem::onAlbumAdded(Album* album)
                                                                               100,
                                                                               Qt::KeepAspectRatio,
                                                                               Qt::SmoothTransformation)));
+    }
+}
+
+void ArtistsListItem::onArtistUpdated(Artist* artist, quint8 fields)
+{
+    if(artist == m_artist)
+    {
+        if(fields & Artist::NAME)
+        {
+            m_artistName->setText(m_artist->name());
+        }
+
+        if(fields & Artist::IMAGE)
+        {
+            if(!m_artist->image())
+            {
+                m_cover->setPixmap(QPixmap::fromImage(QImage(":/images/album-placeholder.png")).scaled(100,
+                                                                                                       100,
+                                                                                                       Qt::KeepAspectRatio,
+                                                                                                       Qt::SmoothTransformation));
+            }
+            else
+            {
+                m_hasCover = true;
+                m_cover->setPixmap(QPixmap(m_artist->image().scaled(100,
+                                                                    100,
+                                                                    Qt::KeepAspectRatio,
+                                                                    Qt::SmoothTransformation)));
+            }
+        }
+
+        emit itemUpdated();
     }
 }
 

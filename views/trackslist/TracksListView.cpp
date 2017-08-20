@@ -52,9 +52,29 @@ TracksListView::~TracksListView()
 
 }
 
-QSize TracksListView::fittingSize()
+QSize TracksListView::sizeHint()
 {
-    return sizeHint();
+    QSize hint = QTableView::sizeHint();
+
+    if(model())
+    {
+        quint16 width = verticalHeader()->width() + 4;
+        for(quint8 i = 0; i < model()->columnCount(); ++i)
+        {
+            width += columnWidth(i);
+        }
+
+        quint16 height = horizontalHeader()->height() + 4;
+        for(quint8 i = 0; i < model()->rowCount(); ++i)
+        {
+            height += rowHeight(i);
+        }
+
+        hint.setWidth(width);
+        hint.setHeight(height);
+    }
+
+    return hint;
 }
 
 quint8 TracksListView::mode() const
@@ -140,31 +160,6 @@ void TracksListView::resizeEvent(QResizeEvent* event)
     }
 
     QTableView::resizeEvent(event);
-}
-
-QSize TracksListView::sizeHint()
-{
-    QSize hint = QTableView::sizeHint();
-
-    if(model())
-    {
-        quint16 width = verticalHeader()->width() + 4;
-        for(quint8 i = 0; i < model()->columnCount(); ++i)
-        {
-            width += columnWidth(i);
-        }
-
-        quint16 height = horizontalHeader()->height() + 4;
-        for(quint8 i = 0; i < model()->rowCount(); ++i)
-        {
-            height += rowHeight(i);
-        }
-
-        hint.setWidth(width);
-        hint.setHeight(height);
-    }
-
-    return hint;
 }
 
 void TracksListView::onContextMenuRequested(QPoint position)

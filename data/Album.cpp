@@ -163,7 +163,7 @@ void Album::onCoverDownloaded(HttpRequestWorker* worker)
         m_cover.loadFromData(worker->response());
         emit albumUpdated(this, COVER);
 
-        qDebug() << "Cover downloaded";
+        qDebug() << "Cover downloaded for album" << m_title;
     }
     else
     {

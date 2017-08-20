@@ -40,7 +40,8 @@ class TracksListView : public QTableView
         explicit TracksListView(quint8 mode, bool sort = true, QWidget* parent = 0);
         ~TracksListView();
 
-        QSize fittingSize();
+        virtual QSize sizeHint();
+
         quint8 mode() const;
 
         TracksListModel* tracksListModel() const;
@@ -67,7 +68,6 @@ class TracksListView : public QTableView
 
     protected:
         virtual void resizeEvent(QResizeEvent* event);
-        virtual QSize sizeHint();
 
     private slots:
         void onContextMenuRequested(QPoint position);
