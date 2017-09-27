@@ -21,6 +21,7 @@ class ArtistView : public QWidget
 
     private slots:
         void onArtistAdded(Artist* artist);
+        void onArtistDestroyed(QObject* artist);
 
     private:
         QMutex m_mutex;

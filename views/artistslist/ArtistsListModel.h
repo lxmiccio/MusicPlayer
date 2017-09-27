@@ -37,6 +37,9 @@ class ArtistsListModel : public QAbstractItemModel
     signals:
         void itemUpdated();
 
+    private slots:
+        void onArtistDestroyed(QObject* artist);
+
     private:
         ArtistsListItem* m_rootItem;
 };

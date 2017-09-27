@@ -19,6 +19,7 @@ class Artist : public QObject
 
         explicit Artist(QObject* parent = 0);
         explicit Artist(const QString& title, QObject* parent = 0);
+        ~Artist();
 
         const QString& name() const;
         void setName(const QString& name);

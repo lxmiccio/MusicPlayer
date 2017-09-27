@@ -14,6 +14,14 @@ Album::Album(const QString& title, Artist* artist, QObject* parent) : QObject(pa
     QObject::connect(artist, SIGNAL(artistUpdated(Artist*, quint8)), this, SLOT(onArtistUpdated(Artist*,quint8)));
 }
 
+Album::~Album()
+{
+    foreach(Track* i_track, m_tracks)
+    {
+        delete i_track;
+    }
+}
+
 const QString& Album::title() const
 {
     return m_title;

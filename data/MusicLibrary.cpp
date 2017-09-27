@@ -47,6 +47,7 @@ Artist* MusicLibrary::artist(const QString& name) const
 
 bool MusicLibrary::removeArtist(Artist* artist)
 {
+    delete artist;
     return m_artists.removeOne(artist);
 }
 

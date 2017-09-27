@@ -125,6 +125,22 @@ QSize ArtistsListView::maxSize()
 
 void ArtistsListView::onContextMenuRequested(QPoint position)
 {
+    QMenu menu(this);
+
+    QAction* changeName = menu.addAction("Change name");
+    QAction* removeArtist = menu.addAction("Remove artist");
+
+    QAction* selectedAction = menu.exec(viewport()->mapToGlobal(position));
+
+    if(selectedAction == changeName)
+    {
+        QString newName = QInputDialog::getText(0, "Artist editing", "Artist:", QLineEdit::Normal, m_artistsListModel->rootItem()->child(indexAt(position).row())->artist()->name());
+        m_artistsListModel->rootItem()->child(indexAt(position).row())->artist()->setName(newName);
+    }
+    else if(selectedAction == removeArtist)
+    {
+        MusicLibrary::instance()->removeArtist(m_artistsListModel->rootItem()->child(indexAt(position).row())->artist());
+    }
 }
 
 void ArtistsListView::onItemClicked(const QModelIndex& index)

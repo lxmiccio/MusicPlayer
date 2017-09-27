@@ -20,6 +20,14 @@ Artist::Artist(const QString& name, QObject* parent) : QObject(parent)
     }
 }
 
+Artist::~Artist()
+{
+    foreach(Album* i_album, m_albums)
+    {
+        delete i_album;
+    }
+}
+
 const QString& Artist::name() const
 {
     return m_name;

@@ -135,6 +135,8 @@ void ArtistsListModel::appendItem(Artist* artist)
     QObject::connect(item, SIGNAL(itemUpdated()), SIGNAL(itemUpdated()));
     m_rootItem->appendChild(item);
     endInsertRows();
+
+    QObject::connect(artist, SIGNAL(destroyed(QObject*)), SLOT(onArtistDestroyed(QObject*)));
 }
 
 void ArtistsListModel::insertItemAt(Artist* artist, int row)
@@ -184,6 +186,11 @@ void ArtistsListModel::removeItemAt(int row)
         m_rootItem->removeChildAt(row);
         endRemoveRows();
     }
+}
+
+void ArtistsListModel::onArtistDestroyed(QObject* artist)
+{
+    removeItem(static_cast<Artist*>(artist));
 }
 
 void ArtistsListModel::clear()

@@ -33,10 +33,17 @@ ArtistView::~ArtistView()
 {
 
 }
+
 void ArtistView::onArtistAdded(Artist* artist)
 {
     if(artist)
     {
+        QObject::connect(artist, SIGNAL(destroyed(QObject*)), SLOT(onArtistDestroyed(QObject*)));
         m_artistsListView->appendItem(artist);
     }
+}
+
+void ArtistView::onArtistDestroyed(QObject* artist)
+{
+    //m_artistsListView->removeItem(static_cast<Artist*>(artist));
 }

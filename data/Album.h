@@ -23,6 +23,7 @@ class Album : public QObject
 
         explicit Album(QObject* parent = 0);
         explicit Album(const QString& title, Artist* artist, QObject* parent = 0);
+        ~Album();
 
         const QString& title() const;
         void setTitle(const QString& title);
